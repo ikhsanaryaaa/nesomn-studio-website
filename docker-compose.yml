@@ -11,6 +11,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: nesomn
+    # Bind hanya ke localhost (bukan publik) agar host dapat menjalankan
+    # migration/seed/test. Komunikasi antar container tetap via host `db`.
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
