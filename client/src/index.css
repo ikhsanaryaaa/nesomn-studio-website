@@ -1,0 +1,10 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens via Tailwind v4 @theme.
+ * Token sebenarnya diisi di milestone UI sesuai DESIGN.md.
+ * Blok ini disiapkan sebagai placeholder.
+ */
+@theme {
+  /* Warna, tipografi, spacing, radius, shadow → diisi di milestone UI */
+}
