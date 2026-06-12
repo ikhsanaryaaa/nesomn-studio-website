@@ -1,0 +1,67 @@
+import {
+  pgTable,
+  pgEnum,
+  uuid,
+  text,
+  boolean,
+  numeric,
+  timestamp,
+  jsonb,
+  primaryKey,
+} from 'drizzle-orm/pg-core';
+
+export const assetType = pgEnum('asset_type', [
+  'font',
+  'mockup3d',
+  'mockup2d',
+  'asset3d',
+  'graphic',
+  'motion',
+]);
+export const assetTier = pgEnum('asset_tier', ['free', 'pro']);
+export const bundleType = pgEnum('bundle_type', ['preset', 'custom']);
+
+/** Item marketplace (PRD §8.1). */
+export const assets = pgTable('assets', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  slug: text('slug').notNull().unique(),
+  title: text('title').notNull(),
+  description: text('description'),
+  type: assetType('type').notNull(),
+  tier: assetTier('tier').notNull().default('free'),
+  priceIdr: numeric('price_idr', { precision: 12, scale: 2 }).notNull().default('0'),
+  priceUsd: numeric('price_usd', { precision: 12, scale: 2 }).notNull().default('0'),
+  previews: jsonb('previews').$type<string[]>().notNull().default([]),
+  fileKey: text('file_key'),
+  glbFile: text('glb_file'),
+  uvMapInfo: jsonb('uv_map_info'),
+  popular: boolean('popular').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Koleksi tematik/preset (PRD §8.3). */
+export const bundles = pgTable('bundles', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  slug: text('slug').notNull().unique(),
+  title: text('title').notNull(),
+  description: text('description'),
+  type: bundleType('type').notNull().default('preset'),
+  previews: jsonb('previews').$type<string[]>().notNull().default([]),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Relasi many-to-many bundle <-> assets. */
+export const bundleItems = pgTable(
+  'bundle_items',
+  {
+    bundleId: uuid('bundle_id')
+      .notNull()
+      .references(() => bundles.id, { onDelete: 'cascade' }),
+    assetId: uuid('asset_id')
+      .notNull()
+      .references(() => assets.id, { onDelete: 'cascade' }),
+  },
+  (table) => [primaryKey({ columns: [table.bundleId, table.assetId] })],
+);
