@@ -1,10 +1,172 @@
 @import 'tailwindcss';
 
+/* Font self-host (DESIGN.md §3) */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
 /*
- * Design tokens via Tailwind v4 @theme.
- * Token sebenarnya diisi di milestone UI sesuai DESIGN.md.
- * Blok ini disiapkan sebagai placeholder.
+ * Design tokens Nesomn Studio (Tailwind v4 @theme).
+ * Sumber kebenaran: DESIGN.md §2-4. Jangan pakai nilai ad-hoc di komponen.
  */
 @theme {
-  /* Warna, tipografi, spacing, radius, shadow → diisi di milestone UI */
+  /* Core palette (DESIGN.md §2.1) */
+  --color-background: hsl(240 6% 5%);
+  --color-surface: hsl(240 5% 9%);
+  --color-surface-2: hsl(240 5% 12%);
+  --color-surface-3: hsl(240 4% 16%);
+  --color-border: hsl(240 4% 18%);
+  --color-border-strong: hsl(240 4% 26%);
+  --color-foreground: hsl(0 0% 98%);
+  --color-muted-foreground: hsl(240 4% 60%);
+  --color-faint-foreground: hsl(240 4% 40%);
+
+  /* Accent / brand (DESIGN.md §2.2) */
+  --color-accent: hsl(232 100% 62%);
+  --color-accent-hover: hsl(232 100% 67%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-accent-subtle: hsl(232 60% 16%);
+
+  /* Semantic (DESIGN.md §2.3) */
+  --color-success: hsl(142 71% 45%);
+  --color-warning: hsl(38 92% 50%);
+  --color-danger: hsl(0 84% 60%);
+  --color-info: hsl(199 89% 60%);
+
+  /* Tipografi (DESIGN.md §3) */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', monospace;
+
+  /* Radius (DESIGN.md §4.2) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Shadow / elevation (DESIGN.md §4.3) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 0 1px hsl(232 100% 62%), 0 0 24px rgba(59, 91, 255, 0.25);
+}
+
+/* Gradient & efek (DESIGN.md §2.4) sebagai CSS var global */
+:root {
+  --gradient-accent: linear-gradient(135deg, #3b5bff, #6e5bff);
+}
+
+/* Reset & dasar tema gelap */
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Helper utilities */
+.text-gradient-accent {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-gradient-accent {
+  background: var(--gradient-accent);
+}
+
+/* Glassmorphism hemat (DESIGN.md §2.4) untuk toolbar overlay */
+.glass {
+  background: rgba(20, 20, 22, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Surface glow halus di belakang elemen fokus (hero/kartu unggulan) */
+.surface-glow {
+  position: relative;
+}
+
+.surface-glow::before {
+  content: '';
+  position: absolute;
+  inset: -40% -10% auto;
+  height: 60%;
+  background: radial-gradient(
+    50% 50% at 50% 0%,
+    rgba(59, 91, 255, 0.12),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Shimmer skeleton (DESIGN.md §9) */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-2) 25%,
+    var(--color-surface-3) 37%,
+    var(--color-surface-2) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+/* Custom scrollbar tipis selaras tema */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+  background-clip: content-box;
+}
+
+/* Hormati prefers-reduced-motion (DESIGN.md §9-10) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

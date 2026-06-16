@@ -6,7 +6,7 @@ import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['**/dist/', '**/build/', '**/out/', '**/node_modules/'] },
+  { ignores: ['**/dist/**', '**/build/**', '**/out/**', '**/node_modules/**'] },
 
   // Base JS + TS rules for all workspaces
   js.configs.recommended,

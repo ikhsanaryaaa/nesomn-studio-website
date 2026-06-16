@@ -6,7 +6,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@shared/*": ["../packages/shared/src/*"]
+      "@shared/*": ["../packages/shared/src/*"],
+      "@nesomn/shared": ["../packages/shared/src/index.ts"]
     }
   },
   "include": ["src"]
