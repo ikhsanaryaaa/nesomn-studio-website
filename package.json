@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "packageManager": "bun@1.3.14",
-  "workspaces": ["client", "api", "worker", "packages/*"],
+  "workspaces": ["client", "admin", "api", "worker", "packages/*"],
   "scripts": {
     "dev": "bun --filter '*' dev",
     "build": "bun --filter '*' build",

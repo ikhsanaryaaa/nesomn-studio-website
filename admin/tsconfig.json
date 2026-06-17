@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["../packages/shared/src/*"],
+      "@nesomn/shared": ["../packages/shared/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}
