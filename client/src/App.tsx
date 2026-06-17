@@ -6,6 +6,9 @@ import { queryClient } from '@/lib/query';
 import HomePage from '@/pages/home';
 import PricingPage from '@/pages/pricing';
 import MarketplacePage from '@/pages/marketplace';
+import AssetDetailPage from '@/pages/asset-detail';
+import BundleBuilderPage from '@/pages/bundle-builder';
+import LibraryPage from '@/pages/library';
 import SceneEditorPage from '@/pages/scene-editor';
 import Editor3DPage from '@/pages/editor-3d';
 import AccountPage from '@/pages/account';
@@ -26,6 +29,9 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route path="pricing" element={<PricingPage />} />
           <Route path="marketplace" element={<MarketplacePage />} />
+          <Route path="marketplace/:slug" element={<AssetDetailPage />} />
+          <Route path="bundle-builder" element={<BundleBuilderPage />} />
+          <Route path="library" element={<LibraryPage />} />
           <Route path="editor/scene" element={<SceneEditorPage />} />
           <Route path="editor/3d" element={<Editor3DPage />} />
           <Route path="account" element={<AccountPage />} />
