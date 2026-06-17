@@ -75,6 +75,16 @@ services:
       retries: 3
       start_period: 10s
 
+  # ── Admin (Refine build + nginx, served internally at /admin) ──
+  admin:
+    build:
+      context: .
+      dockerfile: admin/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+
   # ── Client (Vite build + nginx) ──
   client:
     build:
