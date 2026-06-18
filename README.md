@@ -130,6 +130,36 @@ bun run lint         # lint lintas workspace
 
 ---
 
+## 🚢 Deployment (Produksi)
+
+> Semua service berjalan via Docker Compose. Pastikan `.env` terisi lengkap sebelum deploy.
+
+```bash
+# 1. Siapkan environment produksi
+cp .env.example .env
+#    Wajib diisi: DATABASE_URL, REDIS_URL, JWT_SECRET, ENCRYPTION_KEY
+#    Gateway: PAKASIR_API_KEY + PAKASIR_WEBHOOK_SECRET, STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET
+#    Storage: STORAGE_DRIVER=r2 + R2_* ; AI: KIE_AI_API_KEY
+
+# 2. Build & jalankan seluruh stack
+docker compose up --build -d
+
+# 3. Migrasi schema & seed data awal (plans, credit packs, admin)
+docker compose exec api bun run db:migrate
+docker compose exec api bun run db:seed
+
+# 4. Jalankan data retention (terjadwal, mis. cron harian)
+docker compose exec api bun run src/scripts/retention.ts
+```
+
+**Catatan penting:**
+- **Gateway pembayaran**: tanpa kredensial, sistem memakai `StubGateway` (simulasi). Isi env Pakasir/Stripe untuk mengaktifkan pembayaran nyata. Daftarkan URL webhook `POST /api/billing/webhook/:gateway` di dashboard gateway.
+- **Webhook diverifikasi server-side** (signature) sebelum order menjadi `paid`. Grant credit/lisensi/langganan bersifat idempoten.
+- **Rate limit** aktif pada endpoint sensitif. Untuk multi-instance, pindahkan store rate limit ke Redis.
+- **Retention**: data project dihapus 30 hari setelah langganan berakhir. Jadwalkan `src/scripts/retention.ts`.
+
+---
+
 ## 🗺️ Roadmap
 
 | | Milestone | Fokus |
