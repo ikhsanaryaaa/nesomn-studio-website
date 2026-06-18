@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@nesomn/shared": "workspace:*",
+    "@nesomn/api": "workspace:*",
+    "drizzle-orm": "^0.38.3",
     "bullmq": "^5.34.5"
   },
   "devDependencies": {

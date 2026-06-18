@@ -10,6 +10,11 @@ import type {
   ProjectSummaryDTO,
   SceneState,
   Scene3DState,
+  AiJobDTO,
+  AiModelDTO,
+  SceneGenInput,
+  MotionGenInput,
+  AiTab,
 } from '@nesomn/shared';
 
 /**
@@ -142,5 +147,28 @@ export const api = {
     /** Hapus project. */
     remove: (id: string) =>
       request<{ ok: true }>(`/projects/${id}`, { method: 'DELETE' }),
+  },
+
+  // ── AI System (butuh auth) ──
+  ai: {
+    /** Daftar model AI yang boleh diakses user (per tab). */
+    models: (tab?: AiTab) =>
+      request<AiModelDTO[]>(`/ai/models${tab ? `?tab=${tab}` : ''}`),
+    /** Saldo credit user. */
+    credit: () => request<{ balance: number }>('/ai/credit'),
+    /** Buat job AI (Scene atau Motion). */
+    createJob: (payload: {
+      providerId: string;
+      tab: AiTab;
+      input: SceneGenInput | MotionGenInput;
+    }) =>
+      request<AiJobDTO>('/ai/jobs', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+    /** Status 1 job (untuk polling). */
+    getJob: (id: string) => request<AiJobDTO>(`/ai/jobs/${id}`),
+    /** Riwayat job user. */
+    listJobs: () => request<AiJobDTO[]>('/ai/jobs'),
   },
 };

@@ -188,3 +188,75 @@ export type Scene3DState = {
   decals: Decal3D[];
 };
 
+// ── AI System (M7) ──
+
+/** Status siklus hidup job AI. */
+export type AiJobStatus = 'pending' | 'processing' | 'done' | 'failed';
+
+/** Tab AI di editor. */
+export type AiTab = 'scene' | 'motion';
+
+/** Jenis output generasi AI. */
+export type AiKind = 'image' | 'video';
+
+/** Rasio aspek output yang didukung. */
+export type AiAspect = '1:1' | '4:3' | '3:4' | '16:9' | '9:16';
+
+/** Input generasi Panel Scene (image-to-image). */
+export type SceneGenInput = {
+  prompt: string;
+  aspect: AiAspect;
+  /** Gambar dasar (data URL atau URL) yang ditransformasi. */
+  baseImage?: string;
+  /** Gambar referensi tambahan (opsional). */
+  referenceImages?: string[];
+};
+
+/** Arah pergerakan kamera untuk video (trajectory). */
+export type MotionTrajectory = {
+  /** Horizontal: -1 kiri .. 1 kanan. */
+  h: number;
+  /** Vertical: -1 bawah .. 1 atas. */
+  v: number;
+  /** Zoom: -1 menjauh .. 1 mendekat. */
+  zoom: number;
+};
+
+/** Input generasi Panel Motion (video start+end keyframe). */
+export type MotionGenInput = {
+  /** Frame awal (data URL atau URL). */
+  startFrame: string;
+  /** Frame akhir opsional. Bila model tidak mendukung, adapter fallback. */
+  endFrame?: string;
+  trajectory: MotionTrajectory;
+  /** Durasi video dalam detik. */
+  durationSec: number;
+  aspect: AiAspect;
+  prompt: string;
+};
+
+/** Gabungan input job AI. */
+export type AiJobInput = SceneGenInput | MotionGenInput;
+
+/** Job AI yang aman dikirim ke client (tanpa data sensitif provider). */
+export type AiJobDTO = {
+  id: string;
+  kind: AiKind;
+  tab: AiTab;
+  status: AiJobStatus;
+  resultUrl: string | null;
+  error: string | null;
+  creditCost: number;
+  createdAt: string | Date;
+};
+
+/** Model AI yang boleh diakses user (tanpa apiKey/baseUrl). */
+export type AiModelDTO = {
+  id: string;
+  key: string;
+  modelName: string;
+  tab: AiTab;
+  kind: AiKind;
+  creditCost: number;
+};
+
