@@ -1,5 +1,5 @@
 import { db, sql } from './client.ts';
-import { plans, creditPacks, users, type EditorAccess } from './schema/index.ts';
+import { plans, creditPacks, users, assets, type EditorAccess } from './schema/index.ts';
 import { hashPassword } from '../lib/password.ts';
 
 /**
@@ -186,10 +186,78 @@ async function seedAdmin() {
   console.log(`Seed admin: ${email} diproses.`);
 }
 
+async function seedAssets() {
+  const samples = [
+    {
+      slug: 'tshirt-mockup-front',
+      title: 'T-Shirt Mockup Front',
+      description: 'Mockup kaos tampak depan, siap untuk desain sablon.',
+      type: 'mockup2d' as const,
+      tier: 'free' as const,
+      priceIdr: '0',
+      priceUsd: '0',
+      previews: ['https://picsum.photos/seed/tshirt/600/750'],
+      fileKey: 'samples/tshirt-front.png',
+      popular: true,
+    },
+    {
+      slug: 'hoodie-3d-mockup',
+      title: 'Hoodie 3D Mockup',
+      description: 'Mockup hoodie 3D dengan UV map untuk kustomisasi warna.',
+      type: 'mockup3d' as const,
+      tier: 'pro' as const,
+      priceIdr: '150000',
+      priceUsd: '10',
+      previews: ['https://picsum.photos/seed/hoodie/600/750'],
+      fileKey: 'samples/hoodie.glb',
+      popular: true,
+    },
+    {
+      slug: 'grotesk-display-font',
+      title: 'Grotesk Display Font',
+      description: 'Font display modern untuk header dan poster.',
+      type: 'font' as const,
+      tier: 'pro' as const,
+      priceIdr: '99000',
+      priceUsd: '7',
+      previews: ['https://picsum.photos/seed/font/600/750'],
+      fileKey: 'samples/grotesk.zip',
+      popular: false,
+    },
+    {
+      slug: 'gradient-poster-pack',
+      title: 'Gradient Poster Pack',
+      description: 'Kumpulan latar gradient siap pakai untuk poster sosial media.',
+      type: 'graphic' as const,
+      tier: 'free' as const,
+      priceIdr: '0',
+      priceUsd: '0',
+      previews: ['https://picsum.photos/seed/poster/600/750'],
+      fileKey: 'samples/gradients.zip',
+      popular: false,
+    },
+    {
+      slug: 'loop-motion-pack',
+      title: 'Loop Motion Pack',
+      description: 'Animasi loop seamless untuk intro dan transisi.',
+      type: 'motion' as const,
+      tier: 'pro' as const,
+      priceIdr: '199000',
+      priceUsd: '13',
+      previews: ['https://picsum.photos/seed/motion/600/750'],
+      fileKey: 'samples/loops.zip',
+      popular: true,
+    },
+  ];
+  await db.insert(assets).values(samples).onConflictDoNothing({ target: assets.slug });
+  console.log(`Seed assets: ${samples.length} baris diproses.`);
+}
+
 async function main() {
   await seedPlans();
   await seedCreditPacks();
   await seedAdmin();
+  await seedAssets();
   await sql.end();
   console.log('Seed selesai.');
 }

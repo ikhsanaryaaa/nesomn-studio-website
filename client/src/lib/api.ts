@@ -1,4 +1,12 @@
-import type { UserDTO, SessionDTO, ApiError } from '@nesomn/shared';
+import type {
+  UserDTO,
+  SessionDTO,
+  ApiError,
+  AssetDTO,
+  BundleDTO,
+  BundlePriceDTO,
+  LibraryItemDTO,
+} from '@nesomn/shared';
 
 /**
  * Klien API tipis berbasis fetch dengan kredensial cookie httpOnly.
@@ -58,4 +66,50 @@ export const api = {
 
   /** Logout: hapus sesi aktif & bersihkan cookie. */
   logout: () => request<{ ok: true }>('/auth/logout', { method: 'POST' }),
+
+  // ── Catalog (publik) ──
+  /** Daftar aset katalog dengan filter & search opsional. */
+  catalogAssets: (params?: {
+    type?: string;
+    tier?: string;
+    popular?: string;
+    q?: string;
+  }) => {
+    const qs = new URLSearchParams(
+      Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
+    ).toString();
+    return request<AssetDTO[]>(`/catalog/assets${qs ? `?${qs}` : ''}`);
+  },
+
+  /** Detail aset by slug. */
+  catalogAsset: (slug: string) => request<AssetDTO>(`/catalog/assets/${slug}`),
+
+  /** Daftar bundle preset. */
+  catalogBundles: () => request<BundleDTO[]>('/catalog/bundles'),
+
+  // ── Store (butuh auth) ──
+  /** Hitung harga bundle dari daftar asset ID (server-side). */
+  bundlePrice: (assetIds: string[]) =>
+    request<BundlePriceDTO>('/store/bundle/price', {
+      method: 'POST',
+      body: JSON.stringify({ assetIds }),
+    }),
+
+  /** Claim aset gratis: grant license instan. */
+  claimAsset: (id: string) =>
+    request<{ id: string }>(`/store/assets/${id}/claim`, { method: 'POST' }),
+
+  /** Buat order pending untuk item berbayar (settle di M8). */
+  checkout: (assetIds: string[]) =>
+    request<{ note: string }>('/store/checkout', {
+      method: 'POST',
+      body: JSON.stringify({ assetIds }),
+    }),
+
+  /** Asset Library: aset yang dimiliki user. */
+  library: () => request<LibraryItemDTO[]>('/store/library'),
+
+  /** Signed URL untuk download aset berlisensi. */
+  downloadUrl: (id: string) =>
+    request<{ url: string }>(`/store/assets/${id}/download`),
 };

@@ -10,7 +10,20 @@ import {
   useForm,
 } from '@refinedev/antd';
 import { useShow } from '@refinedev/core';
-import { Table, Space, Tag, Form, Input, Select, Switch, Typography } from 'antd';
+import {
+  Table,
+  Space,
+  Tag,
+  Form,
+  Input,
+  Select,
+  Switch,
+  Typography,
+  Upload,
+  Button,
+  message,
+} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 const ASSET_TYPES = ['font', 'mockup3d', 'mockup2d', 'asset3d', 'graphic', 'motion'];
 
@@ -47,7 +60,9 @@ export const AssetList = () => {
   );
 };
 
-const AssetFields = () => (
+const AssetFields = () => {
+  const form = Form.useFormInstance();
+  return (
   <>
     <Form.Item label="Title" name="title" rules={[{ required: true }]}>
       <Input />
@@ -75,11 +90,41 @@ const AssetFields = () => (
     <Form.Item label="Price USD" name="priceUsd" initialValue="0">
       <Input />
     </Form.Item>
+    <Form.Item label="Preview Image" name="previews" valuePropName="fileList" getValueFromEvent={() => undefined} help="Upload gambar preview; URL preview otomatis terisi.">
+      <Upload
+        accept="image/*"
+        maxCount={1}
+        showUploadList={false}
+        customRequest={async ({ file, onSuccess, onError }) => {
+          try {
+            const fd = new FormData();
+            fd.append('file', file as File);
+            const res = await fetch('/api/admin/uploads', {
+              method: 'POST',
+              credentials: 'include',
+              body: fd,
+            });
+            if (!res.ok) throw new Error('upload gagal');
+            const data = await res.json();
+            form.setFieldValue('previews', [data.previewUrl]);
+            form.setFieldValue('fileKey', data.fileKey);
+            message.success('Upload berhasil');
+            onSuccess?.(data);
+          } catch (err) {
+            message.error('Upload gagal');
+            onError?.(err as Error);
+          }
+        }}
+      >
+        <Button icon={<UploadOutlined />}>Upload preview</Button>
+      </Upload>
+    </Form.Item>
     <Form.Item label="Popular" name="popular" valuePropName="checked" initialValue={false}>
       <Switch />
     </Form.Item>
   </>
-);
+  );
+};
 
 export const AssetCreate = () => {
   const { formProps, saveButtonProps } = useForm();

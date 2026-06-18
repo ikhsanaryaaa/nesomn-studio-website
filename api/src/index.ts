@@ -5,6 +5,9 @@ import { errorHandler } from './middleware/error.ts';
 import { authRoutes } from './modules/auth/routes.ts';
 import { userRoutes } from './modules/user/routes.ts';
 import { adminRoutes } from './modules/admin/index.ts';
+import { catalogRoutes } from './modules/catalog/routes.ts';
+import { storeRoutes } from './modules/store/routes.ts';
+import { storageRoutes } from './modules/storage/routes.ts';
 
 const PORT = Number(process.env.PORT) || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
@@ -27,7 +30,10 @@ export const app = new Elysia()
   })
   .use(authRoutes)
   .use(userRoutes)
-  .use(adminRoutes);
+  .use(adminRoutes)
+  .use(catalogRoutes)
+  .use(storeRoutes)
+  .use(storageRoutes);
 
 // Jalankan server hanya saat file dieksekusi langsung (bukan saat di-import test).
 if (import.meta.main) {

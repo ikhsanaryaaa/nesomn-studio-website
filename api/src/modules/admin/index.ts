@@ -10,6 +10,7 @@ import { subscriptionAdminRoutes } from './subscriptions.routes.ts';
 import { creditLedgerAdminRoutes } from './credit-ledger.routes.ts';
 import { sessionAdminRoutes } from './sessions.routes.ts';
 import { auditLogAdminRoutes } from './audit-logs.routes.ts';
+import { uploadAdminRoutes } from './uploads.routes.ts';
 
 /**
  * Seluruh endpoint admin di bawah prefix /admin dan guard requireAdmin.
@@ -30,5 +31,6 @@ export const adminRoutes = new Elysia({ prefix: '/admin' })
       .use(subscriptionAdminRoutes)
       .use(creditLedgerAdminRoutes)
       .use(sessionAdminRoutes)
-      .use(auditLogAdminRoutes),
+      .use(auditLogAdminRoutes)
+      .use(uploadAdminRoutes),
   );
