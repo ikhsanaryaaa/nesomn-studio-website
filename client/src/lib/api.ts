@@ -9,6 +9,7 @@ import type {
   ProjectDTO,
   ProjectSummaryDTO,
   SceneState,
+  Scene3DState,
 } from '@nesomn/shared';
 
 /**
@@ -124,7 +125,7 @@ export const api = {
     /** Ambil 1 project lengkap (dengan state). */
     get: (id: string) => request<ProjectDTO>(`/projects/${id}`),
     /** Buat project baru. */
-    create: (payload: { title: string; kind: string; state?: SceneState }) =>
+    create: (payload: { title: string; kind: string; state?: SceneState | Scene3DState }) =>
       request<ProjectDTO>('/projects', {
         method: 'POST',
         body: JSON.stringify(payload),
@@ -132,7 +133,7 @@ export const api = {
     /** Update title/state/thumbnail. */
     update: (
       id: string,
-      payload: { title?: string; state?: SceneState; thumbnailKey?: string | null },
+      payload: { title?: string; state?: SceneState | Scene3DState; thumbnailKey?: string | null },
     ) =>
       request<ProjectDTO>(`/projects/${id}`, {
         method: 'PUT',
