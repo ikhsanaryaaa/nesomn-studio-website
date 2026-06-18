@@ -135,7 +135,7 @@ export type ProjectDTO = {
   id: string;
   title: string;
   kind: ProjectKind;
-  state: SceneState | Record<string, unknown>;
+  state: SceneState | Scene3DState | Record<string, unknown>;
   thumbnailKey: string | null;
   createdAt: string | Date;
   updatedAt: string | Date;
@@ -148,5 +148,43 @@ export type ProjectSummaryDTO = {
   kind: ProjectKind;
   thumbnailKey: string | null;
   updatedAt: string | Date;
+};
+
+// ── 3D Editor (M6) ──
+
+/** Preset sudut kamera untuk viewport 3D. */
+export type CameraPreset = 'front' | 'threeQuarter' | 'side' | 'top';
+
+/**
+ * Decal (desain yang ditempel) pada permukaan model 3D mengikuti UV.
+ * Posisi/rotasi/skala dalam ruang lokal model; proyeksi dilakukan oleh
+ * komponen <Decal> drei saat render.
+ */
+export type Decal3D = {
+  id: string;
+  /** Sumber gambar (data URL atau URL aset Library). */
+  src: string;
+  /** Posisi proyeksi decal [x, y, z] di ruang lokal model. */
+  position: [number, number, number];
+  /** Rotasi euler decal [x, y, z] (radian). */
+  rotation: [number, number, number];
+  /** Skala seragam decal. */
+  scale: number;
+};
+
+/** State editor 3D lengkap, disimpan sebagai JSON di projects.state (kind scene3d). */
+export type Scene3DState = {
+  /** Kunci/identitas model GLB yang dimuat (mis. 'mug'). */
+  modelKey: string;
+  /** Warna latar viewport (hex). */
+  background: string;
+  /** Warna material PBR objek (hex). */
+  materialColor: string;
+  /** Intensitas grain effect 0-100. */
+  grain: number;
+  /** Preset sudut kamera aktif. */
+  camera: CameraPreset;
+  /** Daftar decal yang ditempel pada model. */
+  decals: Decal3D[];
 };
 
