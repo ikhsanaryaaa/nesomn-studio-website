@@ -12,6 +12,8 @@ import { SceneCanvas } from '@/components/editor/scene-canvas';
 import { EditorToolbar } from '@/components/editor/editor-toolbar';
 import { AddDesignDialog } from '@/components/editor/add-design-dialog';
 import { ColorPanel } from '@/components/editor/color-panel';
+import { ScenePanel } from '@/components/ai/scene-panel';
+import { MotionPanel } from '@/components/ai/motion-panel';
 import { useSceneEditor } from '@/stores/scene-editor-store';
 import { exportStage, type ExportFormat } from '@/lib/export-image';
 import { api, ApiRequestError } from '@/lib/api';
@@ -27,7 +29,7 @@ export default function SceneEditorPage() {
   const projectIdParam = searchParams.get('project');
 
   const stageRef = useRef<Konva.Stage | null>(null);
-  const [tab, setTab] = useState<'design' | 'colour'>('design');
+  const [tab, setTab] = useState<'design' | 'colour' | 'ai-scene' | 'ai-motion'>('design');
   const [addOpen, setAddOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [scale, setScale] = useState(1);
@@ -36,6 +38,7 @@ export default function SceneEditorPage() {
   const projectId = useSceneEditor((s) => s.projectId);
   const setTitle = useSceneEditor((s) => s.setTitle);
   const addText = useSceneEditor((s) => s.addText);
+  const addImage = useSceneEditor((s) => s.addImage);
   const loadState = useSceneEditor((s) => s.loadState);
   const toState = useSceneEditor((s) => s.toState);
   const markSaved = useSceneEditor((s) => s.markSaved);
@@ -83,6 +86,20 @@ export default function SceneEditorPage() {
     toast({ title: 'Export dimulai', description: `Mengunduh ${format.toUpperCase()} (maks 1080p).` });
   }
 
+  // Tarik hasil image AI ke canvas: muat untuk ambil dimensi natural dulu.
+  function applyAiImage(url: string) {
+    const img = new window.Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      addImage(url, img.naturalWidth, img.naturalHeight);
+      setTab('design');
+      toast({ title: 'Hasil ditambahkan', description: 'Image AI masuk ke canvas.' });
+    };
+    img.onerror = () =>
+      toast({ title: 'Gagal memuat hasil', description: 'Sumber gambar tidak valid.', variant: 'danger' });
+    img.src = url;
+  }
+
   async function handleSave() {
     setSaving(true);
     try {
@@ -112,10 +129,16 @@ export default function SceneEditorPage() {
       <Topbar
         title="Scene Editor"
         left={
-          <Tabs value={tab} onValueChange={(v) => setTab(v as 'design' | 'colour')} className="ml-4">
+          <Tabs
+            value={tab}
+            onValueChange={(v) => setTab(v as 'design' | 'colour' | 'ai-scene' | 'ai-motion')}
+            className="ml-4"
+          >
             <TabsList>
               <TabsTrigger value="design">Design</TabsTrigger>
               <TabsTrigger value="colour">Colour</TabsTrigger>
+              <TabsTrigger value="ai-scene">AI Scene</TabsTrigger>
+              <TabsTrigger value="ai-motion">AI Motion</TabsTrigger>
             </TabsList>
           </Tabs>
         }
@@ -131,7 +154,7 @@ export default function SceneEditorPage() {
         </div>
 
         {/* Panel kanan */}
-        <aside className="flex w-80 shrink-0 flex-col border-l border-border bg-surface">
+        <aside className="flex w-80 shrink-0 flex-col overflow-y-auto border-l border-border bg-surface">
           <div className="border-b border-border p-4">
             <label className="mb-1 block text-xs font-medium text-muted-foreground">
               Nama project
@@ -139,7 +162,7 @@ export default function SceneEditorPage() {
             <Input value={title} onChange={(e) => setTitle(e.target.value)} id="project-title" />
           </div>
 
-          {tab === 'design' ? (
+          {tab === 'design' && (
             <div className="flex flex-col gap-2 p-4">
               <Button id="add-design" variant="secondary" onClick={() => setAddOpen(true)}>
                 <Plus className="size-4" />
@@ -150,9 +173,10 @@ export default function SceneEditorPage() {
                 Add Text
               </Button>
             </div>
-          ) : (
-            <ColorPanel />
           )}
+          {tab === 'colour' && <ColorPanel />}
+          {tab === 'ai-scene' && <ScenePanel onApplyResult={applyAiImage} />}
+          {tab === 'ai-motion' && <MotionPanel />}
         </aside>
       </div>
 

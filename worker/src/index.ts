@@ -1,4 +1,5 @@
 import { Queue, Worker } from 'bullmq';
+import { processJob } from './process-job.ts';
 
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
@@ -13,16 +14,21 @@ const connection = {
 
 const QUEUE_NAME = 'ai-jobs';
 
-// Placeholder queue — logika job AI nyata ditambahkan pada milestone AI.
+// Queue dipakai juga oleh API (producer). Worker mengonsumsi & memproses.
 export const aiQueue = new Queue(QUEUE_NAME, { connection });
 
 const worker = new Worker(
   QUEUE_NAME,
   async (job) => {
-    // Belum memproses logika nyata; sekadar log untuk membuktikan koneksi.
-    console.log(`📥 received job ${job.id} (${job.name}) — no-op for now`);
+    const { jobId } = job.data as { jobId: string };
+    console.log(`📥 memproses job ${jobId}`);
+    const result = await processJob(jobId);
+    console.log(`✔ job ${jobId} selesai: ${result.status}`);
+    return result;
   },
-  { connection },
+  // Concurrency 2: beberapa user dapat diproses paralel; 1 job/user
+  // ditegakkan di API. Priority (Pro > Free) diatur saat enqueue.
+  { connection, concurrency: 2 },
 );
 
 worker.on('ready', () => {
