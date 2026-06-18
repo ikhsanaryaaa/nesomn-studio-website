@@ -11,6 +11,7 @@ import AssetDetailPage from '@/pages/asset-detail';
 import BundleBuilderPage from '@/pages/bundle-builder';
 import LibraryPage from '@/pages/library';
 import AccountPage from '@/pages/account';
+import CheckoutPage from '@/pages/checkout';
 import NotFoundPage from '@/pages/not-found';
 
 // Editor berat (Konva/R3F) di-lazy-load agar tidak masuk bundle prerender publik.
@@ -70,6 +71,7 @@ export default function App() {
             }
           />
           <Route path="account" element={<AccountPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

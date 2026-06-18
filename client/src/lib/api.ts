@@ -15,6 +15,13 @@ import type {
   SceneGenInput,
   MotionGenInput,
   AiTab,
+  PlanDTO,
+  CreditPackDTO,
+  OrderDTO,
+  SubscriptionDTO,
+  CheckoutInput,
+  CheckoutResult,
+  FeatureAccess,
 } from '@nesomn/shared';
 
 /**
@@ -171,4 +178,31 @@ export const api = {
     /** Riwayat job user. */
     listJobs: () => request<AiJobDTO[]>('/ai/jobs'),
   },
+
+  // ── Billing & Subscription ──
+  billing: {
+    /** Daftar plan (publik). */
+    plans: () => request<PlanDTO[]>('/billing/plans'),
+    /** Daftar credit pack aktif (publik). */
+    creditPacks: () => request<CreditPackDTO[]>('/billing/credit-packs'),
+    /** Buat order + checkout URL. */
+    checkout: (payload: CheckoutInput) =>
+      request<CheckoutResult>('/billing/checkout', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }),
+    /** Simulasi pembayaran (gateway stub, dev). */
+    devPay: (orderId: string) =>
+      request<{ ok: boolean }>(`/billing/dev/pay/${orderId}`, { method: 'POST' }),
+    /** Riwayat order user. */
+    history: () => request<OrderDTO[]>('/billing/history'),
+    /** Langganan aktif user. */
+    subscription: () => request<SubscriptionDTO | null>('/billing/subscription'),
+    /** Batalkan langganan aktif. */
+    cancel: () =>
+      request<SubscriptionDTO>('/billing/subscription/cancel', { method: 'POST' }),
+  },
+
+  /** Hak akses fitur user (dari plan aktif). */
+  access: () => request<FeatureAccess>('/me/access'),
 };

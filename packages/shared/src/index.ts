@@ -260,3 +260,103 @@ export type AiModelDTO = {
   creditCost: number;
 };
 
+// ── Billing & Subscription (M8) ──
+
+/** Gateway pembayaran yang didukung. */
+export type Gateway = 'pakasir' | 'stripe' | 'stub';
+
+/** Segmen & siklus plan. */
+export type PlanSegment = 'individual' | 'team' | 'enterprise';
+export type BillingCycle = 'monthly' | 'yearly';
+
+/** Hak akses editor per plan (cermin EditorAccess di server). */
+export type FeatureAccess = {
+  scene2d: boolean;
+  editor3d: boolean;
+  proTemplates: boolean;
+  aiVideo: boolean;
+};
+
+/** Plan langganan untuk halaman pricing (dari DB). */
+export type PlanDTO = {
+  id: string;
+  code: string;
+  name: string;
+  segment: PlanSegment;
+  cycle: BillingCycle;
+  priceIdr: string;
+  priceUsd: string;
+  creditQuota: number;
+  maxConcurrentSessions: number | null;
+  editorAccess: FeatureAccess;
+  commercial: boolean;
+  isEnterprise: boolean;
+};
+
+/** Pack top-up credit. */
+export type CreditPackDTO = {
+  id: string;
+  code: string;
+  name: string;
+  credits: number;
+  priceIdr: string;
+  priceUsd: string;
+};
+
+/** Status & jenis order. */
+export type OrderType = 'asset' | 'bundle' | 'topup' | 'subscription';
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+
+/** Order pembelian milik user. */
+export type OrderDTO = {
+  id: string;
+  type: OrderType;
+  status: OrderStatus;
+  amountIdr: string;
+  amountUsd: string;
+  currency: string;
+  gateway: string | null;
+  gatewayRef: string | null;
+  createdAt: string | Date;
+};
+
+/** Langganan aktif/historis milik user. */
+export type SubscriptionDTO = {
+  id: string;
+  planId: string;
+  status: 'active' | 'canceled' | 'expired' | 'pending';
+  cycle: BillingCycle;
+  segment: PlanSegment;
+  currentPeriodStart: string | Date | null;
+  currentPeriodEnd: string | Date | null;
+};
+
+/** Item riwayat tagihan untuk dashboard. */
+export type BillingHistoryItem = {
+  id: string;
+  type: OrderType;
+  status: OrderStatus;
+  amountIdr: string;
+  currency: string;
+  createdAt: string | Date;
+};
+
+/** Input checkout dari client (harga dihitung ulang server-side). */
+export type CheckoutInput = {
+  type: OrderType;
+  gateway: Gateway;
+  /** planId untuk subscription. */
+  planId?: string;
+  /** creditPackId untuk topup. */
+  creditPackId?: string;
+  /** assetIds untuk asset/bundle. */
+  assetIds?: string[];
+};
+
+/** Respons checkout: order dibuat + URL pembayaran. */
+export type CheckoutResult = {
+  order: OrderDTO;
+  /** URL redirect ke gateway (atau halaman simulasi stub). */
+  checkoutUrl: string;
+};
+

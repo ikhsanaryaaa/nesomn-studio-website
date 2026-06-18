@@ -4,11 +4,13 @@ import { db } from '../../db/client.ts';
 import { sessions } from '../../db/schema/index.ts';
 import { AppError } from '../../middleware/error.ts';
 import { authPlugin } from '../../middleware/auth.ts';
+import { getFeatureAccess } from '../../lib/feature-access.ts';
 
 /** Endpoint profil & manajemen sesi milik user (semua butuh auth). */
 export const userRoutes = new Elysia()
   .use(authPlugin)
   .get('/me', ({ user }) => user, { requireAuth: true })
+  .get('/me/access', async ({ user }) => getFeatureAccess(user!.id), { requireAuth: true })
   .get(
     '/sessions',
     async ({ user }) => {
