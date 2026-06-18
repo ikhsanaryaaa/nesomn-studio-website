@@ -8,6 +8,7 @@ import { adminRoutes } from './modules/admin/index.ts';
 import { catalogRoutes } from './modules/catalog/routes.ts';
 import { storeRoutes } from './modules/store/routes.ts';
 import { storageRoutes } from './modules/storage/routes.ts';
+import { projectRoutes } from './modules/project/routes.ts';
 
 const PORT = Number(process.env.PORT) || 3000;
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
@@ -33,7 +34,8 @@ export const app = new Elysia()
   .use(adminRoutes)
   .use(catalogRoutes)
   .use(storeRoutes)
-  .use(storageRoutes);
+  .use(storageRoutes)
+  .use(projectRoutes);
 
 // Jalankan server hanya saat file dieksekusi langsung (bukan saat di-import test).
 if (import.meta.main) {
