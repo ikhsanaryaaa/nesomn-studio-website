@@ -93,3 +93,60 @@ export type LibraryItemDTO = {
   previews: string[];
 };
 
+// ── Project / Scene Editor (M5) ──
+
+/** Jenis project editor. */
+export type ProjectKind = 'scene2d' | 'scene3d';
+
+/** Satu objek di canvas 2D (image atau text) beserta transform-nya. */
+export type SceneObject = {
+  id: string;
+  type: 'image' | 'text';
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+  opacity: number;
+  /** Warna isi: untuk text = warna huruf, untuk image = tint opsional (tidak dipakai default). */
+  fill?: string;
+  /** Sumber gambar (data URL atau URL aset) untuk type image. */
+  src?: string;
+  /** Konten teks untuk type text. */
+  text?: string;
+  fontSize?: number;
+};
+
+/** Properti canvas scene 2D. */
+export type SceneCanvas = {
+  width: number;
+  height: number;
+  background: string;
+};
+
+/** State editor 2D lengkap, disimpan sebagai JSON di projects.state. */
+export type SceneState = {
+  canvas: SceneCanvas;
+  objects: SceneObject[];
+};
+
+/** Project lengkap milik user (termasuk state editor). */
+export type ProjectDTO = {
+  id: string;
+  title: string;
+  kind: ProjectKind;
+  state: SceneState | Record<string, unknown>;
+  thumbnailKey: string | null;
+  createdAt: string | Date;
+  updatedAt: string | Date;
+};
+
+/** Ringkasan project untuk daftar (tanpa state berat). */
+export type ProjectSummaryDTO = {
+  id: string;
+  title: string;
+  kind: ProjectKind;
+  thumbnailKey: string | null;
+  updatedAt: string | Date;
+};
+
