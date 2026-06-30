@@ -18,6 +18,7 @@ const DEFAULT_STATE: Scene3DState = {
 
 type Scene3DStoreState = {
   modelKey: string;
+  modelUrl: string | null;
   background: string;
   materialColor: string;
   grain: number;
@@ -32,6 +33,7 @@ type Scene3DStoreState = {
   setBackground: (color: string) => void;
   setGrain: (value: number) => void;
   setCamera: (preset: CameraPreset) => void;
+  setModelUrl: (url: string | null) => void;
   addDecal: (src: string) => void;
   updateDecal: (id: string, patch: Partial<Decal3D>) => void;
   removeDecal: (id: string) => void;
@@ -49,6 +51,7 @@ function uid(): string {
 
 export const useScene3DEditor = create<Scene3DStoreState>((set, get) => ({
   ...DEFAULT_STATE,
+  modelUrl: null,
   selectedDecalId: null,
   dirty: false,
   projectId: null,
@@ -61,6 +64,8 @@ export const useScene3DEditor = create<Scene3DStoreState>((set, get) => ({
   setGrain: (value) => set({ grain: Math.max(0, Math.min(100, value)), dirty: true }),
 
   setCamera: (preset) => set({ camera: preset, dirty: true }),
+
+  setModelUrl: (url) => set({ modelUrl: url }),
 
   addDecal: (src) => {
     const decal: Decal3D = {

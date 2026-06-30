@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, useParams } from 'react-router';
 import type { WebGLRenderer } from 'three';
 import { Camera, Video, Save } from 'lucide-react';
 import { Topbar } from '@/components/shell/topbar';
@@ -31,6 +31,7 @@ export default function Editor3DPage() {
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const projectIdParam = searchParams.get('project');
+  const { slug } = useParams();
 
   const glRef = useRef<WebGLRenderer | null>(null);
   const [tab, setTab] = useState<'design' | 'colour'>('design');
@@ -46,6 +47,7 @@ export default function Editor3DPage() {
   const toState = useScene3DEditor((s) => s.toState);
   const markSaved = useScene3DEditor((s) => s.markSaved);
   const reset = useScene3DEditor((s) => s.reset);
+  const setModelUrl = useScene3DEditor((s) => s.setModelUrl);
 
   // Muat project 3D dari query, atau reset scene baru.
   useEffect(() => {
@@ -68,6 +70,27 @@ export default function Editor3DPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdParam]);
+
+  // Muat GLB dari katalog bila dibuka via /editor/3d/:slug.
+  useEffect(() => {
+    if (!slug) return;
+    let active = true;
+    api
+      .editorAsset(slug)
+      .then((asset) => {
+        if (!active) return;
+        if (asset.modelUrl) setModelUrl(asset.modelUrl);
+        setTitle(asset.title);
+      })
+      .catch((err) => {
+        const msg = err instanceof ApiRequestError ? err.message : 'Gagal memuat model 3D.';
+        toast({ title: 'Tidak dapat memuat model', description: msg, variant: 'danger' });
+      });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
   function handleExportImage(format: ExportImageFormat) {
     if (!glRef.current) return;

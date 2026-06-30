@@ -55,7 +55,23 @@ export default function App() {
             }
           />
           <Route
+            path="editor/scene/:slug"
+            element={
+              <Suspense fallback={<EditorFallback />}>
+                <SceneEditorPage />
+              </Suspense>
+            }
+          />
+          <Route
             path="editor/3d"
+            element={
+              <Suspense fallback={<EditorFallback />}>
+                <Editor3DPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="editor/3d/:slug"
             element={
               <Suspense fallback={<EditorFallback />}>
                 <Editor3DPage />

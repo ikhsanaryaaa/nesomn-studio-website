@@ -100,6 +100,16 @@ export const api = {
   /** Detail aset by slug. */
   catalogAsset: (slug: string) => request<AssetDTO>(`/catalog/assets/${slug}`),
 
+  /** Data aset untuk dimuat ke editor (signed URL base mockup). */
+  editorAsset: (slug: string) =>
+    request<{
+      slug: string;
+      title: string;
+      type: string;
+      previews: string[];
+      modelUrl: string | null;
+    }>(`/catalog/editor-asset/${slug}`),
+
   /** Daftar bundle preset. */
   catalogBundles: () => request<BundleDTO[]>('/catalog/bundles'),
 
