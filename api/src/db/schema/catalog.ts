@@ -31,6 +31,12 @@ export const assetType = pgEnum('asset_type', [
 export const assetTier = pgEnum('asset_tier', ['free', 'pro']);
 export const bundleType = pgEnum('bundle_type', ['preset', 'custom']);
 
+/** Editor tujuan aset: menentukan domain akses (subscription 3D vs Scene). */
+export const editorType = pgEnum('editor_type', ['scene_editor', 'product_3d_editor']);
+
+/** Status publikasi aset. `draft` disembunyikan dari katalog publik. */
+export const assetStatus = pgEnum('asset_status', ['draft', 'published', 'archived']);
+
 /** Item marketplace (PRD §8.1). */
 export const assets = pgTable(
   'assets',
@@ -41,6 +47,17 @@ export const assets = pgTable(
     description: text('description'),
     type: assetType('type').notNull(),
     tier: assetTier('tier').notNull().default('free'),
+    // Domain akses aset (menentukan subscription mana yang boleh memakainya).
+    editorType: editorType('editor_type').notNull().default('scene_editor'),
+    // Kategori bebas untuk pengelompokan Library (mis. 'mockup', 'font').
+    category: text('category'),
+    tags: jsonb('tags').$type<string[]>().notNull().default([]),
+    version: text('version').notNull().default('1.0.0'),
+    status: assetStatus('status').notNull().default('draft'),
+    // Kepemilikan: bisa dibeli di marketplace dan/atau termasuk aset subscription.
+    isMarketplace: boolean('is_marketplace').notNull().default(false),
+    isSubscriptionAsset: boolean('is_subscription_asset').notNull().default(true),
+    thumbnail: text('thumbnail'),
     priceIdr: numeric('price_idr', { precision: 12, scale: 2 }).notNull().default('0'),
     priceUsd: numeric('price_usd', { precision: 12, scale: 2 }).notNull().default('0'),
     previews: jsonb('previews').$type<string[]>().notNull().default([]),

@@ -27,6 +27,14 @@ function publicAsset(a: typeof assets.$inferSelect) {
     description: a.description,
     type: a.type,
     tier: a.tier,
+    editorType: a.editorType,
+    category: a.category,
+    tags: a.tags,
+    version: a.version,
+    status: a.status,
+    isMarketplace: a.isMarketplace,
+    isSubscriptionAsset: a.isSubscriptionAsset,
+    thumbnail: a.thumbnail,
     priceIdr: a.priceIdr,
     priceUsd: a.priceUsd,
     previews: a.previews,
@@ -37,6 +45,7 @@ function publicAsset(a: typeof assets.$inferSelect) {
 
 const listQuery = z.object({
   type: z.enum(['font', 'mockup3d', 'mockup2d', 'asset3d', 'graphic', 'motion']).optional(),
+  editorType: z.enum(['scene_editor', 'product_3d_editor']).optional(),
   tier: z.enum(['free', 'pro']).optional(),
   popular: z.enum(['true', 'false']).optional(),
   q: z.string().trim().min(1).optional(),
@@ -47,15 +56,17 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
     const range = parseListQuery(query);
     const f = listQuery.parse(query);
 
-    const conds: SQL[] = [];
+    // Katalog publik hanya menampilkan aset yang sudah dipublikaslikan.
+    const conds: SQL[] = [eq(assets.status, 'published')];
     if (f.type) conds.push(eq(assets.type, f.type));
+    if (f.editorType) conds.push(eq(assets.editorType, f.editorType));
     if (f.tier) conds.push(eq(assets.tier, f.tier));
     if (f.popular) conds.push(eq(assets.popular, f.popular === 'true'));
     // Full-text search di kolom tsvector generated (search_vector).
     if (f.q) {
       conds.push(sql`${assets.searchVector} @@ plainto_tsquery('simple', ${f.q})`);
     }
-    const where = conds.length ? and(...conds) : undefined;
+    const where = and(...conds);
 
     const [{ count }] = await db
       .select({ count: sql<number>`count(*)::int` })

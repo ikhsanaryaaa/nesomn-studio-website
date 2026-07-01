@@ -1,7 +1,7 @@
 import { and, eq, desc } from 'drizzle-orm';
 import { db } from '../db/client.ts';
-import { subscriptions, plans } from '../db/schema/index.ts';
-import type { FeatureAccess } from '@nesomn/shared';
+import { subscriptions, plans, licenses, assets } from '../db/schema/index.ts';
+import type { FeatureAccess, EditorType } from '@nesomn/shared';
 
 /**
  * Hitung hak akses fitur user dari plan langganan aktif. Tanpa langganan
@@ -31,4 +31,32 @@ export async function getFeatureAccess(userId: string): Promise<FeatureAccess> {
   const plan = await db.query.plans.findFirst({ where: eq(plans.id, sub.planId) });
   if (!plan) return { ...FREE_ACCESS };
   return plan.editorAccess;
+}
+
+/**
+ * Petakan editorType aset ke flag akses editor pada plan.
+ * scene_editor -> scene2d; product_3d_editor -> editor3d.
+ */
+export function editorTypeAllowed(access: FeatureAccess, editor: EditorType): boolean {
+  return editor === 'product_3d_editor' ? access.editor3d : access.scene2d;
+}
+
+/**
+ * Tentukan apakah user boleh memakai sebuah aset. Aturan:
+ * 1. Aset yang sudah dibeli (punya license) selalu boleh, permanen, lintas
+ *    subscription (marketplace one-time purchase).
+ * 2. Selain itu, akses mengikuti subscription: editorType aset harus diizinkan
+ *    oleh plan aktif user.
+ */
+export async function canUseAsset(userId: string, assetId: string): Promise<boolean> {
+  const owned = await db.query.licenses.findFirst({
+    where: and(eq(licenses.userId, userId), eq(licenses.assetId, assetId)),
+  });
+  if (owned) return true;
+
+  const asset = await db.query.assets.findFirst({ where: eq(assets.id, assetId) });
+  if (!asset) return false;
+
+  const access = await getFeatureAccess(userId);
+  return editorTypeAllowed(access, asset.editorType);
 }

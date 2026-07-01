@@ -1,6 +1,17 @@
 import { Route } from 'react-router';
 
-import { AssetList, AssetCreate, AssetEdit, AssetShow } from './pages/assets.tsx';
+import {
+  Asset3dList,
+  Asset3dCreate,
+  Asset3dEdit,
+  Asset3dShow,
+} from './pages/assets-3d.tsx';
+import {
+  AssetSceneList,
+  AssetSceneCreate,
+  AssetSceneEdit,
+  AssetSceneShow,
+} from './pages/assets-scene.tsx';
 import { BundleList, BundleCreate, BundleEdit, BundleShow } from './pages/bundles.tsx';
 import { PlanList, PlanCreate, PlanEdit } from './pages/plans.tsx';
 import { CreditPackList, CreditPackCreate, CreditPackEdit } from './pages/credit-packs.tsx';
@@ -16,31 +27,20 @@ import { AuditLogList } from './pages/audit-logs.tsx';
  */
 export const adminRoutes = (
   <>
-    {/* Assets Mockup (mockup2d) -> Scene Editor */}
-    <Route path="/assets-mockup">
-      <Route index element={<AssetList types={['mockup2d']} title="Assets Mockup" />} />
-      <Route path="create" element={<AssetCreate allowedTypes={['mockup2d']} />} />
-      <Route path="edit/:id" element={<AssetEdit allowedTypes={['mockup2d']} />} />
-      <Route path="show/:id" element={<AssetShow />} />
-    </Route>
-
-    {/* Assets 3D (mockup3d, asset3d) -> 3D Editor */}
+    {/* Assets 3D (product_3d_editor): resource & CRUD terpisah. */}
     <Route path="/assets-3d">
-      <Route index element={<AssetList types={['mockup3d', 'asset3d']} title="Assets 3D" />} />
-      <Route path="create" element={<AssetCreate allowedTypes={['mockup3d', 'asset3d']} />} />
-      <Route path="edit/:id" element={<AssetEdit allowedTypes={['mockup3d', 'asset3d']} />} />
-      <Route path="show/:id" element={<AssetShow />} />
+      <Route index element={<Asset3dList />} />
+      <Route path="create" element={<Asset3dCreate />} />
+      <Route path="edit/:id" element={<Asset3dEdit />} />
+      <Route path="show/:id" element={<Asset3dShow />} />
     </Route>
 
-    {/* Assets (font, graphic, motion) -> Marketplace */}
+    {/* Assets Scene (scene_editor): resource & CRUD terpisah. */}
     <Route path="/assets">
-      <Route
-        index
-        element={<AssetList types={['font', 'graphic', 'motion']} title="Assets (Marketplace)" />}
-      />
-      <Route path="create" element={<AssetCreate allowedTypes={['font', 'graphic', 'motion']} />} />
-      <Route path="edit/:id" element={<AssetEdit allowedTypes={['font', 'graphic', 'motion']} />} />
-      <Route path="show/:id" element={<AssetShow />} />
+      <Route index element={<AssetSceneList />} />
+      <Route path="create" element={<AssetSceneCreate />} />
+      <Route path="edit/:id" element={<AssetSceneEdit />} />
+      <Route path="show/:id" element={<AssetSceneShow />} />
     </Route>
 
     <Route path="/bundles">
