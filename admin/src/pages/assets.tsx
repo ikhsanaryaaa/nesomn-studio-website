@@ -9,7 +9,7 @@ import {
   Show,
   useForm,
 } from '@refinedev/antd';
-import { useShow } from '@refinedev/core';
+import { useShow, useResource, useNavigation } from '@refinedev/core';
 import {
   Table,
   Space,
@@ -22,6 +22,10 @@ import {
   Upload,
   Button,
   message,
+  Row,
+  Col,
+  Card,
+  Divider,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -30,6 +34,10 @@ const ASSET_TYPES = ['font', 'mockup3d', 'mockup2d', 'asset3d', 'graphic', 'moti
 export const AssetList = ({ types, title }: { types?: string[]; title?: string }) => {
   // Semua varian tab memakai satu endpoint API `assets`; pembeda hanya filter type.
   // Backend menerima `?type=a,b` (comma-separated), jadi kirim sebagai satu filter eq.
+  // Resource rute aktif (assets-3d / assets-mockup / assets) menentukan tab tujuan
+  // tombol Edit/Show, agar tetap di tab yang sama, bukan lompat ke Marketplace.
+  const { resource } = useResource();
+  const routeResource = resource?.name ?? 'assets';
   const { tableProps } = useTable({
     resource: 'assets',
     syncWithLocation: false,
@@ -57,8 +65,8 @@ export const AssetList = ({ types, title }: { types?: string[]; title?: string }
           title="Actions"
           render={(_, record: { id: string }) => (
             <Space>
-              <EditButton hideText size="small" recordItemId={record.id} resource="assets" />
-              <ShowButton hideText size="small" recordItemId={record.id} resource="assets" />
+              <EditButton hideText size="small" recordItemId={record.id} resource={routeResource} />
+              <ShowButton hideText size="small" recordItemId={record.id} resource={routeResource} />
               <DeleteButton hideText size="small" recordItemId={record.id} resource="assets" />
             </Space>
           )}
@@ -97,6 +105,7 @@ async function uploadTo(kind: 'preview' | 'file', file: File) {
 const AssetFields = ({ allowedTypes }: { allowedTypes?: string[] }) => {
   const form = Form.useFormInstance();
   const type = Form.useWatch('type', form) as string | undefined;
+  const previews = Form.useWatch('previews', form) as string[] | undefined;
   const fileKey = Form.useWatch('fileKey', form) as string | undefined;
   const glbFile = Form.useWatch('glbFile', form) as string | undefined;
   const is3d = type === 'mockup3d' || type === 'asset3d';
@@ -108,36 +117,50 @@ const AssetFields = ({ allowedTypes }: { allowedTypes?: string[] }) => {
   return (
     <>
       <Form.Item label="Title" name="title" rules={[{ required: true }]}>
-        <Input />
+        <Input placeholder="Nama aset" />
       </Form.Item>
       <Form.Item label="Slug" name="slug" rules={[{ required: true }]}>
-        <Input />
+        <Input placeholder="contoh: hoodie-3d-mockup" />
       </Form.Item>
       <Form.Item label="Description" name="description">
-        <Input.TextArea rows={3} />
+        <Input.TextArea rows={3} placeholder="Deskripsi singkat aset" />
       </Form.Item>
-      <Form.Item
-        label="Type"
-        name="type"
-        rules={[{ required: true }]}
-        initialValue={allowedTypes?.length === 1 ? allowedTypes[0] : undefined}
-      >
-        <Select options={typeOptions} />
-      </Form.Item>
-      <Form.Item label="Tier" name="tier" initialValue="free">
-        <Select
-          options={[
-            { value: 'free', label: 'free' },
-            { value: 'pro', label: 'pro' },
-          ]}
-        />
-      </Form.Item>
-      <Form.Item label="Price IDR" name="priceIdr" initialValue="0">
-        <Input />
-      </Form.Item>
-      <Form.Item label="Price USD" name="priceUsd" initialValue="0">
-        <Input />
-      </Form.Item>
+
+      <Row gutter={16}>
+        <Col xs={24} sm={12}>
+          <Form.Item
+            label="Type"
+            name="type"
+            rules={[{ required: true }]}
+            initialValue={allowedTypes?.length === 1 ? allowedTypes[0] : undefined}
+          >
+            <Select options={typeOptions} placeholder="Pilih tipe" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12}>
+          <Form.Item label="Tier" name="tier" initialValue="free">
+            <Select
+              options={[
+                { value: 'free', label: 'free' },
+                { value: 'pro', label: 'pro' },
+              ]}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row gutter={16}>
+        <Col xs={24} sm={12}>
+          <Form.Item label="Price IDR" name="priceIdr" initialValue="0">
+            <Input addonBefore="Rp" />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12}>
+          <Form.Item label="Price USD" name="priceUsd" initialValue="0">
+            <Input addonBefore="$" />
+          </Form.Item>
+        </Col>
+      </Row>
 
       {/* Field tersembunyi: nilai diisi oleh uploader, ikut tersimpan saat Save. */}
       <Form.Item name="previews" hidden>
@@ -150,72 +173,19 @@ const AssetFields = ({ allowedTypes }: { allowedTypes?: string[] }) => {
         <Input />
       </Form.Item>
 
-      {/* Gambar preview untuk storefront (selalu gambar). */}
-      <Form.Item label="Preview Image" help="Gambar yang tampil di storefront.">
-        <Upload
-          accept="image/*"
-          maxCount={1}
-          showUploadList={false}
-          customRequest={async ({ file, onSuccess, onError }) => {
-            try {
-              const data = await uploadTo('preview', file as File);
-              form.setFieldValue('previews', [data.previewUrl]);
-              message.success('Preview ter-upload');
-              onSuccess?.(data);
-            } catch (err) {
-              message.error((err as Error).message);
-              onError?.(err as Error);
-            }
-          }}
-        >
-          <Button icon={<UploadOutlined />}>Upload preview</Button>
-        </Upload>
-      </Form.Item>
-
-      {/* File produk yang dijual (accept menyesuaikan tipe). */}
-      <Form.Item
-        label="Asset File (file yang dijual)"
-        help={
-          fileKey
-            ? `Tersimpan: ${fileKey}`
-            : 'File produk yang diunduh pembeli. Pilih Type dulu agar format sesuai.'
-        }
-      >
-        <Upload
-          accept={type ? (FILE_ACCEPT[type] ?? '*') : '*'}
-          maxCount={1}
-          showUploadList={false}
-          customRequest={async ({ file, onSuccess, onError }) => {
-            try {
-              const data = await uploadTo('file', file as File);
-              form.setFieldValue('fileKey', data.fileKey);
-              message.success('File aset ter-upload');
-              onSuccess?.(data);
-            } catch (err) {
-              message.error((err as Error).message);
-              onError?.(err as Error);
-            }
-          }}
-        >
-          <Button icon={<UploadOutlined />}>Upload asset file</Button>
-        </Upload>
-      </Form.Item>
-
-      {/* Model 3D (GLB/GLTF) hanya untuk tipe 3D. */}
-      {is3d && (
-        <Form.Item
-          label="3D Model (GLB/GLTF)"
-          help={glbFile ? `Tersimpan: ${glbFile}` : 'Model 3D untuk viewer/editor.'}
-        >
+      <Card size="small" title="Files & Media" style={{ marginBottom: 24 }}>
+        {/* Gambar preview untuk storefront (selalu gambar). */}
+        <Form.Item label="Preview Image" help="Gambar yang tampil di storefront." style={{ marginBottom: 16 }}>
           <Upload
-            accept=".glb,.gltf,model/gltf-binary,model/gltf+json"
+            accept="image/*"
             maxCount={1}
+            listType="picture"
             showUploadList={false}
             customRequest={async ({ file, onSuccess, onError }) => {
               try {
-                const data = await uploadTo('file', file as File);
-                form.setFieldValue('glbFile', data.fileKey);
-                message.success('Model 3D ter-upload');
+                const data = await uploadTo('preview', file as File);
+                form.setFieldValue('previews', [data.previewUrl]);
+                message.success('Preview ter-upload');
                 onSuccess?.(data);
               } catch (err) {
                 message.error((err as Error).message);
@@ -223,10 +193,79 @@ const AssetFields = ({ allowedTypes }: { allowedTypes?: string[] }) => {
               }
             }}
           >
-            <Button icon={<UploadOutlined />}>Upload GLB</Button>
+            <Button icon={<UploadOutlined />} type={previews?.length ? 'default' : 'primary'} ghost={!previews?.length}>
+              {previews?.length ? 'Ganti preview' : 'Upload preview'}
+            </Button>
           </Upload>
         </Form.Item>
-      )}
+
+        <Divider style={{ margin: '12px 0' }} />
+
+        {/* File produk yang dijual (accept menyesuaikan tipe). */}
+        <Form.Item
+          label="Asset File (file yang dijual)"
+          style={{ marginBottom: is3d ? 16 : 0 }}
+          help={
+            fileKey
+              ? `Tersimpan: ${fileKey}`
+              : 'File produk yang diunduh pembeli. Pilih Type dulu agar format sesuai.'
+          }
+        >
+          <Upload
+            accept={type ? (FILE_ACCEPT[type] ?? '*') : '*'}
+            maxCount={1}
+            showUploadList={false}
+            customRequest={async ({ file, onSuccess, onError }) => {
+              try {
+                const data = await uploadTo('file', file as File);
+                form.setFieldValue('fileKey', data.fileKey);
+                message.success('File aset ter-upload');
+                onSuccess?.(data);
+              } catch (err) {
+                message.error((err as Error).message);
+                onError?.(err as Error);
+              }
+            }}
+          >
+            <Button icon={<UploadOutlined />} type={fileKey ? 'default' : 'primary'} ghost={!fileKey}>
+              {fileKey ? 'Ganti asset file' : 'Upload asset file'}
+            </Button>
+          </Upload>
+        </Form.Item>
+
+        {/* Model 3D (GLB/GLTF) hanya untuk tipe 3D. */}
+        {is3d && (
+          <>
+            <Divider style={{ margin: '12px 0' }} />
+            <Form.Item
+              label="3D Model (GLB/GLTF)"
+              style={{ marginBottom: 0 }}
+              help={glbFile ? `Tersimpan: ${glbFile}` : 'Model 3D untuk viewer/editor.'}
+            >
+              <Upload
+                accept=".glb,.gltf,model/gltf-binary,model/gltf+json"
+                maxCount={1}
+                showUploadList={false}
+                customRequest={async ({ file, onSuccess, onError }) => {
+                  try {
+                    const data = await uploadTo('file', file as File);
+                    form.setFieldValue('glbFile', data.fileKey);
+                    message.success('Model 3D ter-upload');
+                    onSuccess?.(data);
+                  } catch (err) {
+                    message.error((err as Error).message);
+                    onError?.(err as Error);
+                  }
+                }}
+              >
+                <Button icon={<UploadOutlined />} type={glbFile ? 'default' : 'primary'} ghost={!glbFile}>
+                  {glbFile ? 'Ganti GLB' : 'Upload GLB'}
+                </Button>
+              </Upload>
+            </Form.Item>
+          </>
+        )}
+      </Card>
 
       <Form.Item label="Popular" name="popular" valuePropName="checked" initialValue={false}>
         <Switch />
@@ -236,7 +275,17 @@ const AssetFields = ({ allowedTypes }: { allowedTypes?: string[] }) => {
 };
 
 export const AssetCreate = ({ allowedTypes }: { allowedTypes?: string[] }) => {
-  const { formProps, saveButtonProps } = useForm({ resource: 'assets', action: 'create' });
+  // Data selalu ke resource `assets` (endpoint tunggal). Setelah simpan, kembali
+  // ke list tab asal (assets-3d / assets-mockup / assets), bukan Marketplace.
+  const { resource } = useResource();
+  const { list } = useNavigation();
+  const routeResource = resource?.name ?? 'assets';
+  const { formProps, saveButtonProps } = useForm({
+    resource: 'assets',
+    action: 'create',
+    redirect: false,
+    onMutationSuccess: () => list(routeResource),
+  });
   return (
     <Create saveButtonProps={saveButtonProps} resource="assets">
       <Form {...formProps} layout="vertical">
@@ -247,7 +296,16 @@ export const AssetCreate = ({ allowedTypes }: { allowedTypes?: string[] }) => {
 };
 
 export const AssetEdit = ({ allowedTypes }: { allowedTypes?: string[] }) => {
-  const { formProps, saveButtonProps } = useForm({ resource: 'assets', action: 'edit' });
+  // Sama seperti create: data ke `assets`, redirect balik ke tab asal.
+  const { resource } = useResource();
+  const { list } = useNavigation();
+  const routeResource = resource?.name ?? 'assets';
+  const { formProps, saveButtonProps } = useForm({
+    resource: 'assets',
+    action: 'edit',
+    redirect: false,
+    onMutationSuccess: () => list(routeResource),
+  });
   return (
     <Edit saveButtonProps={saveButtonProps} resource="assets">
       <Form {...formProps} layout="vertical">
