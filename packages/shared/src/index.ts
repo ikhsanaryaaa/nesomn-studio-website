@@ -46,6 +46,12 @@ export type ApiError = {
 export type AssetType = 'font' | 'mockup3d' | 'mockup2d' | 'asset3d' | 'graphic' | 'motion';
 export type AssetTier = 'free' | 'pro';
 
+/** Editor tujuan aset: menentukan domain akses (subscription 3D vs Scene). */
+export type EditorType = 'scene_editor' | 'product_3d_editor';
+
+/** Status publikasi aset. `draft` disembunyikan dari katalog publik. */
+export type AssetStatus = 'draft' | 'published' | 'archived';
+
 /** Aset publik untuk storefront. fileKey TIDAK pernah disertakan. */
 export type AssetDTO = {
   id: string;
@@ -54,6 +60,14 @@ export type AssetDTO = {
   description: string | null;
   type: AssetType;
   tier: AssetTier;
+  editorType: EditorType;
+  category: string | null;
+  tags: string[];
+  version: string;
+  status: AssetStatus;
+  isMarketplace: boolean;
+  isSubscriptionAsset: boolean;
+  thumbnail: string | null;
   priceIdr: string;
   priceUsd: string;
   previews: string[];

@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia';
 import { authPlugin } from '../../middleware/auth.ts';
-import { assetAdminRoutes } from './assets.routes.ts';
+import { assets3dAdminRoutes } from './assets-3d.routes.ts';
+import { assetsSceneAdminRoutes } from './assets-scene.routes.ts';
 import { bundleAdminRoutes } from './bundles.routes.ts';
 import { planAdminRoutes } from './plans.routes.ts';
 import { creditPackAdminRoutes } from './credit-packs.routes.ts';
@@ -22,7 +23,8 @@ export const adminRoutes = new Elysia({ prefix: '/admin' })
   .use(authPlugin)
   .guard({ requireAdmin: true }, (app) =>
     app
-      .use(assetAdminRoutes)
+      .use(assets3dAdminRoutes)
+      .use(assetsSceneAdminRoutes)
       .use(bundleAdminRoutes)
       .use(planAdminRoutes)
       .use(creditPackAdminRoutes)
