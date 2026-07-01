@@ -19,11 +19,8 @@ import {
   Select,
   Switch,
   Typography,
-  Upload,
-  Button,
-  message,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { AssetUploader } from '../components/asset-uploader.tsx';
 
 const ASSET_TYPES = ['font', 'mockup3d', 'mockup2d', 'asset3d', 'graphic', 'motion'];
 
@@ -62,6 +59,7 @@ export const AssetList = () => {
 
 const AssetFields = () => {
   const form = Form.useFormInstance();
+  const previews = Form.useWatch('previews', form) as string[] | undefined;
   return (
   <>
     <Form.Item label="Title" name="title" rules={[{ required: true }]}>
@@ -90,34 +88,26 @@ const AssetFields = () => {
     <Form.Item label="Price USD" name="priceUsd" initialValue="0">
       <Input />
     </Form.Item>
-    <Form.Item label="Preview Image" name="previews" valuePropName="fileList" getValueFromEvent={() => undefined} help="Upload gambar preview; URL preview otomatis terisi.">
-      <Upload
+    {/* Field tersembunyi: nilai diisi uploader, ikut tersimpan saat Save. */}
+    <Form.Item name="previews" hidden>
+      <Input />
+    </Form.Item>
+    <Form.Item name="fileKey" hidden>
+      <Input />
+    </Form.Item>
+    <Form.Item label="Preview Image" help="Gambar preview untuk storefront. URL preview otomatis terisi.">
+      <AssetUploader
+        kind="preview"
         accept="image/*"
-        maxCount={1}
-        showUploadList={false}
-        customRequest={async ({ file, onSuccess, onError }) => {
-          try {
-            const fd = new FormData();
-            fd.append('file', file as File);
-            const res = await fetch('/api/admin/uploads', {
-              method: 'POST',
-              credentials: 'include',
-              body: fd,
-            });
-            if (!res.ok) throw new Error('upload gagal');
-            const data = await res.json();
-            form.setFieldValue('previews', [data.previewUrl]);
-            form.setFieldValue('fileKey', data.fileKey);
-            message.success('Upload berhasil');
-            onSuccess?.(data);
-          } catch (err) {
-            message.error('Upload gagal');
-            onError?.(err as Error);
-          }
+        title="Tarik & lepas gambar, atau klik untuk pilih"
+        hint="Format gambar (PNG, JPG, WEBP). Maksimal 1 file."
+        savedLabel={previews?.[0]}
+        successMessage="Preview ter-upload"
+        onUploaded={(data) => {
+          if (data.previewUrl) form.setFieldValue('previews', [data.previewUrl]);
+          if (data.fileKey) form.setFieldValue('fileKey', data.fileKey);
         }}
-      >
-        <Button icon={<UploadOutlined />}>Upload preview</Button>
-      </Upload>
+      />
     </Form.Item>
     <Form.Item label="Popular" name="popular" valuePropName="checked" initialValue={false}>
       <Switch />

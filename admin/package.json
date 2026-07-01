@@ -10,13 +10,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@nesomn/shared": "workspace:*",
-    "@refinedev/core": "^4.57.0",
     "@refinedev/antd": "^5.45.0",
+    "@refinedev/core": "^4.57.0",
     "@refinedev/react-router": "^1.0.0",
     "@refinedev/simple-rest": "^5.0.10",
     "antd": "^5.23.0",
-    "@ant-design/icons": "^5.5.2",
     "axios": "^1.7.9",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

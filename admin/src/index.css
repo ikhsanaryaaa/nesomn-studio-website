@@ -1,0 +1,155 @@
+/*
+ * Global styling admin Nesomn Studio.
+ * Menyelaraskan tampilan Refine + Ant Design dengan DESIGN.md
+ * (dark studio, satu aksen biru-indigo). Token warna mengikuti DESIGN.md 2.
+ * Nilai token utama diinjeksikan lewat antd ConfigProvider (App.tsx);
+ * file ini hanya finishing yang tidak tercakup token antd.
+ */
+
+/* Font self-host (DESIGN.md 3) */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+:root {
+  /* Palet DESIGN.md 2 sebagai CSS var (dipakai styling non-antd). */
+  --nsm-background: hsl(240 6% 5%);
+  --nsm-surface: hsl(240 5% 9%);
+  --nsm-surface-2: hsl(240 5% 12%);
+  --nsm-surface-3: hsl(240 4% 16%);
+  --nsm-border: hsl(240 4% 18%);
+  --nsm-border-strong: hsl(240 4% 26%);
+  --nsm-foreground: hsl(0 0% 98%);
+  --nsm-muted-foreground: hsl(240 4% 60%);
+  --nsm-accent: hsl(232 100% 62%);
+  --nsm-accent-hover: hsl(232 100% 67%);
+  --nsm-accent-subtle: hsl(232 60% 16%);
+  --nsm-success: hsl(142 71% 45%);
+  --nsm-danger: hsl(0 84% 60%);
+  --nsm-gradient-accent: linear-gradient(135deg, #3b5bff, #6e5bff);
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--nsm-background);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Angka/kode/dimensi memakai mono (DESIGN.md 3) */
+code,
+kbd,
+pre,
+.nsm-mono {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', monospace;
+}
+
+/* Custom scrollbar tipis selaras tema (samakan dengan client) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--nsm-surface-3);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--nsm-border-strong);
+  background-clip: content-box;
+}
+
+/*
+ * Dropzone upload (AssetUploader).
+ * Dashed border, hover accent, dan state ter-upload.
+ * Meng-override sebagian style Upload.Dragger antd agar selaras DESIGN.md 6.5.
+ */
+.nsm-uploader .ant-upload-drag {
+  background: var(--nsm-surface-2);
+  border: 1px dashed var(--nsm-border-strong);
+  border-radius: 14px;
+  transition:
+    border-color 150ms ease-out,
+    background 150ms ease-out;
+}
+
+.nsm-uploader .ant-upload-drag:hover {
+  border-color: var(--nsm-accent);
+  background: var(--nsm-surface-3);
+}
+
+.nsm-uploader.nsm-uploader-done .ant-upload-drag {
+  border-color: var(--nsm-success);
+  border-style: solid;
+}
+
+.nsm-uploader-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.nsm-uploader-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background: var(--nsm-accent-subtle);
+  color: var(--nsm-accent);
+  font-size: 20px;
+}
+
+.nsm-uploader-done .nsm-uploader-icon {
+  background: hsl(142 71% 45% / 0.16);
+  color: var(--nsm-success);
+}
+
+.nsm-uploader-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--nsm-foreground);
+}
+
+.nsm-uploader-hint {
+  font-size: 12px;
+  color: var(--nsm-muted-foreground);
+  max-width: 320px;
+}
+
+.nsm-uploader-file {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--nsm-success);
+  word-break: break-all;
+}
+
+/* Hormati prefers-reduced-motion (DESIGN.md 9-10) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
