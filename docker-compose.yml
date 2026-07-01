@@ -27,6 +27,10 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
+    # Bind hanya ke localhost (bukan publik) agar host dapat menjalankan
+    # test/queue. Komunikasi antar container tetap via host `redis`.
+    ports:
+      - "127.0.0.1:6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

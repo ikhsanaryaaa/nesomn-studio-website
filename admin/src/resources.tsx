@@ -9,6 +9,8 @@ import {
   ThunderboltOutlined,
   DesktopOutlined,
   FileSearchOutlined,
+  PictureOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons';
 
 /**
@@ -18,12 +20,28 @@ import {
  */
 export const resources: ResourceProps[] = [
   {
+    name: 'assets-mockup',
+    list: '/assets-mockup',
+    create: '/assets-mockup/create',
+    edit: '/assets-mockup/edit/:id',
+    show: '/assets-mockup/show/:id',
+    meta: { label: 'Assets Mockup', icon: <PictureOutlined />, parent: 'catalog' },
+  },
+  {
+    name: 'assets-3d',
+    list: '/assets-3d',
+    create: '/assets-3d/create',
+    edit: '/assets-3d/edit/:id',
+    show: '/assets-3d/show/:id',
+    meta: { label: 'Assets 3D', icon: <DatabaseOutlined />, parent: 'catalog' },
+  },
+  {
     name: 'assets',
     list: '/assets',
     create: '/assets/create',
     edit: '/assets/edit/:id',
     show: '/assets/show/:id',
-    meta: { label: 'Assets', icon: <DatabaseOutlined />, parent: 'catalog' },
+    meta: { label: 'Assets (Marketplace)', icon: <ShoppingOutlined />, parent: 'catalog' },
   },
   {
     name: 'bundles',

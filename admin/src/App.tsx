@@ -10,7 +10,7 @@ import routerProvider, {
   CatchAllNavigate,
 } from '@refinedev/react-router';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router';
-import { ConfigProvider, App as AntdApp } from 'antd';
+import { ConfigProvider, App as AntdApp, theme } from 'antd';
 import {
   DatabaseOutlined,
   AppstoreOutlined,
@@ -32,10 +32,24 @@ import { Authenticated } from './components/authenticated.tsx';
 import { resources } from './resources.tsx';
 import { adminRoutes } from './routes.tsx';
 
+// Tema gelap admin: gabungkan preset biru Refine dengan algoritma dark antd.
+// Token kustom menjaga kontras permukaan (sider/header) tetap nyaman dibaca.
+const darkTheme = {
+  ...RefineThemes.Blue,
+  algorithm: theme.darkAlgorithm,
+  token: {
+    ...RefineThemes.Blue.token,
+    colorBgLayout: '#0f1115',
+    colorBgContainer: '#171a21',
+    colorBgElevated: '#1f232c',
+    colorBorder: '#2a2f3a',
+  },
+};
+
 export default function App() {
   return (
     <BrowserRouter basename="/admin">
-      <ConfigProvider theme={RefineThemes.Blue}>
+      <ConfigProvider theme={darkTheme}>
         <AntdApp>
           <Refine
             dataProvider={dataProvider}
@@ -53,7 +67,20 @@ export default function App() {
               <Route
                 element={
                   <Authenticated key="auth">
-                    <ThemedLayoutV2 Title={() => <strong>Nesomn Admin</strong>}>
+                    <ThemedLayoutV2
+                      initialSiderCollapsed={false}
+                      Title={({ collapsed }) => (
+                        <img
+                          src="/nesomn-logo-white.svg"
+                          alt="Nesomn"
+                          style={{
+                            height: 28,
+                            width: collapsed ? 28 : 'auto',
+                            objectFit: 'contain',
+                          }}
+                        />
+                      )}
+                    >
                       <Outlet />
                     </ThemedLayoutV2>
                   </Authenticated>

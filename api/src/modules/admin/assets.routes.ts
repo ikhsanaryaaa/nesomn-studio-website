@@ -1,8 +1,9 @@
 import { Elysia } from 'elysia';
 import { z } from 'zod';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, inArray } from 'drizzle-orm';
 import { db } from '../../db/client.ts';
 import { assets } from '../../db/schema/index.ts';
+import { assetType } from '../../db/schema/catalog.ts';
 import { AppError } from '../../middleware/error.ts';
 import { parseListQuery, buildOrderBy, setTotalCount } from '../../lib/admin-query.ts';
 
@@ -32,8 +33,17 @@ const assetBody = z.object({
 export const assetAdminRoutes = new Elysia({ prefix: '/assets' })
   .get('/', async ({ query, set }) => {
     const range = parseListQuery(query);
-    const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(assets);
+    // Filter type: dukung satu (`?type=mockup2d`) atau banyak (`?type=mockup3d,asset3d`).
+    const typeParam = (query as Record<string, string | undefined>).type;
+    const types = typeParam ? typeParam.split(',').map((t) => t.trim()).filter(Boolean) : [];
+    const where = types.length ? inArray(assets.type, types as (typeof assetType.enumValues)[number][]) : undefined;
+
+    const [{ count }] = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(assets)
+      .where(where);
     const rows = await db.query.assets.findMany({
+      where,
       orderBy: [buildOrderBy(range, ASSET_COLUMNS, assets.createdAt)],
       limit: range.limit,
       offset: range.offset,

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router';
+import { useSearchParams, useParams } from 'react-router';
 import type Konva from 'konva';
 import { Plus, Type } from 'lucide-react';
 import { Topbar } from '@/components/shell/topbar';
@@ -27,6 +27,7 @@ export default function SceneEditorPage() {
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const projectIdParam = searchParams.get('project');
+  const { slug } = useParams();
 
   const stageRef = useRef<Konva.Stage | null>(null);
   const [tab, setTab] = useState<'design' | 'colour' | 'ai-scene' | 'ai-motion'>('design');
@@ -66,6 +67,34 @@ export default function SceneEditorPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdParam]);
+
+  // Muat base mockup dari katalog bila dibuka via /editor/scene/:slug.
+  useEffect(() => {
+    if (!slug) return;
+    let active = true;
+    api
+      .editorAsset(slug)
+      .then((asset) => {
+        if (!active || !asset.modelUrl) return;
+        const img = new window.Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          if (active) {
+            addImage(asset.modelUrl as string, img.naturalWidth, img.naturalHeight);
+            setTitle(asset.title);
+          }
+        };
+        img.src = asset.modelUrl;
+      })
+      .catch((err) => {
+        const msg = err instanceof ApiRequestError ? err.message : 'Gagal memuat mockup.';
+        toast({ title: 'Tidak dapat memuat mockup', description: msg, variant: 'danger' });
+      });
+    return () => {
+      active = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
 
   // Fit canvas ke viewport tersedia (responsif sederhana).
   useEffect(() => {

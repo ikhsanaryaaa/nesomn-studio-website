@@ -5,6 +5,7 @@ import { db } from '../../db/client.ts';
 import { assets, bundles, bundleItems } from '../../db/schema/index.ts';
 import { AppError } from '../../middleware/error.ts';
 import { parseListQuery, buildOrderBy, setTotalCount } from '../../lib/admin-query.ts';
+import { getStorage } from '../../lib/storage/index.ts';
 
 /**
  * API katalog publik (tanpa auth). Hanya mengembalikan field aman:
@@ -75,6 +76,28 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
     const row = await db.query.assets.findFirst({ where: eq(assets.slug, params.slug) });
     if (!row) throw new AppError('NOT_FOUND', 'Aset tidak ditemukan.', 404);
     return publicAsset(row);
+  })
+  // Loader khusus editor: kembalikan field yang dibutuhkan editor + signed URL
+  // untuk base mockup. fileKey/glbFile mentah tetap tidak dibocorkan langsung.
+  .get('/editor-asset/:slug', async ({ params }) => {
+    const row = await db.query.assets.findFirst({ where: eq(assets.slug, params.slug) });
+    if (!row) throw new AppError('NOT_FOUND', 'Aset tidak ditemukan.', 404);
+
+    const storage = await getStorage();
+    // 3D pakai glbFile; mockup 2D pakai fileKey (gambar base) bila ada.
+    const is3d = row.type === 'mockup3d' || row.type === 'asset3d';
+    const baseKey = is3d ? row.glbFile : (row.fileKey ?? row.previews[0] ?? null);
+    const modelUrl = baseKey && !baseKey.startsWith('http')
+      ? await storage.getSignedUrl(baseKey, 3600)
+      : (baseKey ?? null);
+
+    return {
+      slug: row.slug,
+      title: row.title,
+      type: row.type,
+      previews: row.previews,
+      modelUrl,
+    };
   })
   .get('/bundles', async ({ query, set }) => {
     const range = parseListQuery(query);
