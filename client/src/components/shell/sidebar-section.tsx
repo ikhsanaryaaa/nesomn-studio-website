@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -19,6 +19,7 @@ export function SidebarSection({
   defaultOpen = true,
 }: SidebarSectionProps) {
   const [open, setOpen] = useState(defaultOpen);
+  const id = useId();
 
   return (
     <div className="flex flex-col gap-1">
@@ -26,26 +27,27 @@ export function SidebarSection({
         <button
           type="button"
           disabled={!expandable}
+          aria-expanded={expandable ? open : undefined}
+          aria-controls={expandable ? id : undefined}
           onClick={() => expandable && setOpen((v) => !v)}
           className={cn(
             'flex items-center justify-between px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground',
-            expandable && 'cursor-pointer hover:text-foreground',
+            expandable && 'min-h-11 cursor-pointer hover:text-foreground',
           )}
         >
           <span>{title}</span>
           {expandable && (
             <ChevronDown
-              className={cn(
-                'size-3.5 transition-transform duration-200',
-                !open && '-rotate-90',
-              )}
+              className={cn('size-3.5 transition-transform duration-200', !open && '-rotate-90')}
             />
           )}
         </button>
       )}
       {collapsed && <div className="my-1 h-px bg-border" />}
       {(open || collapsed) && (
-        <div className="flex flex-col gap-0.5">{children}</div>
+        <div id={id} className="flex flex-col gap-0.5">
+          {children}
+        </div>
       )}
     </div>
   );

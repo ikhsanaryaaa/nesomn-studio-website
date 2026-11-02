@@ -1,0 +1,10 @@
+bun test v1.4.4 (38afee6c8)
+
+tests\litepod.test.ts:
+(pass) worker health is optional and rejects invalid ports [7.61ms]
+(pass) private worker HTTP listener fails closed and exposes no dependency details [28.82ms]
+
+ 2 pass
+ 0 fail
+ 17 expect() calls
+Ran 2 tests across 1 file. [97.00ms]

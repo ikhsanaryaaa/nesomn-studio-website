@@ -96,7 +96,7 @@ describe('ai job api', () => {
         }),
       }),
     );
-    expect(first.status).toBe(200);
+    expect(first.status).toBe(202);
     const job = (await first.json()) as { id: string; status: string; creditCost: number };
     expect(job.status).toBe('pending');
     expect(job.creditCost).toBe(10);

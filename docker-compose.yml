@@ -1,105 +1,63 @@
-# ─────────────────────────────────────────────────────────
-# Nesomn Studio — Docker Compose (dev/staging)
-# ─────────────────────────────────────────────────────────
-
+# Main deployment owns exactly app + gateway. Data/worker lifecycles are external.
 services:
-  # ── Database ──
-  db:
-    image: postgres:17-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: nesomn
-    # Bind hanya ke localhost (bukan publik) agar host dapat menjalankan
-    # migration/seed/test. Komunikasi antar container tetap via host `db`.
-    ports:
-      - "127.0.0.1:5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  # ── Redis ──
-  redis:
-    image: redis:7-alpine
-    restart: unless-stopped
-    # Bind hanya ke localhost (bukan publik) agar host dapat menjalankan
-    # test/queue. Komunikasi antar container tetap via host `redis`.
-    ports:
-      - "127.0.0.1:6379:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  # ── API (Elysia) ──
-  api:
+  app:
+    image: ${APP_IMAGE:-nesomn-app:local}
     build:
       context: .
-      dockerfile: api/Dockerfile
-    restart: unless-stopped
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      dockerfile: Dockerfile
+      target: app
+    env_file:
+      - ${APP_ENV_FILE:-.env}
     environment:
+      NODE_ENV: production
+      TRUST_PROXY: "1"
       PORT: 3000
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/nesomn
-      REDIS_URL: redis://redis:6379
-      CLIENT_URL: http://localhost
-      JWT_SECRET: dev-secret-change-me
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-
-  # ── Worker (BullMQ) ──
-  worker:
-    build:
-      context: .
-      dockerfile: worker/Dockerfile
+      STORAGE_PATH: /data/storage
+    expose: ['3000']
     restart: unless-stopped
-    depends_on:
-      redis:
-        condition: service_healthy
-    environment:
-      REDIS_URL: redis://redis:6379
-    healthcheck:
-      test: ["CMD-SHELL", "ps aux | grep 'bun' || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
+    init: true
+    read_only: true
+    tmpfs: ['/tmp:rw,noexec,nosuid,size=64m']
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    stop_grace_period: 30s
+    volumes:
+      - storage:/data/storage
+    networks: [web, data]
 
-  # ── Admin (Refine build + nginx, served internally at /admin) ──
-  admin:
-    build:
-      context: .
-      dockerfile: admin/Dockerfile
-    restart: unless-stopped
-    depends_on:
-      api:
-        condition: service_healthy
-
-  # ── Client (Vite build + nginx) ──
-  client:
-    build:
-      context: .
-      dockerfile: client/Dockerfile
-    restart: unless-stopped
+  gateway:
+    image: nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949
+    user: nginx
+    # Skip image init scripts: config is read-only and listens on 8080.
+    entrypoint: [nginx, '-g', 'daemon off;']
     ports:
-      - "80:80"
+      - '${GATEWAY_BIND:-127.0.0.1}:${GATEWAY_PORT:-8080}:8080'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/trusted-proxies.conf:/etc/nginx/trusted-proxies.conf:ro
     depends_on:
-      api:
+      app:
         condition: service_healthy
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ['/tmp:rw,noexec,nosuid,size=128m']
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    stop_grace_period: 30s
+    healthcheck:
+      test: [CMD-SHELL, 'wget -qO- http://127.0.0.1:8080/health/live >/dev/null || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks: [web]
+
+networks:
+  web:
+  data:
+    external: true
+    name: ${DATA_NETWORK:-nesomn-data-network}
 
 volumes:
-  pgdata:
+  storage:
+    external: true
+    name: ${STORAGE_VOLUME:-nesomn-storage}

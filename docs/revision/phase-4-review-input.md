@@ -1,0 +1,11 @@
+# Phase 4 review brief
+
+Repository C:/Users/ikhsan/Desktop/nesomn-studio-website; origin ikhsanaryaaa/nesomn-studio-website, branch works/runtime-tooling-upgrade, HEAD041d225fca07ae405b440ca424a0c56f90fdac0f. All phases1-4 uncommitted; do not judge phase2/3 work as new phase4. Compare docs/revision/phase-4-input.json hashes with current files to identify phase4 delta; all new tests/security and security/business lib/service files are phase4.
+
+Spec: REVISION.md phase4 (business integrity, auth/private file/CSRF/upload/provider URL, settlement/credits/concurrency/outbox/recovery/entitlement); docs/revision/phase-4-issue.md; actual as-built docs/security.md; rulings in phase-4-progress.md. User authorizes implementation/tests but no merchant transactions/production DB/deploy/push/reset. No redesign/QRIS expected yet.
+
+Review complete phase4 behavior against user-visible effects and security/data integrity, plus maintainability/documentation. Read all touched financial/auth/queue/storage source and migrations0004/0005. Pay attention to payload idempotency, concurrent initial ledger/job/subscription/receipt, expiry/refund, unknown legacy data, queue crash ambiguity, endpoint boundaries, storage disclosure and OAuth. Use source over old README. Keep findings concrete with path/line, trigger, effect, severity. Separate Critical/Important/Minor and declined-to-judge. Reviewer is read-only: do not edit files or open .env/secrets or production services. Offline/read-only tools are fine; main agent runs test lab.
+
+Current evidence: 30security tests152assertions pass (newcore plus actual BullMQ, legacy upgrade fixture),24baseline integration,22unit/scene, typecheck5workspaces, frozen Bun1.4.4/Elysia1.4.30 lock unchanged, lint0errors2existing warnings, productionbuild/Dockerappworker, gateway5HTTP tests passed. Further exact finalimage/drain/full suite pending; do not infer production-ready or live-vendor proven. API/merchant Google/Stripe offline cryptographic tests, example.com credential-free TLS probe BunWindows200. Phase3 script now productionnegative, workerdrain explicitly testmode only. Browser UI evidence is historical phase3 only.
+
+Return review findings to parent; final review written by parent in docs/revision/phase-4-review.md. This is the one fresh-context final review required by executing-plans; no implementer delegation.

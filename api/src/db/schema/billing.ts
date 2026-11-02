@@ -26,6 +26,7 @@ export const creditReason = pgEnum('credit_reason', [
   'usage',
   'refund',
   'admin_adjust',
+  'expiry',
 ]);
 
 /** Hak akses editor per plan. */
@@ -72,6 +73,12 @@ export const subscriptions = pgTable(
     cycle: billingCycle('cycle').notNull(),
     segment: planSegment('segment').notNull(),
     gateway: text('gateway'),
+    benefits: jsonb('benefits').$type<{
+      creditQuota: number;
+      maxConcurrentSessions: number | null;
+      editorAccess: EditorAccess;
+      code: string;
+    }>(),
     currentPeriodStart: timestamp('current_period_start', { withTimezone: true }),
     currentPeriodEnd: timestamp('current_period_end', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
@@ -105,6 +112,7 @@ export const creditLedger = pgTable(
     reason: creditReason('reason').notNull(),
     refType: text('ref_type'),
     refId: text('ref_id'),
+    operationKey: text('operation_key').unique(),
     balanceAfter: integer('balance_after').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },

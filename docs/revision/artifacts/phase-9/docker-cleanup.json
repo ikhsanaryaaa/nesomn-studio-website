@@ -1,0 +1,94 @@
+{
+  "time": "2026-10-31T12:51:18.435Z",
+  "containers": [
+    {
+      "name": "/nesomn-revision-ai-worker-phase9",
+      "id": "74afe8a3e4b89a8b6f9fc2f5dbb6ccb8bbb883c058529e9ba2cb37a82c779ab0"
+    },
+    {
+      "name": "/nesomn-revision-phase9-gateway-1",
+      "id": "dda86cb02223e9e98e3af3bbef60748019df9dae002cc1d1d75256b590f6a3e5"
+    },
+    {
+      "name": "/nesomn-revision-phase9-app-1",
+      "id": "3be972053f72bd763d885c1bd44702a9eeb787d638994bac68b8e34e5370d075"
+    },
+    {
+      "name": "/nesomn-revision-phase9-redis",
+      "id": "11f06fb4ca22be705e7bb77e657b477a46a7a951d8a92cdadb4e051f00516094"
+    },
+    {
+      "name": "/nesomn-revision-test-test-db-1",
+      "id": "e7d5f6b700bb55e31692cb3dd83e03859a20e99757fb2d3e2eefe3ed9287594e"
+    },
+    {
+      "name": "/nesomn-revision-test-test-redis-1",
+      "id": "4cb252ae0df1988a06960cc894bc4768b5d9729b753962eecd9f5a0e7998e208"
+    }
+  ],
+  "removedCount": 6,
+  "images": [
+    {
+      "reference": "nesomn-ai-worker:revision-phase9",
+      "exit": 0,
+      "output": "Untagged: nesomn-ai-worker:revision-phase9\nDeleted: sha256:e22be39e714ef9cc5d858721f5fe73b52d0b1a31387ce858e79547f9f539b2ad\n"
+    },
+    {
+      "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+      "exit": 0,
+      "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+    },
+    {
+      "reference": "nesomn-app:revision-phase9",
+      "exit": 0,
+      "output": "Untagged: nesomn-app:revision-phase9\nDeleted: sha256:3803f37989ba970f238ba48b8a8d58b8d4cadf4d95503cc7dfcdec4c5c7380a2\n"
+    },
+    {
+      "reference": "redis:7-alpine",
+      "exit": 0,
+      "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+    }
+  ],
+  "skipped": [
+    {
+      "reference": "postgres:17-alpine",
+      "reason": "Used by another container"
+    }
+  ],
+  "remainingTaskContainers": "",
+  "volumesRemoved": false,
+  "globalPrune": false,
+  "buildCachePruned": false,
+  "totalContainerRemovals": 18,
+  "cleanupPasses": 2,
+  "verifiedAbsent": [
+    {
+      "reference": "nesomn-ai-worker:revision-phase9",
+      "absent": true
+    },
+    {
+      "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+      "absent": true
+    },
+    {
+      "reference": "nesomn-app:revision-phase9",
+      "absent": true
+    },
+    {
+      "reference": "redis:7-alpine",
+      "absent": true
+    }
+  ],
+  "testedImagesAbsent": [
+    {
+      "kind": "app",
+      "id": "sha256:3803f37989ba970f238ba48b8a8d58b8d4cadf4d95503cc7dfcdec4c5c7380a2",
+      "absent": true
+    },
+    {
+      "kind": "worker",
+      "id": "sha256:e22be39e714ef9cc5d858721f5fe73b52d0b1a31387ce858e79547f9f539b2ad",
+      "absent": true
+    }
+  ]
+}

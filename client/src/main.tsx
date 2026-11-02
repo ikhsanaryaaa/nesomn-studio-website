@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import App from './App';
 import './index.css';
+import { applyTheme } from '@nesomn/shared/theme';
 import { ROUTE_META, formatTitle, DEFAULT_DESCRIPTION } from './lib/seo-config';
 
 /**
@@ -10,7 +11,8 @@ import { ROUTE_META, formatTitle, DEFAULT_DESCRIPTION } from './lib/seo-config';
  *   menghasilkan HTML statis + meta SEO per halaman publik.
  */
 
-if (typeof window !== 'undefined') {
+async function mountBrowser() {
+  applyTheme();
   const { createRoot } = await import('react-dom/client');
   const { BrowserRouter } = await import('react-router');
   const rootEl = document.getElementById('root')!;
@@ -24,9 +26,15 @@ if (typeof window !== 'undefined') {
   );
 }
 
+// Do not await at module scope: Rollup may share React with the client chunk,
+// creating an import cycle which otherwise leaves production bootstrap pending.
+if (typeof window !== 'undefined') void mountBrowser();
+
 /** Dipanggil vite-prerender-plugin untuk tiap route publik. */
 export async function prerender(data: { url: string }) {
-  const { renderToString } = await import('react-dom/server');
+  // Vite's browser resolution opens a MessageChannel that keeps Node alive.
+  // The Web Streams entry supports this build-time render without Node builtins.
+  const { renderToString } = await import('react-dom/server.edge');
   const { StaticRouter } = await import('react-router');
 
   const html = renderToString(

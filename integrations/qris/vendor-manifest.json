@@ -1,0 +1,108 @@
+{
+  "repository": "https://github.com/ikhsanaryaaa/qris-merchant-id",
+  "commit": "e1b1b6968c570c0cb18ccf9ce4d95694e8df48de",
+  "version": "0.2.0",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "integrations/qris/vendor/LICENSE",
+      "sha256": "93c926882cd98f97daa3d7eff1587b14c45688695b3e4f6ef60ebd812b430372"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/core/exceptions.py",
+      "sha256": "600e3568461d6903861d7e062bb5369756c66a36bd45fe1335a3a1991cc9ba2a"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/core/token_cache.py",
+      "sha256": "7136b5094071813c06ccafe1923905a36e3bd2ef83f9c904dec84c62a8749231"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/core/transport.py",
+      "sha256": "e85e8d9d5bc7480f27b0ec796411fd41c3a462c9390f8137c6b1bca674463ff5"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/core/__init__.py",
+      "sha256": "2e96155477e9b51c42dc9939333c26d12239fc014a20d81eb8b724f8866aee32"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/auth.py",
+      "sha256": "e049cfac65d2716d57799498588233cfe352c1f37678d5c324856eb9aa2b2d11"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/client.py",
+      "sha256": "8a72e6f88e58de3d1e555e24edf13a70fd489cca4471bfe4c9f289dfd8c04b55"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/constants.py",
+      "sha256": "c579e0ad948b4ba372e47f7a5d8251b2957765c8b02b4991fa48534e48235a73"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/merchants.py",
+      "sha256": "f901f2aec820ffb55d1048e238ecb072cc0fee830b54f2702d43a1b42dca0c11"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/money.py",
+      "sha256": "3dcbfbeb249efeb956983d498bbbb1515a59e801022b2013d0e7862f5fd36fb4"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/payouts.py",
+      "sha256": "d59697732655d3ecee49aad9e4c5178be98654aeddf830ef2c0aa85718b5d61e"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/qris.py",
+      "sha256": "5bf5203bd989bd041b21757b446d1917ebba39f0e57e1de063f4c4c5a69d8b4f"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/transactions.py",
+      "sha256": "e3d91def0a19d71e4fce11c2ae0973bcfcabe78e40a02ad67edd3ce7a28796a7"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/users.py",
+      "sha256": "7877fee9c0a528ca25b76d2d4ca89cbd746cdc16c6bce811ec733543010f6875"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/watcher.py",
+      "sha256": "36b5d7e2e6d912bb9630186fd1942da0051ff76fc16fa5a678f44348c3dd6ea5"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/gopay/__init__.py",
+      "sha256": "7a3fc5143f76cba7bd1944b7d7093a127aa44cda0ec3936f62f7fea11cb4e41a"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/auth.py",
+      "sha256": "2a6dc984a975ae2b9602ce761607a20934ae06367f3d5f13f52d34a466e59d3f"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/client.py",
+      "sha256": "32f950665b5c5710d75a6a9f48109e365211c0af7b8a2714d76020ba8b0b6e58"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/constants.py",
+      "sha256": "ed6b505958116273aaf459335d1b345dcecd1619c47037ad465eb3ce4fc53ca3"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/money.py",
+      "sha256": "f2f32f1e3ad30d27c3c431e32ce20586bf664ab8f102fe7a9edeff723489ca96"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/stores.py",
+      "sha256": "dd264b3c98a1542dbe30cdf0df182b027005f20132b9a83251108364fb39a028"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/transactions.py",
+      "sha256": "3f440a738d9329a5b56ab3e1ada61e89c78cf6cde0fb17923d02edbdfe880307"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/watcher.py",
+      "sha256": "15986eb13325f0d08348cdf725485691487e06a835c2e8735f379a1169fd1532"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/shopee/__init__.py",
+      "sha256": "63e76d08623903934b093c4ed8f76240a0822e90036f2fbd6142d160c23e8a88"
+    },
+    {
+      "path": "integrations/qris/vendor/qrismerchantid/__init__.py",
+      "sha256": "1564904fb3b8d95103576ae4b86588ad7d164bd69b132e4bc73862b74143b38b"
+    }
+  ]
+}

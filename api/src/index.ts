@@ -2,6 +2,7 @@ import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import type { HealthResponse } from '@nesomn/shared';
 import { errorHandler } from './middleware/error.ts';
+import { requestSecurity } from './middleware/request-security.ts';
 import { rateLimit } from './middleware/rate-limit.ts';
 import { authRoutes } from './modules/auth/routes.ts';
 import { userRoutes } from './modules/user/routes.ts';
@@ -26,6 +27,7 @@ export const app = new Elysia()
     }),
   )
   .use(errorHandler)
+  .use(requestSecurity)
   // Hardening: rate limit baseline per IP+path (lindungi dari abuse dasar).
   .use(rateLimit('global', { max: 200, windowMs: 60_000 }))
   .get('/health', (): HealthResponse => {

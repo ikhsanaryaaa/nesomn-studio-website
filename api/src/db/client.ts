@@ -11,7 +11,7 @@ const DATABASE_URL =
   process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/nesomn';
 
 /** Klien postgres mentah (dipakai juga untuk migrator & seed). */
-export const sql = postgres(DATABASE_URL, { max: 10 });
+export const sql = postgres(DATABASE_URL, { max: 10, connect_timeout: 3 });
 
 /** Instance Drizzle dengan seluruh schema & konvensi snake_case. */
 export const db = drizzle(sql, { schema, casing: 'snake_case' });

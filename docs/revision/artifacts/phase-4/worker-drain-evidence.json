@@ -1,0 +1,10 @@
+{
+  "observedBeforeSignal": "processing",
+  "final": "done",
+  "exitCode": 0,
+  "logOrder": [
+    "draining",
+    "job done",
+    "stopped"
+  ]
+}

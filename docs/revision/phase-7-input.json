@@ -1,0 +1,282 @@
+{
+  "branch": "works/runtime-tooling-upgrade",
+  "head": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "files": [
+    {
+      "path": "client/index.html",
+      "sha256": "2b1b854c0d458829c1f443685e366508ddaf869bb7bf61d2ff7be6c391c2ca01"
+    },
+    {
+      "path": "client/public/nesomn-logo-white.svg",
+      "sha256": "329d0b515e1419ed8a9fc667ef3d154e8fe65d335007ddaf37a0d264a48a623e"
+    },
+    {
+      "path": "client/public/nesomn-logo-black.svg",
+      "sha256": "6617eb6a62f426d7333db4b07b1e6e6258ecf787cd50ab23ebd98625add09adc"
+    },
+    {
+      "path": "client/src/stores/ui-store.ts",
+      "sha256": "8ba0b2e6203ef4862ba7063190a5696aa006faf5df5d14dc1d1742e1891acef7"
+    },
+    {
+      "path": "client/src/stores/scene-editor-store.ts",
+      "sha256": "422ce21751a4e0f67c57c7d7020468f4f83cf2b1ae41e0d2a20862653d3b270a"
+    },
+    {
+      "path": "client/src/stores/scene-3d-store.ts",
+      "sha256": "e42420ffc7b24a7d544f328b7dcb15f1506c943ff83130459fd07577ffa3c5e7"
+    },
+    {
+      "path": "client/src/stores/cart-store.ts",
+      "sha256": "8235099af3d9294c41fd9bb24bd843fa5e44f7c6ac7a68b20cea84da0fd194f9"
+    },
+    {
+      "path": "client/src/index.css",
+      "sha256": "0c23e4712613558234d65e3ea1b257978c69c3b47fab7ff69a90f5059e50ff40"
+    },
+    {
+      "path": "client/src/main.tsx",
+      "sha256": "79e3905eaa944dbc92f8ee251088c06e84aefdd37f2f79feba027858f7b489c6"
+    },
+    {
+      "path": "client/src/pages/account.tsx",
+      "sha256": "3f6016b249882e2de40c80fb80f489ccdc34ed6302b388573436327fd9852931"
+    },
+    {
+      "path": "client/src/components/seo.tsx",
+      "sha256": "d6001a4287a7aff8701903660803ba1149e4ef5bdf516512c72fa0105b141058"
+    },
+    {
+      "path": "client/src/components/ui/badge.tsx",
+      "sha256": "c3f677c3e7ac5126b55b636a968d509a6c3059dfa34e1b2f925fa174d9eb5154"
+    },
+    {
+      "path": "client/src/pages/asset-detail.tsx",
+      "sha256": "1b21ccc622cc3a0d3d879cf9735bd827859f9ed1597dfbde5b0857ab2d07ee41"
+    },
+    {
+      "path": "client/src/components/ui/button.tsx",
+      "sha256": "9d1f0b342d77f5b00a11cce0391418a6bd5523d69117b714442e395c587848bb"
+    },
+    {
+      "path": "client/src/App.tsx",
+      "sha256": "f170f1d7340a783b22be4f6560e01105b27b61fa8d54c313dff90bc96a923e65"
+    },
+    {
+      "path": "client/src/pages/checkout.tsx",
+      "sha256": "5a00e3a1c936cbc3722de304c7c2d05f01e2c0d2754ac424b843e543445f1863"
+    },
+    {
+      "path": "client/src/pages/bundle-builder.tsx",
+      "sha256": "5e3e70004ab30e2903d90eec17031f514db3220c0fe45bb05bfd955c1ad8bec2"
+    },
+    {
+      "path": "client/src/pages/editor-3d.tsx",
+      "sha256": "8bd81dba1e2054a7544774cdc5fcf0ac97bc23094049355d60874542f471e20b"
+    },
+    {
+      "path": "client/src/pages/home.tsx",
+      "sha256": "636de7ba7e12e7ba92f6f08b182270f4ac2cb51848193549e1d6aad0cf3cf6e6"
+    },
+    {
+      "path": "client/src/components/ui/dialog.tsx",
+      "sha256": "d906b3fcfdb0bd49974646db13906d2cb5b760e3475dcb5ea41964854611364c"
+    },
+    {
+      "path": "client/src/components/ui/card.tsx",
+      "sha256": "4b3e9a7a7fab59433844fe08d6190b846944e2cbff54e53196d8b5d5dd682a29"
+    },
+    {
+      "path": "client/src/components/ui/dropdown-menu.tsx",
+      "sha256": "b4c702a7b0842e585af033facdff9426f713717143dd3df05e6cd27d8dc3bc85"
+    },
+    {
+      "path": "client/src/pages/scene-editor.tsx",
+      "sha256": "d11e4b8aeb4fcf928ef8bada4fad9e63e7128d9a03bb83818f5499e44e19d498"
+    },
+    {
+      "path": "client/src/pages/projects.tsx",
+      "sha256": "ba8d4daf7dc1c841640697e23888bcc8f0fde8ad7ae8cbe8871f03f140359019"
+    },
+    {
+      "path": "client/src/pages/pricing.tsx",
+      "sha256": "c33df74ff1ab035e4b63d423c3550eec12812bc245b34f1a6572fa498bf8fbb5"
+    },
+    {
+      "path": "client/src/pages/not-found.tsx",
+      "sha256": "c3efdcc0387aebc671e626eef60c736affb8a996994759903eb3bc154bd711f8"
+    },
+    {
+      "path": "client/src/pages/marketplace.tsx",
+      "sha256": "b7c2fb850ac0c691b48568eea59e30539692372e14e0f93181c4454931a022c3"
+    },
+    {
+      "path": "client/src/pages/library.tsx",
+      "sha256": "797e82a908dbbac6256e9876a1059abe0bbbaba7d90ce322721a82fbaa77e625"
+    },
+    {
+      "path": "client/src/components/ui/slider.tsx",
+      "sha256": "295f02f6870eca02073c8cae54e03b4606930ab241bb030e5f3c1a0f7e3225b1"
+    },
+    {
+      "path": "client/src/components/ui/skeleton.tsx",
+      "sha256": "92231cb1eb1a53ccacb0dcb4df9596fc9e083a7dd19522d4365816716e196615"
+    },
+    {
+      "path": "client/src/components/ui/input.tsx",
+      "sha256": "b2f16fb29541666f243ef9d21e8fb1c86acc36ccd5da268473cf076980bd5c4b"
+    },
+    {
+      "path": "client/src/components/ui/index.ts",
+      "sha256": "842c08810328bd0ef6a05184e9b94870067319a3ec98d4884764eecfc756f930"
+    },
+    {
+      "path": "client/src/components/ui/tabs.tsx",
+      "sha256": "1a255268548c208de8be6803b27acd76c43e864982e21eabe84f416125609825"
+    },
+    {
+      "path": "client/src/components/ui/switch.tsx",
+      "sha256": "7a69be8a73356b7df90cd882e1badbe9c903112dcac0ceacabe6ec65a71db0c1"
+    },
+    {
+      "path": "client/src/components/ui/toast.tsx",
+      "sha256": "57e6199e1e8de2bdebe514f131c4f73580ecc1e8b781c5b591d95bd8fa88781e"
+    },
+    {
+      "path": "client/src/components/ui/toaster.tsx",
+      "sha256": "b28dcf2843f69e9f3cd6a53bfc29f7bcbd3fa6667998a82cd062cc5053558d4d"
+    },
+    {
+      "path": "client/src/components/ui/use-toast.ts",
+      "sha256": "6a9f6495cc464eb9c2cec53f7d7a2805f7e3a709ccdf30ff9e9a77dbf94af157"
+    },
+    {
+      "path": "client/src/lib/utils.ts",
+      "sha256": "52809d249fba3d497f01505af1da566e4edc729ee9501a406b610aaa8ee79be1"
+    },
+    {
+      "path": "client/src/lib/seo-config.ts",
+      "sha256": "d35d1986ce8f1b6e2ee911cc8d87c39eeb6d2edb43ab8360e50dbdc158524359"
+    },
+    {
+      "path": "client/src/lib/record-3d-video.ts",
+      "sha256": "078bed811ada9eed555a39ddaaa45d382a406bb4815a1f688ec559869494c1ba"
+    },
+    {
+      "path": "client/src/lib/query.ts",
+      "sha256": "b8aeca20848fa86c178c0a8ec1befdd153be4d576c3ee26b4ae4f31022c59b4d"
+    },
+    {
+      "path": "client/src/lib/navigation.ts",
+      "sha256": "8f7c2ea2201a04cb6867cbf302ce4c9e7c8a7f9274c5be9d59d277932a68ba34"
+    },
+    {
+      "path": "client/src/lib/export-image.ts",
+      "sha256": "0f5cc2f8bdbf474a41d6c77fb15e3b3d4b8ed20aa89d8cb5df7cce7a178dc555"
+    },
+    {
+      "path": "client/src/lib/export-3d.ts",
+      "sha256": "157428afd6a8720afd7b446562127ab80c0deb814f9d6642c2d862e7063433d4"
+    },
+    {
+      "path": "client/src/lib/api.ts",
+      "sha256": "967a0103611493d99e20a73659e9e3620fb721cf19ab4bc57e7c36976271e8a1"
+    },
+    {
+      "path": "client/src/components/editor/add-design-dialog.tsx",
+      "sha256": "d9d832c5d7b3ec2ab483e7146bc4b79cf1c8dff5e31509a85414aabe0edca29b"
+    },
+    {
+      "path": "client/src/components/editor/canvas-object.tsx",
+      "sha256": "9a76b9dde2471d823b9566b7d9a6bfd3b9d2cdb599086cfa889f01b9278314dc"
+    },
+    {
+      "path": "client/src/components/shell/sidebar-section.tsx",
+      "sha256": "866026b052caa4f032c428159f2a5ef8de04f8e21db2f12357c758fc43c7bf2e"
+    },
+    {
+      "path": "client/src/components/shell/sidebar-item.tsx",
+      "sha256": "2dc86eee55958ee56de77fe22f34305b5ddb217a8262c19f9384ab73e27eb1bf"
+    },
+    {
+      "path": "client/src/components/shell/page-transition.tsx",
+      "sha256": "ddd4a6803d8aef703c40a2075a8277f666ad83a946e35d484ed0a4132eb69262"
+    },
+    {
+      "path": "client/src/components/shell/app-layout.tsx",
+      "sha256": "427aadff29e55ad949823032b6fdc382a27ef6f4584a58903218cab6c1f5db73"
+    },
+    {
+      "path": "client/src/components/shell/theme-control.tsx",
+      "sha256": "5ad3ed74a37ebff49d6a6139d2558d4550a4d89d8d8376f6d03dbf57009d5024"
+    },
+    {
+      "path": "client/src/components/shell/sidebar.tsx",
+      "sha256": "58b3ed2a9cc8276da98e669d3707bc03cfd48eb1e4dc92bc8f9f6c64a912db15"
+    },
+    {
+      "path": "client/src/components/shell/topbar.tsx",
+      "sha256": "02861e34262d2d7a402b9cad5781345a3d9d916dc8b9b5b2b868a392c9e0d060"
+    },
+    {
+      "path": "client/src/components/editor/scene-canvas.tsx",
+      "sha256": "f54888487fb5f1f517113316ba3c6d7a6f0683f8744104bad6da542e69910840"
+    },
+    {
+      "path": "client/src/components/editor/editor-toolbar.tsx",
+      "sha256": "3051e45d49ea9b4012a22bc5851b173dbd3de695d9fce87a4308b83d29ab654e"
+    },
+    {
+      "path": "client/src/components/editor/color-panel.tsx",
+      "sha256": "762f3c01911c2ef5d63afbd5e9f36beeeffe41dd196c47df07cbea616ccd6440"
+    },
+    {
+      "path": "client/src/components/ai/scene-panel.tsx",
+      "sha256": "9b300f3e978dbf65738cdadda32a9651138daba81993d689cf40e3c40b92c623"
+    },
+    {
+      "path": "client/src/components/ai/motion-panel.tsx",
+      "sha256": "1ba3288fe3cfe213d1f85c017fc07c236ae2601fa2e8a025937bd683fa21c6d2"
+    },
+    {
+      "path": "client/src/components/ai/credit-badge.tsx",
+      "sha256": "e29c72b179f9d28dee338303b4c048671160dfec496ec10144da9b6d3a938158"
+    },
+    {
+      "path": "client/src/hooks/use-feature-access.ts",
+      "sha256": "a00ba53a4d973a2f2298f02b63e5f1370284144004e36e3f8addc5db7cc81d4c"
+    },
+    {
+      "path": "client/src/hooks/use-auth.ts",
+      "sha256": "15ef35200313ba80403cf8a84c9fa2de038364e28df69ce9155bc8bf13e9c21b"
+    },
+    {
+      "path": "client/src/hooks/use-ai-job.ts",
+      "sha256": "f59f81d0ca4a7d2f724047e544fb12c119a81da9679eb759c80e84c2958b9fd2"
+    },
+    {
+      "path": "client/src/components/store/asset-card.tsx",
+      "sha256": "5c4813831a61e78bdfd7c14b42d26584967aa53fee5e002108a98ab89d8323a5"
+    },
+    {
+      "path": "client/src/components/store/filter-tabs.tsx",
+      "sha256": "4241f7ccd2d2c2db538566c8c03041887fefbab1bdc315f5e4555d8b924deedd"
+    },
+    {
+      "path": "client/src/components/editor3d/add-design-3d-dialog.tsx",
+      "sha256": "d591d76f1b89981db086e9ce35fd14ff95f8c8fa63b23b108fb12a519aa63b36"
+    },
+    {
+      "path": "client/src/components/editor3d/controls-panel-3d.tsx",
+      "sha256": "39cdea103935da46da33fa3cb05be8b7038c3a28835d719c6cbc7770ea950332"
+    },
+    {
+      "path": "client/src/components/editor3d/scene-3d-viewport.tsx",
+      "sha256": "2f1bdfa05bb79beec6481f267ccbe9c63e7dfb905c0a64500b83889c05bb8f3a"
+    },
+    {
+      "path": "client/src/components/editor3d/model-mesh.tsx",
+      "sha256": "c8506f63067c35c045ed5b8e8bc7c3a077cdcb3a1f3d3be1dc7a94c250764b6d"
+    }
+  ]
+}

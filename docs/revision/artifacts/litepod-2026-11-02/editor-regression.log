@@ -1,0 +1,27 @@
+bun test v1.4.4 (38afee6c8)
+
+tests\editor-bugs.test.ts:
+(pass) account transition clears both editors, selection and undo history [1.88ms]
+(pass) in-flight API response from A cannot be consumed after login B [0.61ms]
+(pass) 3D create preserves title/material/decal edits during save [1.90ms]
+(pass) 3D update preserves title/material/decal edits during save [0.39ms]
+(pass) old 3D save cannot modify a reset or newly loaded document [0.08ms]
+(pass) legacy URL recovery accepts only recognized storage identities, never arbitrary hosts/paths [1.49ms]
+
+tests\scene-compatibility.test.ts:
+(pass) legacy scene contract baseline (tanpa DB/WebGL) > state 2D melewati load/save tanpa kehilangan layer, transform atau sumber gambar [0.21ms]
+(pass) legacy scene contract baseline (tanpa DB/WebGL) > duplicate lalu undo mengembalikan dokumen 2D ke fixture semula [0.31ms]
+(pass) legacy scene contract baseline (tanpa DB/WebGL) > state 3D lama mempertahankan modelKey, kamera, material dan decal saat load/save [0.07ms]
+(pass) legacy scene contract baseline (tanpa DB/WebGL) > reset/load remove stale signed URL; catalog key and optional target survive JSON [0.14ms]
+(pass) catalog mug is explicitly distinguishable from legacy builtin without persisting signed URL [0.22ms]
+
+tests\scene-export.test.ts:
+(pass) 2D presentation never changes scene/export dimensions > fits actual available widths including small screens [0.20ms]
+(pass) 2D presentation never changes scene/export dimensions > restores stage and selection on download [0.43ms]
+(pass) 2D presentation never changes scene/export dimensions > restores stage and selection on CORS failure [0.07ms]
+(pass) edits made while saving stay dirty and retain authored title [0.17ms]
+
+ 15 pass
+ 0 fail
+ 84 expect() calls
+Ran 15 tests across 3 files. [360.00ms]

@@ -1,91 +1,123 @@
-/**
- * Rekam video turntable dari canvas WebGL ke WebM via MediaRecorder.
- * Resolusi mengikuti canvas (DPR sudah dibatasi <= 2, target <= 1080p).
- * Durasi singkat untuk satu putaran penuh. Client-side, tanpa server.
- */
-
 export type RecordOptions = {
-  /** Durasi rekaman dalam milidetik. */
   durationMs?: number;
-  /** Frame per detik target. */
   fps?: number;
   fileName?: string;
+  signal?: AbortSignal;
 };
-
-/** Pilih mime WebM yang didukung browser. */
-function pickMimeType(): string {
-  const candidates = [
-    'video/webm;codecs=vp9',
-    'video/webm;codecs=vp8',
-    'video/webm',
-  ];
-  for (const c of candidates) {
-    if (typeof MediaRecorder !== 'undefined' && MediaRecorder.isTypeSupported(c)) {
-      return c;
-    }
-  }
-  return 'video/webm';
-}
-
-/**
- * Mulai merekam canvas selama durasi tertentu, lalu unduh hasilnya.
- * `onTick` dipanggil tiap frame dengan progres 0..1 agar pemanggil
- * dapat memutar kamera/model (turntable) selama perekaman.
- */
-export function recordTurntable(
+function recordOnce(
   canvas: HTMLCanvasElement,
   onTick: (progress: number) => void,
   options: RecordOptions = {},
 ): Promise<void> {
-  const { durationMs = 4000, fps = 30, fileName = 'nesomn-3d' } = options;
-
+  const { durationMs = 4000, fps = 30, fileName = 'nesomn-3d', signal } = options;
   return new Promise((resolve, reject) => {
-    let stream: MediaStream;
-    try {
-      stream = canvas.captureStream(fps);
-    } catch (err) {
-      reject(err);
+    let stream: MediaStream | undefined,
+      recorder: MediaRecorder | undefined,
+      raf = 0,
+      finished = false;
+    const copy = document.createElement('canvas');
+    const scale = Math.min(1, 1080 / Math.max(canvas.width, canvas.height));
+    copy.width = Math.max(1, Math.round(canvas.width * scale));
+    copy.height = Math.max(1, Math.round(canvas.height * scale));
+    const context = copy.getContext('2d');
+    const cleanup = () => {
+      copy.remove();
+      cancelAnimationFrame(raf);
+      signal?.removeEventListener('abort', abort);
+      stream?.getTracks().forEach((track) => track.stop());
+    };
+    const fail = (error: unknown) => {
+      if (finished) return;
+      finished = true;
+      try {
+        if (recorder && recorder.state !== 'inactive') recorder.stop();
+      } catch {
+        /* still release tracks and RAF */
+      }
+      cleanup();
+      reject(error);
+    };
+    const abort = () => fail(new DOMException('Rekaman dibatalkan.', 'AbortError'));
+    if (signal?.aborted) {
+      abort();
       return;
     }
-
-    const recorder = new MediaRecorder(stream, {
-      mimeType: pickMimeType(),
-      videoBitsPerSecond: 8_000_000,
-    });
-    const chunks: BlobPart[] = [];
-
-    recorder.ondataavailable = (e) => {
-      if (e.data.size > 0) chunks.push(e.data);
-    };
-
-    recorder.onstop = () => {
-      const blob = new Blob(chunks, { type: 'video/webm' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.download = `${fileName}.webm`;
-      link.href = url;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      resolve();
-    };
-
-    const start = performance.now();
-    let raf = 0;
-    const loop = () => {
-      const elapsed = performance.now() - start;
-      const progress = Math.min(1, elapsed / durationMs);
-      onTick(progress);
-      if (progress < 1) {
-        raf = requestAnimationFrame(loop);
-      } else {
-        cancelAnimationFrame(raf);
-        recorder.stop();
-      }
-    };
-
-    recorder.start();
-    loop();
+    signal?.addEventListener('abort', abort, { once: true });
+    try {
+      if (!context || typeof MediaRecorder === 'undefined')
+        throw Error('MediaRecorder tidak tersedia.');
+      context.drawImage(canvas, 0, 0, copy.width, copy.height);
+      // Explicit frame requests work on offscreen/headless compositors as well.
+      copy.style.cssText = 'position:fixed;left:-10000px;top:0;pointer-events:none';
+      document.body.appendChild(copy);
+      stream = copy.captureStream(0);
+      const mime = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find((type) =>
+        MediaRecorder.isTypeSupported(type),
+      );
+      if (!mime) throw Error('WebM tidak didukung.');
+      recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8000000 });
+      const chunks: BlobPart[] = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size) chunks.push(e.data);
+      };
+      recorder.onerror = () => fail(Error('Perekaman gagal.'));
+      recorder.onstop = () => {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        const blob = new Blob(chunks, { type: mime });
+        if (blob.size < 1024) {
+          reject(Error('Tidak ada frame video yang dapat direkam.'));
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = fileName + '.webm';
+        link.href = url;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        resolve();
+      };
+      const start = performance.now();
+      let lastFrame = -Infinity;
+      const loop = () => {
+        if (finished) return;
+        try {
+          const progress = Math.min(1, (performance.now() - start) / durationMs);
+          onTick(progress);
+          if (performance.now() - lastFrame >= 1000 / fps) {
+            context.drawImage(canvas, 0, 0, copy.width, copy.height);
+            (stream!.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack).requestFrame();
+            lastFrame = performance.now();
+          }
+          if (progress < 1) raf = requestAnimationFrame(loop);
+          else recorder!.stop();
+        } catch (error) {
+          fail(error);
+        }
+      };
+      recorder.start(250);
+      raf = requestAnimationFrame(loop);
+    } catch (error) {
+      fail(error);
+    }
   });
+}
+
+export async function recordTurntable(
+  canvas: HTMLCanvasElement,
+  onTick: (progress: number) => void,
+  options: RecordOptions = {},
+): Promise<void> {
+  try {
+    await recordOnce(canvas, onTick, options);
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === 'Tidak ada frame video yang dapat direkam.' &&
+      !options.signal?.aborted
+    ) {
+      await recordOnce(canvas, onTick, options);
+    } else throw error;
+  }
 }

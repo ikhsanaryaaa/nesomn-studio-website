@@ -29,12 +29,12 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
   const canRedo = useSceneEditor((s) => s.future.length > 0);
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex max-w-full flex-wrap items-center gap-1">
       <Button
         id="editor-duplicate"
         variant="ghost"
         size="icon"
-        title="Duplicate"
+        aria-label="Duplicate"
         disabled={!selectedId}
         onClick={duplicate}
       >
@@ -44,7 +44,7 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         id="editor-delete"
         variant="ghost"
         size="icon"
-        title="Delete"
+        aria-label="Delete"
         disabled={!selectedId}
         onClick={deleteSelected}
       >
@@ -55,7 +55,7 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         id="editor-undo"
         variant="ghost"
         size="icon"
-        title="Undo"
+        aria-label="Undo"
         disabled={!canUndo}
         onClick={undo}
       >
@@ -65,7 +65,7 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         id="editor-redo"
         variant="ghost"
         size="icon"
-        title="Redo"
+        aria-label="Redo"
         disabled={!canRedo}
         onClick={redo}
       >

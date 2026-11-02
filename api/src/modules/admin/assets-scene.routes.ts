@@ -1,3 +1,5 @@
+import { parsePatch } from '../../lib/validation.ts';
+import { moneyString, publicMediaUrl, storageKeySchema } from '../../lib/validation.ts';
 import { Elysia } from 'elysia';
 import { z } from 'zod';
 import { eq, and, sql } from 'drizzle-orm';
@@ -22,7 +24,7 @@ const ASSET_COLUMNS = {
 };
 
 const assetSceneBody = z.object({
-  slug: z.string().min(1),
+  slug: z.string().regex(/^[a-z0-9][a-z0-9_-]{0,199}$/),
   title: z.string().min(1),
   description: z.string().nullish(),
   type: z.enum(['font', 'mockup2d', 'graphic', 'motion']),
@@ -33,11 +35,11 @@ const assetSceneBody = z.object({
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
   isMarketplace: z.boolean().default(false),
   isSubscriptionAsset: z.boolean().default(true),
-  thumbnail: z.string().nullish(),
-  priceIdr: z.union([z.string(), z.number()]).transform(String).default('0'),
-  priceUsd: z.union([z.string(), z.number()]).transform(String).default('0'),
-  previews: z.array(z.string()).default([]),
-  fileKey: z.string().nullish(),
+  thumbnail: publicMediaUrl.nullish(),
+  priceIdr: moneyString.default('0'),
+  priceUsd: moneyString.default('0'),
+  previews: z.array(publicMediaUrl).max(20).default([]),
+  fileKey: storageKeySchema.nullish(),
   popular: z.boolean().default(false),
 });
 
@@ -77,7 +79,7 @@ export const assetsSceneAdminRoutes = new Elysia({ prefix: '/assets-scene' })
     return row;
   })
   .patch('/:id', async ({ params, body }) => {
-    const input = assetSceneBody.partial().parse(body);
+    const input = parsePatch(assetSceneBody, body);
     const [row] = await db
       .update(assets)
       .set({ ...input, editorType: 'scene_editor', updatedAt: new Date() })

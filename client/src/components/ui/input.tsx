@@ -1,8 +1,7 @@
 import { forwardRef, useId } from 'react';
 import { cn } from '@/lib/utils';
 
-export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
 }
@@ -15,10 +14,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="text-[13px] font-medium text-muted-foreground"
-          >
+          <label htmlFor={inputId} className="text-[13px] font-medium text-muted-foreground">
             {label}
           </label>
         )}
@@ -27,8 +23,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           aria-invalid={!!error}
+          aria-describedby={error ? `${inputId}-error` : props['aria-describedby']}
           className={cn(
-            'h-[38px] w-full rounded-md border bg-surface-2 px-3 text-sm text-foreground placeholder:text-faint-foreground',
+            'h-11 w-full rounded-md border bg-surface-2 px-3 text-sm text-foreground placeholder:text-faint-foreground',
             'transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-0',
             'disabled:cursor-not-allowed disabled:opacity-50',
             error ? 'border-danger' : 'border-border',
@@ -36,7 +33,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           {...props}
         />
-        {error && <p className="text-xs text-danger">{error}</p>}
+        {error && (
+          <p id={`${inputId}-error`} role="alert" className="text-xs text-danger">
+            {error}
+          </p>
+        )}
       </div>
     );
   },

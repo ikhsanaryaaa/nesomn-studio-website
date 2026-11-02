@@ -1,0 +1,50 @@
+{
+  "branch": "works/runtime-tooling-upgrade",
+  "head": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "files": [
+    {
+      "path": "client/src/lib/record-3d-video.ts",
+      "sha256": "078bed811ada9eed555a39ddaaa45d382a406bb4815a1f688ec559869494c1ba"
+    },
+    {
+      "path": "api/src/web-app.ts",
+      "sha256": "695a9111747d72ad8583b2006f5fe8563b77d5d77863872a7e3b3a70e1095995"
+    },
+    {
+      "path": "client/src/stores/scene-3d-store.ts",
+      "sha256": "e42420ffc7b24a7d544f328b7dcb15f1506c943ff83130459fd07577ffa3c5e7"
+    },
+    {
+      "path": "client/src/lib/export-3d.ts",
+      "sha256": "157428afd6a8720afd7b446562127ab80c0deb814f9d6642c2d862e7063433d4"
+    },
+    {
+      "path": "client/src/App.tsx",
+      "sha256": "f150b98762515e88e4012ebd605ef4f885b99e8d18de37d4d66ea93894b5688a"
+    },
+    {
+      "path": "client/src/pages/editor-3d.tsx",
+      "sha256": "8bd81dba1e2054a7544774cdc5fcf0ac97bc23094049355d60874542f471e20b"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "e71415cfe02fb8bfcd9a5c6b83c37e5d16fdc04f08ef5d72b28e44a3d76455ff"
+    },
+    {
+      "path": "client/src/components/editor3d/scene-3d-viewport.tsx",
+      "sha256": "2f1bdfa05bb79beec6481f267ccbe9c63e7dfb905c0a64500b83889c05bb8f3a"
+    },
+    {
+      "path": "client/src/components/editor3d/model-mesh.tsx",
+      "sha256": "c8506f63067c35c045ed5b8e8bc7c3a077cdcb3a1f3d3be1dc7a94c250764b6d"
+    },
+    {
+      "path": "client/src/components/editor3d/controls-panel-3d.tsx",
+      "sha256": "39cdea103935da46da33fa3cb05be8b7038c3a28835d719c6cbc7770ea950332"
+    },
+    {
+      "path": "client/src/components/editor3d/add-design-3d-dialog.tsx",
+      "sha256": "d591d76f1b89981db086e9ce35fd14ff95f8c8fa63b23b108fb12a519aa63b36"
+    }
+  ]
+}

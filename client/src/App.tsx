@@ -13,11 +13,13 @@ import LibraryPage from '@/pages/library';
 import AccountPage from '@/pages/account';
 import CheckoutPage from '@/pages/checkout';
 import NotFoundPage from '@/pages/not-found';
+import AuthPage from '@/pages/auth';
 
 // Editor berat (Konva/R3F) di-lazy-load agar tidak masuk bundle prerender publik.
 const SceneEditorPage = lazy(() => import('@/pages/scene-editor'));
 const Editor3DPage = lazy(() => import('@/pages/editor-3d'));
 const ProjectsPage = lazy(() => import('@/pages/projects'));
+const Demo3DPage = lazy(() => import('@/pages/demo-3d'));
 
 /** Fallback ringan saat chunk editor sedang dimuat. */
 function EditorFallback() {
@@ -40,6 +42,16 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <Routes>
         <Route element={<AppLayout />}>
+          <Route
+            path="demo/3d"
+            element={
+              <Suspense fallback={<EditorFallback />}>
+                <Demo3DPage />
+              </Suspense>
+            }
+          />
+          <Route path="login" element={<AuthPage key="login" />} />
+          <Route path="register" element={<AuthPage register key="register" />} />
           <Route index element={<HomePage />} />
           <Route path="pricing" element={<PricingPage />} />
           <Route path="marketplace" element={<MarketplacePage />} />

@@ -1,0 +1,1 @@
+PASS: app + gateway only; app port private; external data network/storage; no service profiles.

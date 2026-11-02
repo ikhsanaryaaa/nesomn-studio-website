@@ -31,10 +31,12 @@ export const authPlugin = new Elysia({ name: 'auth' })
     const session = await db.query.sessions.findFirst({
       where: eq(sessions.id, payload.sessionId),
     });
-    if (!session) return { user: null as AuthUser | null, sessionId: null as string | null };
+    if (!session || session.userId !== payload.sub || session.expiresAt <= new Date())
+      return { user: null as AuthUser | null, sessionId: null as string | null };
 
     const user = await db.query.users.findFirst({ where: eq(users.id, payload.sub) });
-    if (!user) return { user: null as AuthUser | null, sessionId: null as string | null };
+    if (!user || user.disabledAt)
+      return { user: null as AuthUser | null, sessionId: null as string | null };
 
     return {
       user: { id: user.id, email: user.email, name: user.name, role: user.role } as AuthUser,
@@ -55,8 +57,7 @@ export const authPlugin = new Elysia({ name: 'auth' })
       return {
         beforeHandle({ user }: { user: AuthUser | null }) {
           if (!user) throw new AppError('UNAUTHORIZED', 'Autentikasi diperlukan.', 401);
-          if (user.role !== 'admin')
-            throw new AppError('FORBIDDEN', 'Akses khusus admin.', 403);
+          if (user.role !== 'admin') throw new AppError('FORBIDDEN', 'Akses khusus admin.', 403);
         },
       };
     },

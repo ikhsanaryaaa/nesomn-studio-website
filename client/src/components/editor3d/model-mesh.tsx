@@ -1,20 +1,49 @@
-import { useMemo } from 'react';
-import { Decal, useTexture, useGLTF } from '@react-three/drei';
+import { useEffect, useState } from 'react';
+import { createPortal } from '@react-three/fiber';
+import { Decal, Html } from '@react-three/drei';
+import * as THREE from 'three';
 import type { Decal3D } from '@nesomn/shared';
 import { useScene3DEditor } from '@/stores/scene-3d-store';
-
-/**
- * Model mockup 3D. Bila store.modelUrl berisi GLB (mis. dimuat dari katalog
- * via slug), model itu dirender. Bila tidak, dipakai geometry primitive
- * ber-UV (cylinder) sebagai dummy dev yang andal tanpa aset eksternal.
- * Material PBR memakai warna dari store; decal ditempel mengikuti UV.
- */
-
-/** Satu decal yang diproyeksikan ke permukaan model. */
+import { targetMesh } from '@/lib/mesh-target';
 function DecalItem({ decal }: { decal: Decal3D }) {
-  const texture = useTexture(decal.src);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null),
+    [error, setError] = useState(false);
+  useEffect(() => {
+    let active = true;
+    setError(false);
+    setTexture(null);
+    const image = new Image();
+    image.crossOrigin = 'anonymous';
+    const owned = new THREE.Texture(image);
+    owned.colorSpace = THREE.SRGBColorSpace;
+    image.onload = () => {
+      if (active) {
+        owned.needsUpdate = true;
+        setTexture(owned);
+      }
+    };
+    image.onerror = () => {
+      if (active) setError(true);
+    };
+    image.src = decal.src;
+    return () => {
+      active = false;
+      image.onload = null;
+      image.onerror = null;
+      image.src = '';
+      owned.dispose();
+    };
+  }, [decal.src]);
+  if (error)
+    return (
+      <Html>
+        <span role="alert">Desain tidak dapat dimuat.</span>
+      </Html>
+    );
+  if (!texture) return null;
   return (
     <Decal
+      userData={{ nesomnDecal: true }}
       position={decal.position}
       rotation={decal.rotation}
       scale={decal.scale}
@@ -23,45 +52,32 @@ function DecalItem({ decal }: { decal: Decal3D }) {
         map={texture}
         transparent
         polygonOffset
-        polygonOffsetFactor={-1}
+        polygonOffsetFactor={-4}
         roughness={0.6}
       />
     </Decal>
   );
 }
-
-/** Render GLB dari URL (model katalog) + decal sebagai child. */
-function GlbModel({ url }: { url: string }) {
-  const { scene } = useGLTF(url);
-  const decals = useScene3DEditor((s) => s.decals);
-  // Clone agar aman bila dipakai beberapa kali / re-render.
-  const cloned = useMemo(() => scene.clone(), [scene]);
+export function ModelMesh({ object }: { object: THREE.Object3D }) {
+  const color = useScene3DEditor((s) => s.materialColor),
+    decals = useScene3DEditor((s) => s.decals);
+  useEffect(() => {
+    object.traverse((obj) => {
+      if (obj instanceof THREE.Mesh && !obj.userData.nesomnDecal) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+        for (const material of Array.isArray(obj.material) ? obj.material : [obj.material])
+          if ('color' in material) (material as THREE.MeshStandardMaterial).color.set(color);
+      }
+    });
+  }, [object, color]);
   return (
-    <group>
-      <primitive object={cloned} />
-      {decals.map((d) => (
-        <DecalItem key={d.id} decal={d} />
-      ))}
-    </group>
-  );
-}
-
-export function ModelMesh() {
-  const materialColor = useScene3DEditor((s) => s.materialColor);
-  const modelUrl = useScene3DEditor((s) => s.modelUrl);
-  const decals = useScene3DEditor((s) => s.decals);
-
-  if (modelUrl) {
-    return <GlbModel url={modelUrl} />;
-  }
-
-  return (
-    <mesh castShadow receiveShadow rotation={[0, 0, 0]}>
-      <cylinderGeometry args={[1, 1, 2, 64, 1, false]} />
-      <meshStandardMaterial color={materialColor} roughness={0.45} metalness={0.05} />
-      {decals.map((d) => (
-        <DecalItem key={d.id} decal={d} />
-      ))}
-    </mesh>
+    <>
+      <primitive object={object} dispose={null} />
+      {decals.map((d) => {
+        const mesh = targetMesh(object, d.meshPath);
+        return mesh ? createPortal(<DecalItem key={d.id} decal={d} />, mesh) : null;
+      })}
+    </>
   );
 }

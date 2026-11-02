@@ -1,0 +1,13 @@
+{
+  "duringOutage": {
+    "status": "pending",
+    "balance": 90,
+    "readiness": 503,
+    "workerShutdownExit": 0
+  },
+  "afterRecovery": {
+    "status": "done",
+    "balance": 90,
+    "delivered": true
+  }
+}

@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import type { AiJobDTO } from '@nesomn/shared';
 
@@ -8,6 +9,7 @@ import type { AiJobDTO } from '@nesomn/shared';
  * menonaktifkan query.
  */
 export function useAiJob(jobId: string | null) {
+  const qc = useQueryClient();
   const query = useQuery<AiJobDTO>({
     queryKey: ['ai-job', jobId],
     queryFn: () => api.ai.getJob(jobId as string),
@@ -20,9 +22,15 @@ export function useAiJob(jobId: string | null) {
   });
 
   const status = query.data?.status;
+  useEffect(() => {
+    if (status === 'done' || status === 'failed')
+      void qc.invalidateQueries({ queryKey: ['ai-credit'] });
+  }, [status, qc]);
   return {
     job: query.data ?? null,
-    isPending: status === 'pending' || status === 'processing',
+    isPending: Boolean(jobId) && (!query.data || status === 'pending' || status === 'processing'),
+    error: query.error,
+    retry: query.refetch,
     isDone: status === 'done',
     isFailed: status === 'failed',
     isLoading: query.isLoading,

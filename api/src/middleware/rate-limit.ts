@@ -1,4 +1,5 @@
 import { Elysia } from 'elysia';
+import { clientIp } from './request-security.ts';
 import { AppError } from './error.ts';
 
 /**
@@ -36,20 +37,21 @@ export function rateLimit(name: string, opts: RateLimitOptions) {
       const now = Date.now();
       sweep(now);
 
-      const ip =
-        server?.requestIP(request)?.address ??
-        request.headers.get('x-forwarded-for') ??
-        'unknown';
+      const ip = clientIp(request, server?.requestIP(request)?.address);
       const url = new URL(request.url);
-      const key = `${name}:${ip}:${url.pathname}`;
+      const sensitive = /\/(auth|billing)(\/|$)/.test(url.pathname);
+      const limit = sensitive ? Math.min(opts.max, 30) : opts.max;
+      const key = `${name}:${ip}:${sensitive ? url.pathname.split('/').slice(0, 3).join('/') : 'all'}`;
 
       const bucket = store.get(key);
       if (!bucket || bucket.resetAt < now) {
+        if (store.size >= 10000)
+          throw new AppError('RATE_LIMITED', 'Terlalu banyak permintaan.', 429);
         store.set(key, { count: 1, resetAt: now + opts.windowMs });
         return;
       }
       bucket.count += 1;
-      if (bucket.count > opts.max) {
+      if (bucket.count > limit) {
         throw new AppError('RATE_LIMITED', 'Terlalu banyak permintaan. Coba lagi nanti.', 429);
       }
     },

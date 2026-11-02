@@ -1,0 +1,92 @@
+{
+  "authorized": "User requested deletion of test images/containers after Docker testing",
+  "containers": [
+    "nesomn-revision-phase7-app-1",
+    "nesomn-revision-phase7-gateway-1",
+    "nesomn-revision-phase5-app-1",
+    "nesomn-revision-phase5-gateway-1",
+    "nesomn-revision-phase4-app-1",
+    "nesomn-revision-phase4-gateway-1",
+    "nesomn-revision-deployment-app-1",
+    "nesomn-revision-deployment-gateway-1",
+    "nesomn-revision-redis-private",
+    "nesomn-revision-ai-worker-phase4"
+  ],
+  "images": [
+    {
+      "ref": "nesomn-app:revision-phase8",
+      "size": "353MB",
+      "output": "Untagged: nesomn-app:revision-phase8\nDeleted: sha256:edc9015663693c99914529e79dfb0f94c29c91922ee8866e5c03b7801ec56cf3"
+    },
+    {
+      "ref": "nesomn-app:revision-phase7",
+      "size": "353MB",
+      "output": "Untagged: nesomn-app:revision-phase7\nDeleted: sha256:e69ad343e740f98dbdca6c0a1d1329729548e071a015b877c392537104a6c1e5"
+    },
+    {
+      "ref": "nesomn-app:revision-phase6",
+      "size": "353MB",
+      "output": "Untagged: nesomn-app:revision-phase6\nDeleted: sha256:b182daf1c8472bdeaa576857e4a4c979b73a49d318dd95fd56f30a10944e7819"
+    },
+    {
+      "ref": "nesomn-app:revision-phase5",
+      "size": "354MB",
+      "output": "Untagged: nesomn-app:revision-phase5\nDeleted: sha256:d5a976be905a8a46e498119f6fb42d4fbb02420d4cb294709e44dba0716dd7c0"
+    },
+    {
+      "ref": "nesomn-qris-worker:revision-phase5",
+      "size": "183MB",
+      "output": "Untagged: nesomn-qris-worker:revision-phase5\nDeleted: sha256:70c522058bd26c6608779fb1ab1cb4c3b1bb9edaada8197b4fdc150a376df7f3"
+    },
+    {
+      "ref": "nesomn-ai-worker:revision-phase5",
+      "size": "347MB",
+      "output": "Untagged: nesomn-ai-worker:revision-phase5\nDeleted: sha256:b917a7ee100a078471f3377aaa4aac376e246c1d01958d3bbb8e1797bf9c2793"
+    },
+    {
+      "ref": "nesomn-app:revision-phase4",
+      "size": "351MB",
+      "output": "Untagged: nesomn-app:revision-phase4\nDeleted: sha256:4a4a85acaa6379cf9fec182faf92e340514fbc03b8a264b2fc5b2370b013d0d4"
+    },
+    {
+      "ref": "nesomn-app:revision-test",
+      "size": "351MB",
+      "output": "Untagged: nesomn-app:revision-test\nDeleted: sha256:0de10a2dbfc8e78a261bd97a2fd34ff16bff742a76e0840d96ff68ea2371e625"
+    },
+    {
+      "ref": "nesomn-ai-worker:revision-test",
+      "size": "343MB",
+      "output": "Untagged: nesomn-ai-worker:revision-test\nDeleted: sha256:c56235742cf0c7559ab86d9b3aa4152fe8c5b42a77ee663743fe1169cbcbc9e5"
+    },
+    {
+      "ref": "nesomn-admin-check:phase2",
+      "size": "96.2MB",
+      "output": "Untagged: nesomn-admin-check:phase2\nDeleted: sha256:cafb308233fa8643d1ba049ea4f9d2812ad9e95578330ccf2ed31e61f18a6f51"
+    },
+    {
+      "ref": "nesomn-client-check:phase2",
+      "size": "98.9MB",
+      "output": "Untagged: nesomn-client-check:phase2\nDeleted: sha256:a69e8f65ce202548c99ea805153fd430441e15587fd86290e20485ecf98d7427"
+    },
+    {
+      "ref": "nesomn-worker-check:phase2",
+      "size": "1.04GB",
+      "output": "Untagged: nesomn-worker-check:phase2\nDeleted: sha256:d3ba0c6d96791449d310c6fbe206f41964c29c3f5652743a2aafd0e6e66e31eb"
+    },
+    {
+      "ref": "nesomn-runtime-check:phase2",
+      "size": "1.04GB",
+      "output": "Untagged: nesomn-runtime-check:phase2\nDeleted: sha256:af04cfafe80962b37c3a8cdc19781351c0060b1ab4a4befd2446bc48143364c4"
+    },
+    {
+      "ref": "nesomn-ai-worker:revision-phase4",
+      "output": "Untagged: nesomn-ai-worker:revision-phase4\nDeleted: sha256:bb594e43a7b0a1df993581f04dbbbb43a5e88868af8163ff3c98899e05b05d48"
+    }
+  ],
+  "skipped": [],
+  "volumesDeleted": false,
+  "networksDeleted": false,
+  "globalPrune": false,
+  "remainingTargetContainers": [],
+  "remainingTargetImageTags": []
+}

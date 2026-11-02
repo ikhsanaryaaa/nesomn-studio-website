@@ -48,7 +48,7 @@ export const errorHandler = new Elysia({ name: 'error-handler' }).onError(
 
     // Fallback: jangan bocorkan detail internal.
     set.status = 500;
-    console.error('[error]', error);
+    console.error('[error] Request failed; internal details withheld.');
     return { error: { code: 'INTERNAL_ERROR', message: 'Terjadi kesalahan internal.' } };
   },
 );

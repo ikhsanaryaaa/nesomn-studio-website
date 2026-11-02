@@ -1,0 +1,15 @@
+test_disabled_and_invalid_ports (test_worker.TestPrivateHealth.test_disabled_and_invalid_ports) ... ok
+test_readiness_uses_durable_delivery_heartbeat_and_redacts_errors (test_worker.TestPrivateHealth.test_readiness_uses_durable_delivery_heartbeat_and_redacts_errors) ... ok
+test_delivery_survives_restart_and_only_ack_marks_delivered (test_worker.TestSpool.test_delivery_survives_restart_and_only_ack_marks_delivered) ... ok
+test_failed_first_does_not_block_second (test_worker.TestSpool.test_failed_first_does_not_block_second) ... ok
+test_old_unresolved_enters_review_and_forward_cursor_continues (test_worker.TestSpool.test_old_unresolved_enters_review_and_forward_cursor_continues) ... ok
+test_pending_retains_lookback_until_completed (test_worker.TestSpool.test_pending_retains_lookback_until_completed) ... ok
+test_pinned_sdk_normalizes_completed_whole_rupiah_and_scope (test_worker.TestSpool.test_pinned_sdk_normalizes_completed_whole_rupiah_and_scope) ... ok
+test_provider_outage_does_not_block_persisted_delivery (test_worker.TestSpool.test_provider_outage_does_not_block_persisted_delivery) ... ok
+test_scope_and_changed_replay (test_worker.TestSpool.test_scope_and_changed_replay) ... ok
+test_truncation_requires_complete_time_slices (test_worker.TestSpool.test_truncation_requires_complete_time_slices) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.852s
+
+OK

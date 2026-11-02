@@ -1,0 +1,115 @@
+{
+  "fixture": "Demo / Sample, fixed disposable database + actual production gateway; synthetic receipt only",
+  "browser": "Chrome/156.0.8078.74",
+  "measurements": [
+    {
+      "route": "home",
+      "mode": "light",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "route": "home",
+      "mode": "light",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "route": "home",
+      "mode": "light",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "route": "home",
+      "mode": "light",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "route": "home",
+      "mode": "light",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "route": "home",
+      "mode": "dark",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "route": "home",
+      "mode": "dark",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "route": "home",
+      "mode": "dark",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "route": "home",
+      "mode": "dark",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "route": "home",
+      "mode": "dark",
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "registration": true,
+  "returnToBundle": true,
+  "serverBaseIdr": 100,
+  "uniqueCode": 1,
+  "paidOnlyAfterSignedReceipt": true,
+  "replayEntitlementCount": 1,
+  "privateDownload": true,
+  "offlineRetry": true,
+  "diagnostics": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": [
+      {
+        "path": "http://127.0.0.1:18092/api/store/library",
+        "error": ""
+      },
+      {
+        "path": "http://127.0.0.1:18092/api/store/library",
+        "error": ""
+      }
+    ],
+    "httpErrors": [
+      {
+        "path": "http://127.0.0.1:18092/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18092/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18092/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18092/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18092/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18092/api/me",
+        "status": 401
+      }
+    ]
+  },
+  "exceptions": []
+}

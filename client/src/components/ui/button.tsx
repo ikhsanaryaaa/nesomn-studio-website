@@ -8,19 +8,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-accent text-accent-foreground hover:bg-accent-hover shadow-sm',
-        secondary:
-          'bg-surface-2 border border-border text-foreground hover:border-border-strong',
+        primary: 'bg-accent text-accent-foreground hover:bg-accent-hover shadow-sm',
+        secondary: 'bg-surface-2 border border-border text-foreground hover:border-border-strong',
         ghost: 'text-foreground hover:bg-surface-2',
-        danger: 'bg-danger text-white hover:opacity-90',
+        danger: 'border border-danger text-danger hover:bg-danger/10',
         link: 'text-accent underline-offset-4 hover:underline',
       },
       size: {
-        sm: 'h-8 rounded-md px-3 text-[13px] [&_svg]:size-4',
-        md: 'h-[38px] rounded-md px-4 text-sm [&_svg]:size-4',
-        lg: 'h-11 rounded-md px-6 text-base [&_svg]:size-5',
-        icon: 'size-9 rounded-md [&_svg]:size-[18px]',
+        sm: 'min-h-11 rounded-md px-3 text-[13px] [&_svg]:size-4',
+        md: 'min-h-11 rounded-md px-4 text-sm [&_svg]:size-4',
+        lg: 'min-h-12 rounded-full px-6 text-base [&_svg]:size-5',
+        icon: 'size-11 rounded-md [&_svg]:size-[18px]',
       },
     },
     defaultVariants: {
@@ -31,8 +29,7 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
 
@@ -40,11 +37,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
     return (
-      <Comp
-        ref={ref}
-        className={cn(buttonVariants({ variant, size }), className)}
-        {...props}
-      />
+      <Comp ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
     );
   },
 );

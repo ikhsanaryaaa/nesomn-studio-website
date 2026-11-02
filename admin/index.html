@@ -1,8 +1,26 @@
 <!doctype html>
 <html lang="id">
   <head>
+    <script>
+      try {
+        var m = localStorage.getItem('nesomn-theme');
+        var t =
+          m === 'dark' || m === 'light'
+            ? m
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = t;
+        document.documentElement.style.colorScheme = t;
+      } catch {
+        document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light';
+      }
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/admin/nesomn-logo-white.svg" />
     <meta name="robots" content="noindex, nofollow" />
     <title>Nesomn Studio · Admin</title>
   </head>

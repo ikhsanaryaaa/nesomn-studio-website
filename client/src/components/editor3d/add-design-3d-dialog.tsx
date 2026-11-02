@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { editorEpoch } from '@/lib/editor-session';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { UploadCloud, ImageOff } from 'lucide-react';
 import {
@@ -29,6 +30,22 @@ type Props = {
 export function AddDesign3DDialog({ open, onOpenChange }: Props) {
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const readerRef = useRef<FileReader | null>(null);
+  useEffect(
+    () => () => {
+      if (readerRef.current) {
+        readerRef.current.onload = null;
+        readerRef.current.abort();
+      }
+    },
+    [],
+  );
+  useEffect(() => {
+    if (!open && readerRef.current) {
+      readerRef.current.onload = null;
+      readerRef.current.abort();
+    }
+  }, [open]);
   const [dragOver, setDragOver] = useState(false);
   const addDecal = useScene3DEditor((s) => s.addDecal);
 
@@ -58,7 +75,14 @@ export function AddDesign3DDialog({ open, onOpenChange }: Props) {
       return;
     }
     const reader = new FileReader();
-    reader.onload = () => applyDecal(reader.result as string);
+    readerRef.current?.abort();
+    readerRef.current = reader;
+    const epoch = editorEpoch();
+    const version = useScene3DEditor.getState().documentVersion;
+    reader.onload = () => {
+      if (epoch === editorEpoch() && version === useScene3DEditor.getState().documentVersion)
+        applyDecal(reader.result as string);
+    };
     reader.readAsDataURL(file);
   }
 

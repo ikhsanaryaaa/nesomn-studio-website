@@ -1,0 +1,38 @@
+[
+  {
+    "id": "nesomn-abstract-form",
+    "title": "Abstract Form",
+    "url": "/demo/models/nesomn-abstract-form.glb",
+    "poster": "/demo/models/nesomn-abstract-form.svg",
+    "bytes": 24244,
+    "label": "Demo / Sample",
+    "license": "Original Nesomn procedural demonstration; not a marketplace product"
+  },
+  {
+    "id": "nesomn-product-box",
+    "title": "Product Box",
+    "url": "/demo/models/nesomn-product-box.glb",
+    "poster": "/demo/models/nesomn-product-box.svg",
+    "bytes": 7180,
+    "label": "Demo / Sample",
+    "license": "Original Nesomn procedural demonstration; not a marketplace product"
+  },
+  {
+    "id": "nesomn-lowpoly-room",
+    "title": "Lowpoly Room",
+    "url": "/demo/models/nesomn-lowpoly-room.glb",
+    "poster": "/demo/models/nesomn-lowpoly-room.svg",
+    "bytes": 17248,
+    "label": "Demo / Sample",
+    "license": "Original Nesomn procedural demonstration; not a marketplace product"
+  },
+  {
+    "id": "nesomn-typography-block",
+    "title": "Typography Block",
+    "url": "/demo/models/nesomn-typography-block.glb",
+    "poster": "/demo/models/nesomn-typography-block.svg",
+    "bytes": 7076,
+    "label": "Demo / Sample",
+    "license": "Original Nesomn procedural demonstration; not a marketplace product"
+  }
+]

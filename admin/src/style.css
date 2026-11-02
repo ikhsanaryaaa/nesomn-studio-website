@@ -1,0 +1,31 @@
+@import '@fontsource-variable/manrope';
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@nesomn/shared/theme.css';
+.admin-theme-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 24px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+.admin-theme-bar a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+.ant-layout {
+  min-width: 0;
+}
+.ant-btn {
+  min-height: 44px;
+}
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector {
+  min-height: 44px;
+}
+.ant-table-wrapper {
+  overflow-x: auto;
+}

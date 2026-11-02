@@ -1,0 +1,67 @@
+{
+  "browser": "Chrome/156.0.8078.74",
+  "realDockerApi": true,
+  "defaultRedirect": true,
+  "creditPackCreateEdit": true,
+  "bundleMembershipCreateEdit": true,
+  "resourceLists": true,
+  "shots": [
+    {
+      "theme": "light",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "scroll": 753
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "scroll": 1009
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1425
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "scroll": 753
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "scroll": 1009
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1425
+    }
+  ],
+  "diagnostics": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": [],
+    "httpErrors": []
+  },
+  "exceptions": []
+}

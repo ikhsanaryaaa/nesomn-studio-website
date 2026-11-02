@@ -4,6 +4,8 @@ import { eq, sql } from 'drizzle-orm';
 import { db } from '../../db/client.ts';
 import { subscriptions, plans } from '../../db/schema/index.ts';
 import { AppError } from '../../middleware/error.ts';
+import { withUserTransaction } from '../../db/transaction.ts';
+import { effectiveSubscription } from '../../lib/entitlement.ts';
 import { writeAudit } from '../../lib/audit.ts';
 import { parseListQuery, buildOrderBy, setTotalCount } from '../../lib/admin-query.ts';
 import { authPlugin, type AuthUser } from '../../middleware/auth.ts';
@@ -19,7 +21,7 @@ const attachBody = z.object({
   userId: z.string().uuid(),
   planId: z.string().uuid(),
   status: z.enum(['active', 'canceled', 'expired', 'pending']).default('active'),
-  periodDays: z.coerce.number().int().positive().default(30),
+  periodDays: z.coerce.number().int().positive().max(3660).default(30),
 });
 
 /** Manajemen langganan manual oleh admin (attach/cabut/atur status). */
@@ -51,19 +53,34 @@ export const subscriptionAdminRoutes = new Elysia({ prefix: '/subscriptions' })
 
     const start = new Date();
     const end = new Date(start.getTime() + input.periodDays * 24 * 60 * 60 * 1000);
-    const [row] = await db
-      .insert(subscriptions)
-      .values({
-        userId: input.userId,
-        planId: input.planId,
-        status: input.status,
-        cycle: plan.cycle,
-        segment: plan.segment,
-        gateway: 'manual',
-        currentPeriodStart: start,
-        currentPeriodEnd: end,
-      })
-      .returning();
+    const row = await withUserTransaction(input.userId, async (tx) => {
+      if (await effectiveSubscription(input.userId, new Date(), tx))
+        throw new AppError(
+          'CONFLICT',
+          'Masih ada periode subscription aktif; rekonsiliasi dahulu.',
+          409,
+        );
+      const [row] = await tx
+        .insert(subscriptions)
+        .values({
+          userId: input.userId,
+          planId: input.planId,
+          status: input.status,
+          cycle: plan.cycle,
+          segment: plan.segment,
+          gateway: 'manual',
+          benefits: {
+            creditQuota: 0,
+            maxConcurrentSessions: plan.maxConcurrentSessions,
+            editorAccess: plan.editorAccess,
+            code: plan.code,
+          },
+          currentPeriodStart: start,
+          currentPeriodEnd: end,
+        })
+        .returning();
+      return row!;
+    });
     await writeAudit((user as AuthUser).id, 'attach', 'subscription', row.id, {
       userId: input.userId,
       planId: input.planId,
@@ -76,12 +93,21 @@ export const subscriptionAdminRoutes = new Elysia({ prefix: '/subscriptions' })
     const patch = z
       .object({ status: z.enum(['active', 'canceled', 'expired', 'pending']) })
       .parse(body);
-    const [row] = await db
-      .update(subscriptions)
-      .set({ status: patch.status, updatedAt: new Date() })
-      .where(eq(subscriptions.id, params.id))
-      .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Langganan tidak ditemukan.', 404);
+    const target = await db.query.subscriptions.findFirst({
+      where: eq(subscriptions.id, params.id),
+    });
+    if (!target) throw new AppError('NOT_FOUND', 'Langganan tidak ditemukan.', 404);
+    const row = await withUserTransaction(target.userId, async (tx) => {
+      const current = await effectiveSubscription(target.userId, new Date(), tx);
+      if (['active', 'canceled'].includes(patch.status) && current && current.id !== target.id)
+        throw new AppError('CONFLICT', 'Periode subscription bertabrakan.', 409);
+      const [updated] = await tx
+        .update(subscriptions)
+        .set({ status: patch.status, updatedAt: new Date() })
+        .where(eq(subscriptions.id, target.id))
+        .returning();
+      return updated!;
+    });
     await writeAudit((user as AuthUser).id, 'update', 'subscription', row.id, {
       status: patch.status,
     });

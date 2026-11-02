@@ -1,0 +1,9 @@
+{
+  "source": "https://api.github.com/repos/oven-sh/bun/releases/latest",
+  "tag": "bun-v1.4.4",
+  "prerelease": false,
+  "draft": false,
+  "publishedAt": "2026-10-22T10:11:32Z",
+  "url": "https://github.com/oven-sh/bun/releases/tag/bun-v1.4.4",
+  "checkedAt": "2026-10-31T13:43:06.140Z"
+}

@@ -1,0 +1,27 @@
+{
+  "fixture": "Production Linux assets, isolated API double, no production data or Docker",
+  "slugSwitch": {
+    "firstLayers": 1,
+    "secondLayers": 1,
+    "bug": false,
+    "reason": "Path transition remounts editor and resets state"
+  },
+  "accountSwitch": {
+    "currentUser": "user-B",
+    "visibleTitle": "PRIVATE PROJECT USER A",
+    "projectGetsBeforeProbe": 1,
+    "serverOwnershipStatus": 404
+  },
+  "expired2dImage": {
+    "pixelsBefore": 2704,
+    "pixelsAfter": 0,
+    "layerStillSaved": 1,
+    "reSignedLookups": 0,
+    "simulatedExpiry": true
+  },
+  "save3d": {
+    "sentTitle": "Untitled 3D Scene",
+    "typedWhilePending": "EDITED WHILE SAVING",
+    "afterResponse": "Untitled 3D Scene"
+  }
+}

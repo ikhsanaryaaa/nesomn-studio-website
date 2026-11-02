@@ -1,17 +1,18 @@
 import { useLocation } from 'react-router';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 /** Animasi transisi halus antar route (DESIGN.md §9). */
 export function PageTransition({ children }: { children: ReactNode }) {
   const location = useLocation();
+  const reduced = useReducedMotion();
 
   return (
     <motion.div
       key={location.pathname}
-      initial={{ opacity: 0, y: 8 }}
+      initial={reduced ? false : { opacity: 1, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: 'easeInOut' }}
+      transition={{ duration: reduced ? 0 : 0.18, ease: 'easeOut' }}
       className="h-full"
     >
       {children}

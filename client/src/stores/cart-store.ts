@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { AssetDTO } from '@nesomn/shared';
 
 /**
@@ -14,11 +15,16 @@ type CartState = {
   clear: () => void;
 };
 
-export const useCart = create<CartState>((set, get) => ({
-  items: [],
-  add: (asset) =>
-    set((s) => (s.items.some((i) => i.id === asset.id) ? s : { items: [...s.items, asset] })),
-  remove: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
-  has: (id) => get().items.some((i) => i.id === id),
-  clear: () => set({ items: [] }),
-}));
+export const useCart = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      add: (asset) =>
+        set((s) => (s.items.some((i) => i.id === asset.id) ? s : { items: [...s.items, asset] })),
+      remove: (id) => set((s) => ({ items: s.items.filter((i) => i.id !== id) })),
+      has: (id) => get().items.some((i) => i.id === id),
+      clear: () => set({ items: [] }),
+    }),
+    { name: 'nesomn-cart', version: 1, partialize: (state) => ({ items: state.items }) },
+  ),
+);

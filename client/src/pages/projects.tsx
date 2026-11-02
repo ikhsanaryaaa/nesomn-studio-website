@@ -12,9 +12,17 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/hooks/use-auth';
 import { api } from '@/lib/api';
 import type { ProjectKind } from '@nesomn/shared';
+import { AuthGate, PageState } from '@/components/page-state';
 
 /** Daftar project (scene 2D/3D) milik user: buka kembali atau hapus. */
 export default function ProjectsPage() {
+  return (
+    <AuthGate>
+      <ProjectsContent />
+    </AuthGate>
+  );
+}
+function ProjectsContent() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const qc = useQueryClient();
@@ -22,7 +30,12 @@ export default function ProjectsPage() {
 
   const editorPath = kind === 'scene3d' ? '/editor/3d' : '/editor/scene';
 
-  const { data: projects, isLoading } = useQuery({
+  const {
+    data: projects,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ['projects', kind],
     queryFn: () => api.projects.list(kind),
     enabled: isAuthenticated,
@@ -51,7 +64,7 @@ export default function ProjectsPage() {
           </Button>
         }
       />
-      <div className="mx-auto max-w-6xl px-6 py-8">
+      <div className="page-wrap">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-semibold tracking-tight">My Projects</h1>
           <Tabs value={kind} onValueChange={(v) => setKind(v as ProjectKind)}>
@@ -64,6 +77,8 @@ export default function ProjectsPage() {
 
         {!authLoading && !isAuthenticated ? (
           <p className="text-sm text-muted-foreground">Login untuk melihat project Anda.</p>
+        ) : isError ? (
+          <PageState title="Project tidak dapat dimuat" retry={() => void refetch()} />
         ) : isLoading ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -90,7 +105,11 @@ export default function ProjectsPage() {
                     size="icon"
                     variant="ghost"
                     title="Hapus"
-                    onClick={() => remove.mutate(p.id)}
+                    aria-label={'Hapus ' + p.title}
+                    onClick={() => {
+                      if (window.confirm('Hapus project ini? Tindakan ini tidak dapat dibatalkan.'))
+                        remove.mutate(p.id);
+                    }}
                     disabled={remove.isPending}
                   >
                     <Trash2 className="size-4" />

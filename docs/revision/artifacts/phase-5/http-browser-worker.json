@@ -1,0 +1,38 @@
+{
+  "fixture": "Demo / Sample only; no merchant calls",
+  "browser": "Chrome/156.0.8078.74",
+  "invoicePending": true,
+  "unsignedReceipt": 401,
+  "serverPrices": true,
+  "uniqueCode": 2,
+  "workerLostAck": "PASS: durable delivery 1",
+  "workerRecovered": "PASS: durable delivery 0",
+  "finalBalance": 10,
+  "finalPaid": true,
+  "screenshots": [
+    {
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "width": 1024,
+      "scroll": 1024
+    }
+  ]
+}

@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { useToast } from '@/components/ui/use-toast';
+import { PendingJobActions } from './pending-job-actions';
+import { JobRecovery } from './job-recovery';
 import { CreditBadge } from './credit-badge';
 import { api, ApiRequestError } from '@/lib/api';
 import { useAiJob } from '@/hooks/use-ai-job';
@@ -45,11 +47,15 @@ export function MotionPanel() {
     queryFn: () => api.ai.models('motion'),
   });
   const selectedModel = models.data?.find((m) => m.id === modelId) ?? models.data?.[0];
-  const { job, isPending, isDone, isFailed } = useAiJob(jobId);
+  const { job, isPending, isDone, isFailed, error, retry } = useAiJob(jobId);
 
   function readFile(file: File, setter: (v: string) => void) {
     if (!ACCEPTED.includes(file.type)) {
-      toast({ title: 'Format tidak didukung', description: 'PNG, JPG, atau WEBP.', variant: 'danger' });
+      toast({
+        title: 'Format tidak didukung',
+        description: 'PNG, JPG, atau WEBP.',
+        variant: 'danger',
+      });
       return;
     }
     if (file.size > MAX_BYTES) {
@@ -62,12 +68,17 @@ export function MotionPanel() {
   }
 
   async function handleGenerate() {
-    if (!selectedModel) {
+    if (submitting || isPending) return;
+    if (!selectedModel || models.isError) {
       toast({ title: 'Pilih model dulu', variant: 'danger' });
       return;
     }
     if (!startFrame) {
-      toast({ title: 'Start frame wajib', description: 'Unggah gambar frame awal.', variant: 'danger' });
+      toast({
+        title: 'Start frame wajib',
+        description: 'Unggah gambar frame awal.',
+        variant: 'danger',
+      });
       return;
     }
     if (!prompt.trim()) {
@@ -107,12 +118,14 @@ export function MotionPanel() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Model</label>
+        <label htmlFor="ai-motion-model" className="text-xs font-medium text-muted-foreground">
+          Model
+        </label>
         <select
           id="ai-motion-model"
           value={selectedModel?.id ?? ''}
           onChange={(e) => setModelId(e.target.value)}
-          className="rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
+          className="min-h-11 rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
         >
           {models.isLoading && <option>Memuat...</option>}
           {models.data?.length === 0 && <option value="">Belum ada model video</option>}
@@ -173,14 +186,25 @@ export function MotionPanel() {
           <label className="text-xs font-medium text-muted-foreground">Durasi</label>
           <span className="font-mono text-xs">{durationSec}s</span>
         </div>
-        <Slider value={[durationSec]} onValueChange={(val) => setDurationSec(val[0])} min={1} max={10} step={1} />
+        <Slider
+          value={[durationSec]}
+          onValueChange={(val) => setDurationSec(val[0])}
+          min={1}
+          max={10}
+          step={1}
+        />
       </div>
 
       <div className="flex flex-col gap-1.5">
         <label className="text-xs font-medium text-muted-foreground">Aspect ratio</label>
         <div className="flex flex-wrap gap-2">
           {ASPECTS.map((a) => (
-            <Button key={a} size="sm" variant={aspect === a ? 'primary' : 'ghost'} onClick={() => setAspect(a)}>
+            <Button
+              key={a}
+              size="sm"
+              variant={aspect === a ? 'primary' : 'ghost'}
+              onClick={() => setAspect(a)}
+            >
               {a}
             </Button>
           ))}
@@ -188,7 +212,9 @@ export function MotionPanel() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Prompt</label>
+        <label htmlFor="ai-motion-prompt" className="text-xs font-medium text-muted-foreground">
+          Prompt
+        </label>
         <Input
           id="ai-motion-prompt"
           value={prompt}
@@ -197,14 +223,37 @@ export function MotionPanel() {
         />
       </div>
 
-      <Button id="ai-motion-generate" onClick={handleGenerate} disabled={submitting || isPending || !selectedModel}>
+      <Button
+        id="ai-motion-generate"
+        onClick={handleGenerate}
+        disabled={submitting || isPending || !selectedModel || models.isError}
+      >
         {isPending ? <Loader2 className="size-4 animate-spin" /> : <Video className="size-4" />}
         {isPending ? 'Generating...' : 'Generate Video'}
       </Button>
 
+      {models.isError && (
+        <p role="alert" className="text-sm text-danger">
+          Model gagal dimuat.{' '}
+          <Button variant="ghost" onClick={() => void models.refetch()}>
+            Coba lagi
+          </Button>
+        </p>
+      )}
+      {error && (
+        <p role="alert" className="text-sm text-danger">
+          Status job belum dapat diverifikasi.{' '}
+          <Button variant="ghost" onClick={() => void retry()}>
+            Coba lagi
+          </Button>
+        </p>
+      )}
+      <PendingJobActions job={job} />
+      <JobRecovery tab="motion" onSelect={setJobId} />
       {isFailed && (
         <p className="text-sm text-danger">
-          Generate gagal: {job?.error ?? 'tidak diketahui'}. Credit dikembalikan.
+          Generate gagal: {job?.error ?? 'tidak diketahui'}. Periksa saldo terbaru atau hubungi
+          admin jika perlu rekonsiliasi.
         </p>
       )}
       {isDone && job?.resultUrl && (
@@ -215,7 +264,15 @@ export function MotionPanel() {
 }
 
 /** Kotak pratinjau / pemicu unggah frame. */
-function FramePicker({ label, value, onClick }: { label: string; value: string; onClick: () => void }) {
+function FramePicker({
+  label,
+  value,
+  onClick,
+}: {
+  label: string;
+  value: string;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"

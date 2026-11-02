@@ -1,0 +1,7 @@
+bun install v1.4.4 (38afee6c8)
+Bun 1.4.4
+
+Checked 646 installs across 749 packages (no changes) [1168.00ms]
+
+$ bun run check:runtime
+$ bun run scripts/check-runtime.mjs

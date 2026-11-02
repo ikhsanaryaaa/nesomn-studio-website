@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-31",
+  "origin": "https://github.com/ikhsanaryaaa/nesomn-studio-website",
+  "branch": "works/runtime-tooling-upgrade",
+  "head": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "committed": false,
+  "runtime": {
+    "bun": "1.4.4",
+    "globalBun": "1.4.0",
+    "elysia": "1.4.30",
+    "cors": "1.4.2"
+  },
+  "lockSha256": "a8125a3484e632f857531e014b78f6e6b5cf59f57d339f0588a113c25ca2d5e6",
+  "checks": [
+    {
+      "name": "contrast",
+      "exit": 0
+    },
+    {
+      "name": "format",
+      "exit": 0
+    },
+    {
+      "name": "frozen",
+      "exit": 0
+    },
+    {
+      "name": "theme",
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "unit",
+      "exit": 0
+    },
+    {
+      "name": "qris-pure",
+      "exit": 0
+    },
+    {
+      "name": "deployment",
+      "exit": 0
+    },
+    {
+      "name": "compose",
+      "exit": 0
+    },
+    {
+      "name": "node-guards",
+      "exit": 0
+    },
+    {
+      "name": "build",
+      "exit": 0
+    }
+  ],
+  "integration": {
+    "security": {
+      "pass": 29,
+      "assertions": 122
+    },
+    "baseline": {
+      "pass": 24,
+      "assertions": 65
+    },
+    "qris": {
+      "pass": 5,
+      "assertions": 25
+    }
+  },
+  "browser": {
+    "fixture": "Demo / Sample, fixed disposable database + actual production gateway; synthetic receipt only",
+    "browser": "Chrome/156.0.8078.74",
+    "measurements": [
+      {
+        "route": "home",
+        "mode": "light",
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "route": "home",
+        "mode": "light",
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "route": "home",
+        "mode": "light",
+        "width": 768,
+        "scroll": 768
+      },
+      {
+        "route": "home",
+        "mode": "light",
+        "width": 1024,
+        "scroll": 1024
+      },
+      {
+        "route": "home",
+        "mode": "light",
+        "width": 1440,
+        "scroll": 1440
+      },
+      {
+        "route": "home",
+        "mode": "dark",
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "route": "home",
+        "mode": "dark",
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "route": "home",
+        "mode": "dark",
+        "width": 768,
+        "scroll": 768
+      },
+      {
+        "route": "home",
+        "mode": "dark",
+        "width": 1024,
+        "scroll": 1024
+      },
+      {
+        "route": "home",
+        "mode": "dark",
+        "width": 1440,
+        "scroll": 1440
+      }
+    ],
+    "registration": true,
+    "returnToBundle": true,
+    "serverBaseIdr": 100,
+    "uniqueCode": 2,
+    "paidOnlyAfterSignedReceipt": true,
+    "replayEntitlementCount": 1,
+    "privateDownload": true,
+    "offlineRetry": true,
+    "exceptions": []
+  },
+  "dockerBuild": "PASS",
+  "independentReview": "UNAVAILABLE: reviewer usage limit; no verdict",
+  "gateway": {
+    "login": 200,
+    "register": 200,
+    "unknownApiJson": 404,
+    "missingAsset": 404,
+    "ready": 200
+  },
+  "skipped": [
+    "Merchant/live wallet/Google consent/provider",
+    "Remote CI/production deploy",
+    "Full editor3DGLB/export/scene operations",
+    "Full WCAG/console network certification"
+  ],
+  "cleanup": {
+    "containers": [
+      {
+        "name": "/nesomn-revision-phase7-app-1",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-phase7-gateway-1",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-redis-private",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-test-test-db-1",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-test-test-redis-1",
+        "status": "exited",
+        "exitCode": 0
+      }
+    ],
+    "syntheticUsersRemaining": 0,
+    "syntheticProductsRemaining": 0,
+    "syntheticFileRemoved": true,
+    "volumesDeleted": false,
+    "networksDeleted": false,
+    "unrelatedContainersTouched": false
+  }
+}

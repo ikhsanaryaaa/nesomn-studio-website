@@ -6,7 +6,17 @@ import prettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default tseslint.config(
-  { ignores: ['**/dist/**', '**/build/**', '**/out/**', '**/node_modules/**'] },
+  {
+    ignores: [
+      '**/dist/**',
+      '**/build/**',
+      '**/out/**',
+      '**/node_modules/**',
+      '.cache/**',
+      'graphify-out/**',
+      '.superpowers/**',
+    ],
+  },
 
   // Base JS + TS rules for all workspaces
   js.configs.recommended,
@@ -20,7 +30,9 @@ export default tseslint.config(
       'react-refresh': reactRefresh,
     },
     rules: {
-      ...reactHooks.configs.recommended.rules,
+      // Preserve the pre-upgrade Hooks checks; React Compiler is not enabled in this project.
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
     },
     languageOptions: {
@@ -29,6 +41,10 @@ export default tseslint.config(
   },
 
   // Node/Bun globals for server-side
+  {
+    files: ['scripts/**/*.mjs', 'tests/**/*.{mjs,ts}'],
+    languageOptions: { globals: globals.node },
+  },
   {
     files: ['api/**/*.ts', 'worker/**/*.ts'],
     languageOptions: {

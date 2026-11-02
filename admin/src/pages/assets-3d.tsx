@@ -70,7 +70,9 @@ export const Asset3dList = () => {
           dataIndex="status"
           title="Status"
           render={(v: string) => (
-            <Tag color={v === 'published' ? 'green' : v === 'archived' ? 'default' : 'orange'}>{v}</Tag>
+            <Tag color={v === 'published' ? 'green' : v === 'archived' ? 'default' : 'orange'}>
+              {v}
+            </Tag>
           )}
         />
         <Table.Column
@@ -169,12 +171,22 @@ const Asset3dFields = () => {
 
       <Row gutter={16}>
         <Col xs={24} sm={12}>
-          <Form.Item label="Marketplace (one-time purchase)" name="isMarketplace" valuePropName="checked" initialValue={false}>
+          <Form.Item
+            label="Marketplace (one-time purchase)"
+            name="isMarketplace"
+            valuePropName="checked"
+            initialValue={false}
+          >
             <Switch />
           </Form.Item>
         </Col>
         <Col xs={24} sm={12}>
-          <Form.Item label="Subscription Asset" name="isSubscriptionAsset" valuePropName="checked" initialValue={true}>
+          <Form.Item
+            label="Subscription Asset"
+            name="isSubscriptionAsset"
+            valuePropName="checked"
+            initialValue={true}
+          >
             <Switch />
           </Form.Item>
         </Col>
@@ -192,7 +204,11 @@ const Asset3dFields = () => {
       </Form.Item>
 
       <Card size="small" title="Files & Media" style={{ marginBottom: 24 }}>
-        <Form.Item label="Preview Image" help="Gambar yang tampil di storefront." style={{ marginBottom: 16 }}>
+        <Form.Item
+          label="Preview Image"
+          help="Gambar yang tampil di storefront."
+          style={{ marginBottom: 16 }}
+        >
           <Upload
             accept="image/*"
             maxCount={1}
@@ -200,7 +216,7 @@ const Asset3dFields = () => {
             customRequest={async ({ file, onSuccess, onError }) => {
               try {
                 const data = await uploadTo('preview', file as File);
-                form.setFieldValue('previews', [data.previewUrl]);
+                form.setFieldValue('previews', [data.previewPath]);
                 message.success('Preview ter-upload');
                 onSuccess?.(data);
               } catch (err) {
@@ -209,7 +225,11 @@ const Asset3dFields = () => {
               }
             }}
           >
-            <Button icon={<UploadOutlined />} type={previews?.length ? 'default' : 'primary'} ghost={!previews?.length}>
+            <Button
+              icon={<UploadOutlined />}
+              type={previews?.length ? 'default' : 'primary'}
+              ghost={!previews?.length}
+            >
               {previews?.length ? 'Ganti preview' : 'Upload preview'}
             </Button>
           </Upload>
@@ -239,8 +259,12 @@ const Asset3dFields = () => {
               }
             }}
           >
-            <Button icon={<UploadOutlined />} type={glbFile ? 'default' : 'primary'} ghost={!glbFile}>
-              {glbFile ?? fileKey ? 'Ganti GLB' : 'Upload GLB'}
+            <Button
+              icon={<UploadOutlined />}
+              type={glbFile ? 'default' : 'primary'}
+              ghost={!glbFile}
+            >
+              {(glbFile ?? fileKey) ? 'Ganti GLB' : 'Upload GLB'}
             </Button>
           </Upload>
         </Form.Item>

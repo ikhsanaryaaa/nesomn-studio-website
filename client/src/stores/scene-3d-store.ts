@@ -17,7 +17,9 @@ const DEFAULT_STATE: Scene3DState = {
 };
 
 type Scene3DStoreState = {
+  documentVersion: number;
   modelKey: string;
+  modelSource?: 'catalog';
   modelUrl: string | null;
   background: string;
   materialColor: string;
@@ -34,13 +36,19 @@ type Scene3DStoreState = {
   setGrain: (value: number) => void;
   setCamera: (preset: CameraPreset) => void;
   setModelUrl: (url: string | null) => void;
+  setModelKey: (key: string) => void;
   addDecal: (src: string) => void;
   updateDecal: (id: string, patch: Partial<Decal3D>) => void;
   removeDecal: (id: string) => void;
   selectDecal: (id: string | null) => void;
   loadState: (state: Scene3DState, projectId: string, title: string) => void;
   toState: () => Scene3DState;
-  markSaved: (projectId: string, title: string) => void;
+  markSaved: (
+    projectId: string,
+    title: string,
+    snapshot: Scene3DState,
+    documentVersion: number,
+  ) => boolean;
   setTitle: (title: string) => void;
   reset: () => void;
 };
@@ -51,6 +59,7 @@ function uid(): string {
 
 export const useScene3DEditor = create<Scene3DStoreState>((set, get) => ({
   ...DEFAULT_STATE,
+  documentVersion: 0,
   modelUrl: null,
   selectedDecalId: null,
   dirty: false,
@@ -66,6 +75,7 @@ export const useScene3DEditor = create<Scene3DStoreState>((set, get) => ({
   setCamera: (preset) => set({ camera: preset, dirty: true }),
 
   setModelUrl: (url) => set({ modelUrl: url }),
+  setModelKey: (key) => set({ modelKey: key, modelSource: 'catalog', modelUrl: null, dirty: true }),
 
   addDecal: (src) => {
     const decal: Decal3D = {
@@ -96,7 +106,10 @@ export const useScene3DEditor = create<Scene3DStoreState>((set, get) => ({
 
   loadState: (state, projectId, title) =>
     set({
+      documentVersion: get().documentVersion + 1,
       modelKey: state.modelKey ?? DEFAULT_STATE.modelKey,
+      modelSource: state.modelSource,
+      modelUrl: null,
       background: state.background ?? DEFAULT_STATE.background,
       materialColor: state.materialColor ?? DEFAULT_STATE.materialColor,
       grain: state.grain ?? DEFAULT_STATE.grain,
@@ -109,17 +122,35 @@ export const useScene3DEditor = create<Scene3DStoreState>((set, get) => ({
     }),
 
   toState: () => {
-    const { modelKey, background, materialColor, grain, camera, decals } = get();
-    return { modelKey, background, materialColor, grain, camera, decals };
+    const { modelKey, modelSource, background, materialColor, grain, camera, decals } = get();
+    return {
+      modelKey,
+      ...(modelSource ? { modelSource } : {}),
+      background,
+      materialColor,
+      grain,
+      camera,
+      decals,
+    };
   },
 
-  markSaved: (projectId, title) => set({ projectId, title, dirty: false }),
+  markSaved: (projectId, title, snapshot, documentVersion) => {
+    const current = get();
+    if (current.documentVersion !== documentVersion) return false;
+    const unchanged =
+      current.title === title && JSON.stringify(current.toState()) === JSON.stringify(snapshot);
+    set({ projectId, dirty: !unchanged });
+    return true;
+  },
 
   setTitle: (title) => set({ title, dirty: true }),
 
   reset: () =>
     set({
       ...DEFAULT_STATE,
+      documentVersion: get().documentVersion + 1,
+      modelSource: undefined,
+      modelUrl: null,
       selectedDecalId: null,
       dirty: false,
       projectId: null,

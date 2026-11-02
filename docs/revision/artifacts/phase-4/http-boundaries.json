@@ -1,0 +1,31 @@
+{
+  "/health/live": {
+    "status": 200,
+    "contentType": "application/json;charset=utf-8",
+    "body": {
+      "status": "ok",
+      "uptime": 166.160675131
+    }
+  },
+  "/health/ready": {
+    "status": 200,
+    "contentType": "application/json;charset=utf-8",
+    "body": {
+      "status": "ready",
+      "checks": {
+        "database": true,
+        "redis": true
+      }
+    }
+  },
+  "/api/unknown": {
+    "status": 404,
+    "contentType": "application/json;charset=utf-8",
+    "body": {
+      "error": {
+        "code": "NOT_FOUND",
+        "message": "Resource tidak ditemukan."
+      }
+    }
+  }
+}

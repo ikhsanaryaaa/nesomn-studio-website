@@ -1,0 +1,6 @@
+{
+  "app": "sha256:3803f37989ba970f238ba48b8a8d58b8d4cadf4d95503cc7dfcdec4c5c7380a2",
+  "worker": "sha256:e22be39e714ef9cc5d858721f5fe73b52d0b1a31387ce858e79547f9f539b2ad",
+  "bun": "1.4.4",
+  "workerHealth": 0
+}

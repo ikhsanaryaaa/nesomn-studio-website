@@ -42,7 +42,7 @@ type SceneEditorState = {
   redo: () => void;
   loadState: (state: SceneState, projectId: string, title: string) => void;
   toState: () => SceneState;
-  markSaved: (projectId: string, title: string) => void;
+  markSaved: (projectId: string, title: string, savedState?: SceneState) => void;
   setTitle: (title: string) => void;
   reset: () => void;
 };
@@ -195,7 +195,11 @@ export const useSceneEditor = create<SceneEditorState>((set, get) => {
       return { canvas, objects };
     },
 
-    markSaved: (projectId, title) => set({ projectId, title, dirty: false }),
+    markSaved: (projectId, title, savedState) => {
+      const current = get();
+      const unchanged = !savedState || (current.title === title && JSON.stringify(current.toState()) === JSON.stringify(savedState));
+      set({ projectId, title: savedState ? current.title : title, dirty: !unchanged });
+    },
 
     setTitle: (title) => set({ title, dirty: true }),
 

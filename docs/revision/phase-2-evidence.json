@@ -1,0 +1,233 @@
+{
+  "date": "2026-10-31",
+  "recordedAtUtc": "2026-10-30T20:13:39.197Z",
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website.git",
+  "branch": "works/runtime-tooling-upgrade",
+  "commit": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "uncommitted": true,
+  "runtime": {
+    "bun": "1.4.4",
+    "bunExecutable": ".cache/runtime/bun-1.4.4/bun-windows-x64/bun.exe",
+    "globalBunUnchanged": "1.4.0",
+    "node": "v24.18.0",
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "bunTypes": "1.4.4",
+    "bunArchiveSha256": "cd2c0fccc78f3ede1f50ca827a15f063eda13d4d150a3d0674f4f6e323d864a5",
+    "bunDockerIndex": "sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a"
+  },
+  "lockfile": {
+    "sha256": "95afff69a5504197a958829f630e8f55e8fbade43a34e43e0721b330f0aaf3e8",
+    "unchangedByFinalFrozenInstall": true
+  },
+  "sourceCompatibility": {
+    "baselineFileCount": 157,
+    "unchanged": 156,
+    "changed": [
+      "client/src/main.tsx"
+    ]
+  },
+  "migrations": [
+    {
+      "path": "api/drizzle/0000_worthless_hellcat.sql",
+      "sha256": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0001_familiar_joshua_kane.sql",
+      "sha256": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0002_milky_nightshade.sql",
+      "sha256": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0003_asset_editor_separation.sql",
+      "sha256": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4",
+      "unchanged": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "frozen-install",
+      "command": "bun --no-env-file install --frozen-lockfile",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/final-frozen-install.log",
+      "logSha256": "97a7da588f9949ffb1cd4eafd35bf5efa0d8c0ecf2a4b0a28c9bad551c6d7e52"
+    },
+    {
+      "name": "typecheck",
+      "command": "bun --no-env-file --no-install run typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/final-typecheck.log",
+      "logSha256": "2f2408dfd2f75f1702281f4de9d23047ba1629dbdc06937fbe64ec2dc484839f"
+    },
+    {
+      "name": "lint",
+      "command": "bun --no-env-file --no-install run lint",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/final-lint.log",
+      "logSha256": "648510554df2623c1af0ea3637611dcfc1375b441ede72a84fa1db184f290b13"
+    },
+    {
+      "name": "build",
+      "command": "bun --no-env-file --no-install run build",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/final-build.log",
+      "logSha256": "3d4e57b19369dc50941c82b31b973dfc86e91d87a5a0440392745d6d90ed3da9",
+      "environment": {
+        "NODE_ENV": "production"
+      }
+    },
+    {
+      "name": "guards-and-prerender",
+      "command": "node --test tests/baseline-runner.test.mjs tests/runtime-pin.test.mjs tests/prerender-exit.test.mjs",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 10,
+      "log": ".cache/revision-phase-2/guards-and-prerender.log",
+      "logSha256": "1469a5ec27164fa026173236b54e386a6710f682918fa529a4092a5b61510dbc"
+    },
+    {
+      "name": "unit",
+      "command": "node scripts/test-baseline.mjs unit",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 22,
+      "log": ".cache/revision-phase-2/unit.log",
+      "logSha256": "b933041eeb38a541bcb5d87d07dde875857b848f400e2a691cd925ab17c7976e"
+    },
+    {
+      "name": "migration",
+      "command": "bun --no-env-file --no-install --cwd api src/db/migrate.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/migration.log",
+      "logSha256": "e6a0ab70bf03bc0ed17ede69e621e83d975a4d031bb0c1bc24c2738628ed75eb"
+    },
+    {
+      "name": "integration",
+      "command": "NESOMN_DISPOSABLE_TESTS=1 node scripts/test-baseline.mjs integration",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 24,
+      "log": ".cache/revision-phase-2/integration.log",
+      "logSha256": "1b64c36c1c4c8133d42e1e752b298b457fd50ffb483b85bb0a06ea681c103327"
+    },
+    {
+      "name": "docker-api",
+      "command": "docker build -f api/Dockerfile -t nesomn-runtime-check:phase2 .",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/docker-api-build.log",
+      "logSha256": "d3bd2d076a279f7fbaa20684e8dbd063d1f0fd53fbaefb0d9257e61f116a0140"
+    },
+    {
+      "name": "docker-worker",
+      "command": "docker build -f worker/Dockerfile -t nesomn-worker-check:phase2 .",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/docker-worker-build.log",
+      "logSha256": "62065c4ea53f4566b758546ada89d7340cb10dcc61276733743249e36dab1866"
+    },
+    {
+      "name": "docker-client",
+      "command": "docker build -f client/Dockerfile -t nesomn-client-check:phase2 .",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/docker-client-build.log",
+      "logSha256": "5ba02cc44c55263dcee39485aceb2217bbc257e812ef46f0b2bf63e10d6a804d"
+    },
+    {
+      "name": "docker-admin",
+      "command": "docker build -f admin/Dockerfile -t nesomn-admin-check:phase2 .",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-2/docker-admin-build.log",
+      "logSha256": "6d9a72af5affedb9f10752869b05c72c4ed94b74b79f39dbb89d0046662d08fa"
+    }
+  ],
+  "additionalChecks": {
+    "runtimeCliGuard": "PASS: global 1.4.0 exit1 rejected; private 1.4.4 exit0",
+    "apiImageSmoke": "PASS: Bun1.4.4; /app/.env, /app/api/.env, /app/.cache, /app/.git absent",
+    "ciYaml": "PASS: Bun.YAML parse, job test env and build-step production env asserted",
+    "composeMain": {
+      "services": [
+        "db",
+        "redis",
+        "api",
+        "admin",
+        "client",
+        "worker"
+      ],
+      "twoServiceAcceptance": "NOT_MET: phase3"
+    },
+    "disposableShutdown": {
+      "project": "nesomn-revision-test",
+      "services": {
+        "test-db": {
+          "state": "exited",
+          "exitCode": 0
+        },
+        "test-redis": {
+          "state": "exited",
+          "exitCode": 0
+        }
+      },
+      "namedVolumes": 0,
+      "productionUsed": false
+    }
+  },
+  "warnings": [
+    "Two existing Fast Refresh warnings: badge.tsx:33, button.tsx:53",
+    "Client 3D and admin chunks exceed Vite 500kB warning limit"
+  ],
+  "skipped": [
+    "GitHub Actions remote run: no push",
+    "Browser hydration/responsive/theme/WebGL/screenshot acceptance",
+    "Gateway routing and external service deployment: phase3",
+    "Live merchant/OAuth/R2/AI provider",
+    "BullMQ consumer retry/delivery end-to-end",
+    "Production schema upgrade"
+  ],
+  "review": {
+    "status": "CLEAN",
+    "reviewer": "phase2_final_review",
+    "date": "2026-10-31",
+    "findingsResolved": [
+      "Important: build inherited NODE_ENV=test; override build-step production and regression RED/GREEN"
+    ],
+    "independentlyVerified": [
+      "Repository identity",
+      "10 Node tests PASS",
+      "12 log hashes and lockfile hash",
+      "Runtime/CI/Docker/source/docs scope"
+    ],
+    "notRerun": [
+      "Integration",
+      "Migration",
+      "Docker builds",
+      "GitHub Actions remote"
+    ]
+  },
+  "regressions": [
+    {
+      "name": "prerender process exit",
+      "red": "Three routes rendered then subprocess timed out at10s",
+      "green": "Three routes rendered, normal subprocess exit, root build0"
+    },
+    {
+      "name": "production React artifacts",
+      "redLog": ".cache/revision-phase-2/production-assets-red.log",
+      "red": "Development marker found in previous test-env build",
+      "green": "Production rebuild exit0, development marker absent, final10 Node tests pass"
+    }
+  ],
+  "phaseStatus": "COMPLETE within phase2 scope; phase3 not started"
+}

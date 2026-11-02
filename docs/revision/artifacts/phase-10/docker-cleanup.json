@@ -1,0 +1,579 @@
+{
+  "time": "2026-10-31T14:07:29.259Z",
+  "removed": [
+    {
+      "name": "/nesomn-release-test-ai-worker",
+      "id": "ab75a7c2144b4c4810a6b47e077e5a8147789b6658e3217ac0fd8af93b532f9c",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-release-test-gateway-1",
+      "id": "e1c1f83acb61e4d1c5ca9bb1d1e8dd7153b92c5dd9340b34d840779bd8317a41",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-release-test-app-1",
+      "id": "cd7781895b1bc84df8c6cd9257bc32783823f452488d5e650d305dbe7d021240",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-release-test-redis",
+      "id": "e2bd5832641a6cb2bc37a85aec54b6a43f99e69b4c841ed5988a788a157ecb70",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-release-test-qris-offline",
+      "id": "e7de459620e2fc8d213045f14350de3724e11ba21bd9781e4607779b1e6392fd",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-revision-test-test-db-1",
+      "id": "8548403744e6abc31a54b3494c2c8b79e70bbb699c8661392663c8e095835aab",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-revision-test-test-redis-1",
+      "id": "a1b9763b1af2a21d730205ac3ce442ed0aca29a4aaefd13301f10c05b601bad9",
+      "exit": 0
+    }
+  ],
+  "images": [
+    {
+      "reference": "nesomn-app:release-check",
+      "status": "PASS",
+      "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:ed2894bb59da27a9a822a63bbf9bc3bf70d81ca823193a7d12d006b3fc551a22\n"
+    },
+    {
+      "reference": "nesomn-ai-worker:release-check",
+      "status": "PASS",
+      "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:f3442e3f68319589786b6a08c998a14ca4662f858dfebcd5dc1d81b386e8cd1f\n"
+    },
+    {
+      "reference": "nesomn-qris-worker:release-check",
+      "status": "PASS",
+      "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:de1ca93f95eb6d662dfa56e829ab0d0bf8a56d6bafdeb43839d77e1cfdf2cedb\n"
+    },
+    {
+      "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+      "status": "PASS",
+      "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+    },
+    {
+      "reference": "redis:7-alpine",
+      "status": "PASS",
+      "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+    },
+    {
+      "reference": "postgres:17-alpine",
+      "status": "SKIPPED",
+      "reason": "Used by another container"
+    }
+  ],
+  "remainingOwned": [],
+  "volumesRemoved": false,
+  "networksRemoved": false,
+  "globalPrune": false,
+  "history": [
+    {
+      "time": "2026-10-31T13:09:49.328Z",
+      "removed": [
+        {
+          "name": "/nesomn-release-test-ai-worker",
+          "id": "4958cbd2a39965cdfca9c5c5a6d9f02af8bc6c81a04ea47df4b2e2864e3baf8d",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-gateway-1",
+          "id": "c39b6aa93fa7e6e7ed6796df3eb9de54cd30d743af419a4c195b8f346318def1",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-app-1",
+          "id": "44c28dfdd35a22415e2ea17a821a9f0f054828f6cb8ad9a8ba6e75133f0816fa",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-redis",
+          "id": "4341cf94bc54ecd55b1afee424fd2a612c5b21b58781230d0059a88756bd412c",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-qris-offline",
+          "id": "2758c254cbd15c1166180903a964dd297cfefaf19a6b42d8aceaf165440b6544",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "501c8f4600610d6a5b578cc267887a1eeec2a91e1a92ff19d57e1c530c7c5707",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "a4dc795ada635bc6078ba1e30eb7b1bc8fb15f918e36db88cc56d4670063603a",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "nesomn-app:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:34c1ab2e07887c39c483569c636d556609bba38e783fd34d2ec5821f0a355f1b\n"
+        },
+        {
+          "reference": "nesomn-ai-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:1fcc82e9625bc88a6c39997e0c2e33228add935222a810015f9ce55fbc52da75\n"
+        },
+        {
+          "reference": "nesomn-qris-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:2e6bab1de3c1ad32cc993956bc9345eb0195e7b322d9dee319f3c568958997d3\n"
+        },
+        {
+          "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+          "status": "PASS",
+          "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        },
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-31T13:15:46.030Z",
+      "removed": [
+        {
+          "name": "/nesomn-release-test-ai-worker",
+          "id": "054068ab79168ff7eb5a917fc4dc1f8c2ed259648dff696463f3a5d3314d22e8",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-gateway-1",
+          "id": "10fb77a6b3d756af0ae35a6a7894c9a7deb8a89764a5aab695d23987f92759bb",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-app-1",
+          "id": "51eda7683e6817afbfa7f6df0f7bd0fdf22acbdb23d46b4e975315c5c629c20f",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-redis",
+          "id": "b64bb45d3eb13cab60724ea4cd1d64f5a950729351556d375a8873f15f4026a1",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-qris-offline",
+          "id": "7b1ca4184275d8225b463869632981159679624d7ed67f23d1d9f58d9628b854",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "cde7fcecd1c9848fb62a2ed95a581534754dd632120fa323fd6ab294f7f10a0a",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "275c83e83481773873d95cdef18abf6002d2d59461b57e12aa6acaf865109e1b",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "nesomn-app:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:155eec39ebff5a0ca775a5b413988fdb1e354a3d60710dc6356b95e12160fcf4\n"
+        },
+        {
+          "reference": "nesomn-ai-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:037ee76fbebd29f1c6914e2dcea23b01f188429746c32139460d88ac7726fdfc\n"
+        },
+        {
+          "reference": "nesomn-qris-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:f5fb86c459cdd8261ebb0ff9f6ba051c0880f51134d6f656efb1e725e4a6dc7a\n"
+        },
+        {
+          "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+          "status": "PASS",
+          "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        },
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-31T13:21:30.966Z",
+      "removed": [
+        {
+          "name": "/nesomn-release-test-ai-worker",
+          "id": "342ab02a923f89c8cd8ccd9cd3d8bec9fc3cc3dc46ac2d26bfdd8c0daa7d17b2",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-gateway-1",
+          "id": "3506779b051fdf37b37ffd6d4cb2e5e9a2c2a4f7520abfd40beb7c0b474b583e",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-app-1",
+          "id": "eaa0d1f31f9a3980eaa50a9cdb9a4b5c80340bf7fb97f2a5a77bb29b3377be1d",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-redis",
+          "id": "37cba6d8c7d1770b82c2ac0de9c16df8e02dad4373dd0789654bdbe720cede9f",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-qris-offline",
+          "id": "2ddf1a154afaf2af36e10bcb58dd8f03d94f0b97baa8a65379cb60eae6ef6d20",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "390053aec57ffd9f67c8e363b261453fda13a5fd6f248eda95e1c37db5583dd6",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "0ad775ab647ebb62a3a1252c7a21d72556377bff073606507e0252a63f829e4b",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "nesomn-app:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:4f70e49ed4fb5ce8f690c72fd3f0cbd0cf3ac526482d819f1d3945ce9ce0fb0f\n"
+        },
+        {
+          "reference": "nesomn-ai-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:4f67883d97aac6edd71cdd03b70b3667fda1d650ab5465f1fdc43e4083a1269f\n"
+        },
+        {
+          "reference": "nesomn-qris-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:cc7efcddec759f24eed9bf354cc5e43f0fe5d322b02a2fd36cbc3e1efd99ded3\n"
+        },
+        {
+          "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+          "status": "PASS",
+          "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        },
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-31T13:34:25.259Z",
+      "removed": [
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "44dda285324b8754f4e70adb0be0ae3d38d59907dc0e43fa1aae7149757663de",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "3650923d5ce53eb11dca521941b9a955f43aa729b9f72cc98a42a35ac14f43f2",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-31T13:40:06.711Z",
+      "removed": [
+        {
+          "name": "/nesomn-release-test-ai-worker",
+          "id": "723aeed3fa783056870cee81157f4ecca909239e29d32cc436acaa4817e1131f",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-gateway-1",
+          "id": "ca33b624821231d5ad27a272b265981cce49fb0272bd1455de336aef40b1912b",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-app-1",
+          "id": "0ccfe457378e2d3526fc025bbaa4b8768c5ee32c589ecaf1be712e31aed578ff",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-redis",
+          "id": "8f07e16e9c9d7bf6d2f2a4247fdd08e0629a538bbbe7ee392b0325fcba82accc",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-qris-offline",
+          "id": "4beb782d108ff31da89c8c14619fe2a1e5fb941099363cb34f8581a7e03cb5f7",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "de1a2c040335775e44670f1beba34e8501e1161dc2280c550bc64bc691452d73",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "9f32d3f1872c399e442bd689c1cc523448d29af2eda3a16d4882df4b31a1c6cb",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "nesomn-app:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:25d42d061d3564fa587ef007f7d095343e7d8264192fe7d7d7cf17e24967386a\n"
+        },
+        {
+          "reference": "nesomn-ai-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:885bb5f3659601f64678d559d6f39957ba61c671333cf1a396b624485803db28\n"
+        },
+        {
+          "reference": "nesomn-qris-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:2a94a37928df8a6b3c5102ac243af3d21bc8999b631757f3b05b54e11b60cb6a\n"
+        },
+        {
+          "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+          "status": "PASS",
+          "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        },
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-31T13:44:43.568Z",
+      "removed": [
+        {
+          "name": "/nesomn-release-test-ai-worker",
+          "id": "91c8779e98b697cd7bb357b02fe6af6967081e55bab4f5323e973380aa5ce3bb",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-gateway-1",
+          "id": "ab91f24374fc4b82f4afbd97c8cda4ba9db7d2d0ee611f9e50b45b330f3d492b",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-app-1",
+          "id": "c37d700d192e1df35ad7ce1a01bba2e3cdd4b7604be3cff5f1f22bd55158509a",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-redis",
+          "id": "ef6f9fc96ba3d346f4d9ebd8e25581bf70519952ac897ec6b62c205008acd302",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-qris-offline",
+          "id": "1ba85bb6bacca57e785dc8dc65fb3316e9fc56a9f3811012bdc2c3909d43ed60",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "9cd15453416278cd7aaee94d8ba66541d94698e981cd8f51c9cbaa4eacb83e8f",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "5c7280dcb23e8ced27528dfdd19074b97ce703a761e6a794c00ee21acceae068",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "nesomn-app:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:923a35e1ea37753a329e272b240d809b6702960419576902cabd253772c30515\n"
+        },
+        {
+          "reference": "nesomn-ai-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:24e6f24b244a32be9bb1246ca6ec853b3b62c1ed3982387a4aa162382488f092\n"
+        },
+        {
+          "reference": "nesomn-qris-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:b854a71507dceffe1243f8cfeb4e79feea8040facc2efe8c704dfd381d01e546\n"
+        },
+        {
+          "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+          "status": "PASS",
+          "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        },
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        }
+      ]
+    },
+    {
+      "time": "2026-10-31T13:50:07.309Z",
+      "removed": [
+        {
+          "name": "/nesomn-release-test-ai-worker",
+          "id": "f2e7d68b518b7fe45078529e9aa3b94f8f07324080f6da279bb21ffe76f19393",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-gateway-1",
+          "id": "0c3d654503f3623a6e772791bc56a81a6aba4d543511bee3e4c65a67e5721ef3",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-app-1",
+          "id": "3ee60ddfa7899cc6bc6a66ba7b14c6053dc5d1f11f365bc09ead5e87ec532c6d",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-redis",
+          "id": "514fb8bcbdda5b9fe8148b5dfee2ca4a782cc9ade40e37571b134454a88b623d",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-release-test-qris-offline",
+          "id": "c665ba5a88f8b4aa53f69f40b30ad5e88c30f081496f2ebb1d35d4e401930de4",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-db-1",
+          "id": "2215770040e591fbffcfdde8436de3c44e7a5c73705ae83ba9be73bb2b818303",
+          "exit": 0
+        },
+        {
+          "name": "/nesomn-revision-test-test-redis-1",
+          "id": "a170317be7577796483a9e754ae4cd0e681e598132bd074009b9c6efc2a6e768",
+          "exit": 0
+        }
+      ],
+      "images": [
+        {
+          "reference": "nesomn-app:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-app:release-check\nDeleted: sha256:a5e1721b4861b4a3fe9988aacb84847056a2bb00a2fafae8f46fa86d27662e75\n"
+        },
+        {
+          "reference": "nesomn-ai-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-ai-worker:release-check\nDeleted: sha256:56dec1fb8ba4d6ee21c0d642208a2580565744cd5c4ac1780a8ce751ab64e1b8\n"
+        },
+        {
+          "reference": "nesomn-qris-worker:release-check",
+          "status": "PASS",
+          "output": "Untagged: nesomn-qris-worker:release-check\nDeleted: sha256:561e79a81ff3a250b126dbc9dd0fb1e0f093f5b85678446b734008f17392832c\n"
+        },
+        {
+          "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+          "status": "PASS",
+          "output": "Untagged: nginx@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\nDeleted: sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949\n"
+        },
+        {
+          "reference": "redis:7-alpine",
+          "status": "PASS",
+          "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+        },
+        {
+          "reference": "postgres:17-alpine",
+          "status": "SKIPPED",
+          "reason": "Used by another container"
+        }
+      ]
+    }
+  ],
+  "verifiedAbsent": [
+    {
+      "reference": "nesomn-app:release-check",
+      "absent": true
+    },
+    {
+      "reference": "nesomn-ai-worker:release-check",
+      "absent": true
+    },
+    {
+      "reference": "nesomn-qris-worker:release-check",
+      "absent": true
+    },
+    {
+      "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+      "absent": true
+    },
+    {
+      "reference": "redis:7-alpine",
+      "absent": true
+    }
+  ],
+  "testedImages": [
+    {
+      "name": "/nesomn-release-test-ai-worker",
+      "image": "sha256:f3442e3f68319589786b6a08c998a14ca4662f858dfebcd5dc1d81b386e8cd1f",
+      "reference": "nesomn-ai-worker:release-check",
+      "absent": true
+    },
+    {
+      "name": "/nesomn-release-test-app-1",
+      "image": "sha256:ed2894bb59da27a9a822a63bbf9bc3bf70d81ca823193a7d12d006b3fc551a22",
+      "reference": "nesomn-app:release-check",
+      "absent": true
+    },
+    {
+      "name": "/nesomn-release-test-qris-offline",
+      "image": "sha256:de1ca93f95eb6d662dfa56e829ab0d0bf8a56d6bafdeb43839d77e1cfdf2cedb",
+      "reference": "nesomn-qris-worker:release-check",
+      "absent": true
+    }
+  ]
+}

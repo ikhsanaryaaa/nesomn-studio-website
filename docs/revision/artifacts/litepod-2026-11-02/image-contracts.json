@@ -1,0 +1,33 @@
+[
+  {
+    "kind": "app",
+    "user": "bun",
+    "cmd": [
+      "bun",
+      "--no-env-file",
+      "--no-install",
+      "api/src/server.ts"
+    ],
+    "health": true
+  },
+  {
+    "kind": "worker",
+    "user": "bun",
+    "cmd": [
+      "bun",
+      "--no-env-file",
+      "--no-install",
+      "worker/src/index.ts"
+    ],
+    "health": true
+  },
+  {
+    "kind": "qris",
+    "user": "qris",
+    "cmd": [
+      "python",
+      "worker.py"
+    ],
+    "health": true
+  }
+]

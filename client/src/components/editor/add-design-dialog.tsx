@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { editorEpoch } from '@/lib/editor-session';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { UploadCloud, ImageOff } from 'lucide-react';
 import {
@@ -29,6 +30,19 @@ type Props = {
 export function AddDesignDialog({ open, onOpenChange }: Props) {
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const resources = useRef(new Set<HTMLImageElement | FileReader>());
+  useEffect(
+    () => () => {
+      for (const resource of resources.current) {
+        resource.onload = null;
+        resource.onerror = null;
+        if (resource instanceof FileReader) resource.abort();
+        else resource.src = '';
+      }
+      resources.current.clear();
+    },
+    [],
+  );
   const [dragOver, setDragOver] = useState(false);
   const addImage = useSceneEditor((s) => s.addImage);
 
@@ -39,14 +53,22 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
   });
 
   function loadIntoCanvas(src: string) {
+    const epoch = editorEpoch();
     const img = new window.Image();
+    resources.current.add(img);
     img.crossOrigin = 'anonymous';
     img.onload = () => {
+      resources.current.delete(img);
+      if (epoch !== editorEpoch()) return;
       addImage(src, img.naturalWidth, img.naturalHeight);
       onOpenChange(false);
     };
     img.onerror = () =>
-      toast({ title: 'Gagal memuat gambar', description: 'Sumber tidak valid.', variant: 'danger' });
+      toast({
+        title: 'Gagal memuat gambar',
+        description: 'Sumber tidak valid.',
+        variant: 'danger',
+      });
     img.src = src;
   }
 
@@ -67,8 +89,13 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
       });
       return;
     }
+    const epoch = editorEpoch();
     const reader = new FileReader();
-    reader.onload = () => loadIntoCanvas(reader.result as string);
+    resources.current.add(reader);
+    reader.onload = () => {
+      resources.current.delete(reader);
+      if (epoch === editorEpoch()) loadIntoCanvas(reader.result as string);
+    };
     reader.readAsDataURL(file);
   }
 

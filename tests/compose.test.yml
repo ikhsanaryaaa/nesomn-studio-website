@@ -1,0 +1,31 @@
+# Hanya dipakai eksplisit: docker compose -p nesomn-revision-test -f tests/compose.test.yml ...
+# Tidak digabung ke Compose deployment utama. Tidak memakai volume persisten.
+services:
+  test-db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: nesomn_test
+      POSTGRES_PASSWORD: nesomn_test
+      POSTGRES_DB: nesomn_revision_test
+    ports:
+      - "127.0.0.1:55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nesomn_test -d nesomn_revision_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  test-redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:56379:6379"
+    tmpfs:
+      - /data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 20

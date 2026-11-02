@@ -1,0 +1,78 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from worker.Dockerfile
+#1 transferring dockerfile: 1.77kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 230B done
+#3 DONE 0.0s
+
+#4 [manifests 1/9] FROM docker.io/oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a
+#4 resolve docker.io/oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a 0.1s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 22.15kB 0.1s done
+#5 DONE 0.1s
+
+#6 [runtime 3/7] COPY --from=production-deps --chown=bun:bun /app/ ./
+#6 CACHED
+
+#7 [manifests 6/9] COPY admin/package.json ./admin/
+#7 CACHED
+
+#8 [manifests 8/9] COPY worker/package.json ./worker/
+#8 CACHED
+
+#9 [manifests 9/9] COPY packages/shared/package.json ./packages/shared/
+#9 CACHED
+
+#10 [manifests 5/9] COPY client/package.json ./client/
+#10 CACHED
+
+#11 [manifests 2/9] WORKDIR /app
+#11 CACHED
+
+#12 [manifests 4/9] COPY scripts/check-runtime.mjs ./scripts/check-runtime.mjs
+#12 CACHED
+
+#13 [runtime 6/7] COPY --chown=bun:bun tsconfig.base.json ./
+#13 CACHED
+
+#14 [production-deps 1/1] RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --production --filter @nesomn/api --filter @nesomn/worker --filter @nesomn/shared
+#14 CACHED
+
+#15 [runtime 5/7] COPY --chown=bun:bun api ./api
+#15 CACHED
+
+#16 [runtime 4/7] COPY --chown=bun:bun packages/shared ./packages/shared
+#16 CACHED
+
+#17 [manifests 3/9] COPY package.json bun.lock .bun-version ./
+#17 CACHED
+
+#18 [manifests 7/9] COPY api/package.json ./api/
+#18 CACHED
+
+#19 [runtime 7/7] RUN mkdir -p /data/storage && chown bun:bun /data/storage
+#19 CACHED
+
+#20 [worker 1/1] COPY --chown=bun:bun worker ./worker
+#20 DONE 0.5s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 0.2s done
+#21 exporting manifest sha256:fe406a86d623b36c1e49edc4fa7ed2c0bb27cecc3bdaf2b6512ee8a88bb01c1e 0.0s done
+#21 exporting config sha256:10d7534d9c8a79834e1f9152067aeb64ef3ca4ab61220cbd2e131241394f24ca 0.0s done
+#21 exporting attestation manifest sha256:020f2fe1c2d27eefebdb6cd5f4894488d217a96f7593f6f1f343c930df0abdc5 0.1s done
+#21 exporting manifest list sha256:000c614709815cfa99a7cac76c35ef707ef1210dae866b5c1cd8328afec20a5b 0.0s done
+#21 naming to docker.io/library/nesomn-litepod-test:worker done
+#21 unpacking to docker.io/library/nesomn-litepod-test:worker 0.1s done
+#21 DONE 0.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/nwjzeixg6m1gl9c4u1cdv7skq

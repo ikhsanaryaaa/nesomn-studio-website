@@ -1,0 +1,57 @@
+[
+  {
+    "name": "build-app",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "build-worker",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "build-qris",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "network",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "pull-redis",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "run-db",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "run-redis",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "run-migrate",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "run-app",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "run-worker",
+    "status": "PASS",
+    "exit": 0
+  },
+  {
+    "name": "run-qris-offline",
+    "status": "PASS",
+    "exit": 0
+  }
+]

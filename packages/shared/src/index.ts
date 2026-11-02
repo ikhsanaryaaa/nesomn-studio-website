@@ -175,6 +175,8 @@ export type CameraPreset = 'front' | 'threeQuarter' | 'side' | 'top';
  * komponen <Decal> drei saat render.
  */
 export type Decal3D = {
+  /** Optional stable target mesh path; old scenes default to largest mesh. */
+  meshPath?: string;
   id: string;
   /** Sumber gambar (data URL atau URL aset Library). */
   src: string;
@@ -188,6 +190,8 @@ export type Decal3D = {
 
 /** State editor 3D lengkap, disimpan sebagai JSON di projects.state (kind scene3d). */
 export type Scene3DState = {
+  /** Optional discriminator for catalog slug equal to legacy builtin key mug. */
+  modelSource?: 'catalog';
   /** Kunci/identitas model GLB yang dimuat (mis. 'mug'). */
   modelKey: string;
   /** Warna latar viewport (hex). */
@@ -254,6 +258,7 @@ export type AiJobInput = SceneGenInput | MotionGenInput;
 
 /** Job AI yang aman dikirim ke client (tanpa data sensitif provider). */
 export type AiJobDTO = {
+  needsReview?: boolean;
   id: string;
   kind: AiKind;
   tab: AiTab;
@@ -277,7 +282,7 @@ export type AiModelDTO = {
 // ── Billing & Subscription (M8) ──
 
 /** Gateway pembayaran yang didukung. */
-export type Gateway = 'pakasir' | 'stripe' | 'stub';
+export type Gateway = 'qris' | 'pakasir' | 'stripe' | 'stub';
 
 /** Segmen & siklus plan. */
 export type PlanSegment = 'individual' | 'team' | 'enterprise';
@@ -373,4 +378,3 @@ export type CheckoutResult = {
   /** URL redirect ke gateway (atau halaman simulasi stub). */
   checkoutUrl: string;
 };
-

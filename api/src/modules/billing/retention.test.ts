@@ -15,7 +15,9 @@ describe('retention selection', () => {
   const emailActive = `ret-act-${crypto.randomUUID()}@test.local`;
 
   beforeAll(async () => {
-    const plan = await db.query.plans.findFirst({ where: eq(plans.code, 'scene_individual_monthly') });
+    const plan = await db.query.plans.findFirst({
+      where: eq(plans.code, 'scene_individual_monthly'),
+    });
     planId = plan!.id;
 
     const [exp] = await db

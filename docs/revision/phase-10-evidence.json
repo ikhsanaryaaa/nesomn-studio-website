@@ -1,0 +1,636 @@
+{
+  "date": "2026-10-31T14:09:40.050Z",
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website.git",
+  "branch": "works/runtime-tooling-upgrade",
+  "commit": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "unit": {
+    "bun": "1.4.4",
+    "mode": "unit",
+    "results": [
+      {
+        "name": "frozen",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "install",
+          "--no-env-file",
+          "--frozen-lockfile"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 424
+      },
+      {
+        "name": "dependency-audit",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "--no-env-file",
+          "audit"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 330
+      },
+      {
+        "name": "typecheck",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 9872
+      },
+      {
+        "name": "lint",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "run",
+          "lint"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 3835
+      },
+      {
+        "name": "build",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "run",
+          "build"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 15321
+      },
+      {
+        "name": "node-guards",
+        "command": "node",
+        "args": [
+          "--test",
+          "tests/baseline-runner.test.mjs",
+          "tests/runtime-pin.test.mjs",
+          "tests/prerender-exit.test.mjs",
+          "tests/browser-bootstrap.test.mjs",
+          "tests/release-runner.test.mjs",
+          "tests/design-tokens.test.mjs"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 343
+      },
+      {
+        "name": "baseline",
+        "command": "node",
+        "args": [
+          "scripts/test-baseline.mjs",
+          "unit"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 776
+      },
+      {
+        "name": "deployment",
+        "command": "node",
+        "args": [
+          "scripts/test-deployment.mjs"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 527
+      },
+      {
+        "name": "compose",
+        "command": "node",
+        "args": [
+          "scripts/check-deployment.mjs"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 472
+      },
+      {
+        "name": "security",
+        "command": "node",
+        "args": [
+          "scripts/test-security.mjs",
+          "unit"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 323
+      },
+      {
+        "name": "qris",
+        "command": "node",
+        "args": [
+          "scripts/test-qris.mjs",
+          "unit"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 104
+      },
+      {
+        "name": "viewer",
+        "command": "node",
+        "args": [
+          "scripts/test-viewer.mjs",
+          "unit"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 195
+      },
+      {
+        "name": "glb",
+        "command": "node",
+        "args": [
+          "scripts/validate-demo-models.mjs"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 68
+      },
+      {
+        "name": "scene",
+        "command": "node",
+        "args": [
+          "scripts/test-phase9.mjs",
+          "unit"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 122
+      },
+      {
+        "name": "theme-navigation",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "--no-env-file",
+          "--no-install",
+          "test",
+          "tests/theme.test.ts",
+          "tests/navigation.test.ts",
+          "tests/public-flow.test.ts",
+          "tests/release-ci.test.ts",
+          "tests/patch-validation.test.ts",
+          "tests/admin-rest.test.ts"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 328
+      }
+    ]
+  },
+  "integration": {
+    "bun": "1.4.4",
+    "mode": "integration",
+    "results": [
+      {
+        "name": "baseline",
+        "command": "node",
+        "args": [
+          "scripts/test-baseline.mjs",
+          "integration"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 3599
+      },
+      {
+        "name": "security",
+        "command": "node",
+        "args": [
+          "scripts/test-security.mjs",
+          "integration"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 8467
+      },
+      {
+        "name": "qris",
+        "command": "node",
+        "args": [
+          "scripts/test-qris.mjs",
+          "integration"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 1088
+      },
+      {
+        "name": "viewer",
+        "command": "node",
+        "args": [
+          "scripts/test-viewer.mjs",
+          "integration"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 492
+      },
+      {
+        "name": "preview-upload",
+        "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+        "args": [
+          "--no-env-file",
+          "--no-install",
+          "test",
+          "tests/security/previews.test.ts",
+          "tests/security/admin-workflows.test.ts",
+          "tests/security/bundle-integrity.test.ts"
+        ],
+        "status": "PASS",
+        "exit": 0,
+        "milliseconds": 1140
+      }
+    ]
+  },
+  "lab": {
+    "status": "PASS",
+    "error": null,
+    "productionReady": false
+  },
+  "runtime": {
+    "bun": "1.4.4",
+    "uid": 1000,
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "drizzle": "0.45.4",
+    "sharp": "0.35.5",
+    "zod": "4.6.7",
+    "envFiles": [],
+    "developmentTooling": []
+  },
+  "shortMobileInspector": {
+    "overflow": "auto",
+    "top": 660,
+    "bottom": 704,
+    "height": 44,
+    "hit": true
+  },
+  "audit": {
+    "before": 66,
+    "after": 0,
+    "packagesChecked": 723,
+    "log": "artifacts/phase-10/dependency-audit-after.log"
+  },
+  "migrationsAndSchema": [
+    {
+      "path": "api/drizzle/0004_business_integrity.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0005_receipt_identity.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0006_remote_execution.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0007_qris_invoices.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/integrity.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/qris.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0000_worthless_hellcat.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0001_familiar_joshua_kane.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0002_milky_nightshade.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0003_asset_editor_separation.sql",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/meta/0000_snapshot.json",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/meta/0001_snapshot.json",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/meta/0002_snapshot.json",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/meta/_journal.json",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/ai.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/audit.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/auth.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/billing.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/catalog.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/index.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/media.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/orders.ts",
+      "unchanged": true
+    },
+    {
+      "path": "api/src/db/schema/projects.ts",
+      "unchanged": true
+    }
+  ],
+  "changedFiles": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "e5c96d5282f2da11e944219155d50598060e9ba9ab23d20a59715a250b42006a",
+      "kind": "modified"
+    },
+    {
+      "path": "REVISION.md",
+      "sha256": "6918d3d2ba74244e33e70530348a129a196cb112d6fc470ff03261ca708afc4d",
+      "kind": "modified"
+    },
+    {
+      "path": "admin/src/providers/rest.ts",
+      "sha256": "fe04165a707c882eda81a28f2c5809c74dde45171dd5f88828fcd15381816f9c",
+      "kind": "new"
+    },
+    {
+      "path": "api/src/lib/validation.ts",
+      "sha256": "c7fc51e6ae813cc27bfc06163c0e27e02f718255586ba160335c3d65475a3d4d",
+      "kind": "modified"
+    },
+    {
+      "path": "docs/as-built.md",
+      "sha256": "33a969d2f202aacba59761cc56ffc57af07d9a7af6486e2f55cb7206947817e4",
+      "kind": "new"
+    },
+    {
+      "path": "docs/dependency-security.md",
+      "sha256": "83c02547fab213a7a4f25e58c0ac458ed27d1bc5d084bd38af640f9e2155fde4",
+      "kind": "new"
+    },
+    {
+      "path": "docs/deployment.md",
+      "sha256": "b2df71f2f41dd62316d9da7c4317ecce07d8eb897ed03495b26f9c2ef7a86523",
+      "kind": "modified"
+    },
+    {
+      "path": "docs/migrations.md",
+      "sha256": "604025c4b6deef3d0bf03089d2703cb8ea5409375f48bb9f528b809918b788b1",
+      "kind": "new"
+    },
+    {
+      "path": "docs/release-readiness.md",
+      "sha256": "a5252b7ffe3046067c3d8f3f1dba59cf09b5de4dc7391dd85037bc505b403161",
+      "kind": "new"
+    },
+    {
+      "path": "docs/revision/phase-10-input.json",
+      "sha256": "d193bee914113490b9fa52152610b105920f4bff4b9a1efc15887b188c15bb52",
+      "kind": "new"
+    },
+    {
+      "path": "docs/revision/phase-10-ledger.md",
+      "sha256": "6e48b57099754397efa1cf320398f73c962b9a1fa95eee62b1523f373d8a17bd",
+      "kind": "new"
+    },
+    {
+      "path": "docs/revision/phase-10-report.md",
+      "sha256": "8f78e972b3fd5bcd229c82ea47f090b16f793aa094edbc113454b6732f319c6c",
+      "kind": "new"
+    },
+    {
+      "path": "docs/testing.md",
+      "sha256": "b35fcf7a7e320ed4eb2279207274b23df789605b0ac4293ab87c866c0f1e50a1",
+      "kind": "modified"
+    },
+    {
+      "path": "docs/workers.md",
+      "sha256": "ee8fc78ec72da17010480cd5c600305dc1664f49f0d68291dad6d976bf568490",
+      "kind": "modified"
+    },
+    {
+      "path": "scripts/release-check.mjs",
+      "sha256": "26c6a37101eb9e34c29ed81dd17d21e714fc518592d36dc6d2b14852739a9f92",
+      "kind": "new"
+    },
+    {
+      "path": "scripts/release-lab.mjs",
+      "sha256": "e59532f71f4ce71ecc09c072e2f3ceb668e929988f493b0360cbf179ecbfc7b7",
+      "kind": "new"
+    },
+    {
+      "path": "tests/admin-browser.mjs",
+      "sha256": "dc473e16b642db3727faf81c5cf98443b53af24c203829f1f7925e1f9f34d50a",
+      "kind": "new"
+    },
+    {
+      "path": "tests/admin-rest.test.ts",
+      "sha256": "eb6b91b354f17e13f5d66f68a75592bd2501868eb00b10738eccc56949124965",
+      "kind": "new"
+    },
+    {
+      "path": "tests/editor-admin-browser.mjs",
+      "sha256": "a812fe600bfec2741f352df194dbb4bb88d40078d7593ef4fcc3c2f46ccecdf8",
+      "kind": "modified"
+    },
+    {
+      "path": "tests/editor-gateway-browser.mjs",
+      "sha256": "dbfc6579a19e37c0b6260c72de084f2bbba13117dcf71d30f35da791acbdb362",
+      "kind": "modified"
+    },
+    {
+      "path": "tests/lib/browser-runtime.mjs",
+      "sha256": "ce3cd9ccc19ffa68a91c794619bdfff460ab00f5e05eb19b2896d032779d902c",
+      "kind": "new"
+    },
+    {
+      "path": "tests/patch-validation.test.ts",
+      "sha256": "ed21c91f8265227efcf4eb040ccde389e731c1ebf360915c0fbad8b1e53abfe7",
+      "kind": "new"
+    },
+    {
+      "path": "tests/public-browser.mjs",
+      "sha256": "864636a8b63e027768a754a8624fead7b2b72bec0b7221dc28eed35c897b2323",
+      "kind": "modified"
+    },
+    {
+      "path": "tests/release-admin-fixture.ts",
+      "sha256": "baf75c5d262995bfbc0b973ba7df31b99e3d042708bd7090731ba5b4cd4617c1",
+      "kind": "new"
+    },
+    {
+      "path": "tests/release-ci.test.ts",
+      "sha256": "c1b4942c6b90e0d2ca1404779771a5c6e3fe7d837cdd64c020d341428d31995f",
+      "kind": "new"
+    },
+    {
+      "path": "tests/release-runner.test.mjs",
+      "sha256": "f82616a73506af4376123549e9a4e0aa217cf97009ace051c4ab726d55f78538",
+      "kind": "new"
+    },
+    {
+      "path": "tests/security/admin-workflows.test.ts",
+      "sha256": "3b74c7890de6f75e2769a196c6319d6dc171665cec31cfa522e9f45cbe5f1dea",
+      "kind": "new"
+    },
+    {
+      "path": "tests/security/bundle-integrity.test.ts",
+      "sha256": "b7b4b86db7f3f9bd1955ccf52582e6b8430842fc5d8230a0ac19322284fb388a",
+      "kind": "new"
+    },
+    {
+      "path": "tests/theme-browser.mjs",
+      "sha256": "1ff9d5b450dbfd06bef7d3a244a946535b78ace0f3ac0b8c653307cabdf0812a",
+      "kind": "modified"
+    },
+    {
+      "path": "tests/viewer-browser.mjs",
+      "sha256": "d0af4c5d623d9bf4d10092dbb6af214fbac55a81a5247565754c3c738aabcb91",
+      "kind": "modified"
+    },
+    {
+      "path": "README.md",
+      "sha256": "629e12737ef8507b8a3b5b8419772411c1fc895a70ccb730dc600217d3e5f26d",
+      "kind": "modified"
+    },
+    {
+      "path": "admin/index.html",
+      "sha256": "2fe2e545e69b1b34b3957943babf3bef9b9da6c8f3a9b1a2055e4bdd4c2d1edf",
+      "kind": "modified"
+    },
+    {
+      "path": "admin/package.json",
+      "sha256": "3206d6986c8fbf0669027b4f95ed491817055c43e99fa6fe60666941e7cf07f5",
+      "kind": "modified"
+    },
+    {
+      "path": "admin/src/pages/bundles.tsx",
+      "sha256": "099e8908f3c4b76327e364d45b902fe45da3d2015c324988821282f3fbb88644",
+      "kind": "modified"
+    },
+    {
+      "path": "admin/src/providers/dataProvider.ts",
+      "sha256": "1f43ff208e4ecc912da3d15beceb674c3089a33ab1d2b79ebd8e2880cff84033",
+      "kind": "modified"
+    },
+    {
+      "path": "api/package.json",
+      "sha256": "41f14739b0026cfd30975405b354520dab3d69b35bb68df23d32ddb1742345d7",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/ai-providers.routes.ts",
+      "sha256": "8489f78031cc362571ac0648a0a886b905fa260be15245ca0eb23944b1274716",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/assets-3d.routes.ts",
+      "sha256": "32def01b2beaa2c7810f9d35a9b5fbdb477cf33520f0a9a902f605b2a85095bf",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/assets-scene.routes.ts",
+      "sha256": "11b3a84f38513b1a711ebb10b15cd6260f372b32bcb9aebb80cd814855003eff",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/bundles.routes.ts",
+      "sha256": "ab66cb46476e8f047bddd068a6b1dd3cdf938141fae03575f6dd975f4dc59d51",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/credit-packs.routes.ts",
+      "sha256": "bb76a71486bf097a0c30bcb1047d4cebfb408aedb6a849148442da0fa7dd9e11",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/index.ts",
+      "sha256": "e6639ee2468664cea2021b5eae0982d8c19ba2cf0b074f821df3e6d29f379936",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/admin/plans.routes.ts",
+      "sha256": "c66e598015251ea81e9f9c4025c90d2cc32c238195d823bb76f329ea07be1524",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/ai/routes.ts",
+      "sha256": "963253c07c5c0fd757808dff67a87c557fc51db828c152142ca908142fe25b90",
+      "kind": "modified"
+    },
+    {
+      "path": "api/src/modules/project/routes.ts",
+      "sha256": "24a0e0acb45c8392ffad5c004b830b8a96e206b332f8484429e8950c0153b69e",
+      "kind": "modified"
+    },
+    {
+      "path": "bun.lock",
+      "sha256": "c36408fb67e39db50bf363127264d35dcd3084c2a1d61b733a551643fbb2e433",
+      "kind": "modified"
+    },
+    {
+      "path": "client/src/pages/scene-editor.tsx",
+      "sha256": "8bd72b10bdfe364d94f52dabf4a48af6904b42080896886e51d1642eb1c4b428",
+      "kind": "modified"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "sha256": "914bb1d7667c28e612ee115fc07269108e0188c530b9da9928b44cb983c8f53a",
+      "kind": "modified"
+    },
+    {
+      "path": "package.json",
+      "sha256": "d84ca2c43b1ecb7912e0356de428683afbe9f5dfa119ac1b7892eebc66f79461",
+      "kind": "modified"
+    },
+    {
+      "path": "worker/package.json",
+      "sha256": "83d5df3753edd108240fa2905c4e2222886c74b2518a525ca81f2242b6cee5b8",
+      "kind": "modified"
+    }
+  ],
+  "cleanup": "artifacts/phase-10/docker-cleanup.json",
+  "releaseDecision": "LOCAL_PASS_PRODUCTION_NO_GO",
+  "notTested": [
+    "live merchant/AI/OAuth/R2",
+    "production TLS/DNS/restore clone",
+    "physical mobile/Safari/GPU",
+    "remote GitHub CI"
+  ],
+  "productionReady": false
+}

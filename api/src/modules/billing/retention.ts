@@ -1,60 +1,42 @@
-import { and, eq, lt, isNotNull } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../../db/client.ts';
 import { subscriptions, projects } from '../../db/schema/index.ts';
-
-/**
- * Data retention (PRD): hapus data project user 30 hari setelah langganan
- * berakhir. Logika seleksi dipisah dari eksekusi agar dapat diuji tanpa
- * benar-benar menghapus. Akun & ledger tetap disimpan untuk audit/keuangan;
- * yang dihapus adalah konten kerja (projects).
- */
-
+import { withUserTransaction } from '../../db/transaction.ts';
 export const RETENTION_DAYS = 30;
-
-/** Ambang waktu: langganan yang berakhir sebelum (sekarang - 30 hari). */
-export function retentionCutoff(now: Date = new Date()): Date {
-  return new Date(now.getTime() - RETENTION_DAYS * 24 * 60 * 60 * 1000);
+export function retentionCutoff(now = new Date()) {
+  return new Date(now.getTime() - RETENTION_DAYS * 86400000);
 }
-
-/**
- * Seleksi userId yang langganannya sudah berakhir lebih dari 30 hari lalu
- * dan tidak punya langganan aktif lain. Tidak menghapus apa pun.
- */
-export async function selectExpiredUserIds(now: Date = new Date()): Promise<string[]> {
-  const cutoff = retentionCutoff(now);
-
-  // Langganan non-aktif yang periodenya berakhir sebelum cutoff.
-  const expired = await db
+/** Latest paid period, across every status, prevents an old row deleting renewed work. */
+export async function selectExpiredUserIds(now = new Date()): Promise<string[]> {
+  const rows = await db
     .select({ userId: subscriptions.userId })
     .from(subscriptions)
-    .where(
-      and(
-        isNotNull(subscriptions.currentPeriodEnd),
-        lt(subscriptions.currentPeriodEnd, cutoff),
-      ),
+    .groupBy(subscriptions.userId)
+    .having(
+      sql`max(${subscriptions.currentPeriodEnd}) < ${retentionCutoff(now).toISOString()} AND count(*) FILTER (WHERE ${subscriptions.status} IN ('active','canceled') AND ${subscriptions.currentPeriodEnd} IS NULL) = 0`,
     );
-
-  const candidates = [...new Set(expired.map((r) => r.userId))];
-
-  // Sisihkan user yang masih punya langganan aktif.
-  const result: string[] = [];
-  for (const userId of candidates) {
-    const active = await db.query.subscriptions.findFirst({
-      where: and(eq(subscriptions.userId, userId), eq(subscriptions.status, 'active')),
-    });
-    if (!active) result.push(userId);
-  }
-  return result;
+  return rows.map((r) => r.userId);
 }
-
-/**
- * Jalankan retention: hapus projects milik user kedaluwarsa. Mengembalikan
- * jumlah user yang diproses. Dipanggil oleh script terjadwal.
- */
-export async function runRetention(now: Date = new Date()): Promise<number> {
-  const userIds = await selectExpiredUserIds(now);
-  for (const userId of userIds) {
-    await db.delete(projects).where(eq(projects.userId, userId));
-  }
-  return userIds.length;
+/** Dry run by default. Destructive execution requires a separately approved explicit ID list. */
+export async function runRetention(
+  now = new Date(),
+  options?: { execute: boolean; approvedUserIds: string[] },
+): Promise<number> {
+  const candidates = await selectExpiredUserIds(now);
+  if (!options?.execute) return candidates.length;
+  if (process.env.RETENTION_EXECUTION_APPROVED !== 'true')
+    throw new Error('Retention execution requires explicit operator approval and backup.');
+  const allowed = new Set(options.approvedUserIds);
+  let count = 0;
+  for (const id of candidates.filter((id) => allowed.has(id)))
+    await withUserTransaction(id, async (tx) => {
+      const rows = await tx
+        .select({ end: subscriptions.currentPeriodEnd })
+        .from(subscriptions)
+        .where(eq(subscriptions.userId, id));
+      if (!rows.length || rows.some((r) => !r.end || r.end >= retentionCutoff(now))) return;
+      await tx.delete(projects).where(eq(projects.userId, id));
+      count++;
+    });
+  return count;
 }

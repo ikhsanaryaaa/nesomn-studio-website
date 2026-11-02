@@ -1,0 +1,75 @@
+{
+  "browser": "Chrome/156.0.8078.74",
+  "renderer": "Chrome software WebGL2 SwiftShader (not physical GPU/mobile device)",
+  "rendered": [
+    {
+      "id": "nesomn-abstract-form",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "id": "nesomn-product-box",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "id": "nesomn-lowpoly-room",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "id": "nesomn-typography-block",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "id": "nesomn-abstract-form",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "id": "nesomn-product-box",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "id": "nesomn-lowpoly-room",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "id": "nesomn-typography-block",
+      "width": 390,
+      "scroll": 390
+    }
+  ],
+  "repeatedSwitches": 12,
+  "canvases": 1,
+  "controls": true,
+  "fullscreen": true,
+  "reducedMotion": true,
+  "invalidRetry": true,
+  "editorSaveRoundtrip": true,
+  "videoMetadata": {
+    "width": 854,
+    "height": 944,
+    "ready": 4
+  },
+  "exportFiles": [
+    {
+      "name": "Demo _ Sample scene.jpg",
+      "bytes": 14808
+    },
+    {
+      "name": "Demo _ Sample scene.png",
+      "bytes": 61856
+    },
+    {
+      "name": "Demo _ Sample scene.webm",
+      "bytes": 27308
+    }
+  ],
+  "externalRequests": false,
+  "exceptions": [],
+  "fixture": "Compiled production assets; explicit offline me/projects fixture, no real credentials/DB"
+}

@@ -1,0 +1,49 @@
+{
+  "removed": [
+    {
+      "name": "nesomn-litepod-test-qris-offline",
+      "exit": 0
+    },
+    {
+      "name": "nesomn-litepod-test-worker",
+      "exit": 0
+    },
+    {
+      "name": "nesomn-litepod-test-app",
+      "exit": 0
+    },
+    {
+      "name": "nesomn-litepod-test-migrate",
+      "exit": 0
+    },
+    {
+      "name": "nesomn-litepod-test-redis",
+      "exit": 0
+    },
+    {
+      "name": "nesomn-litepod-test-db",
+      "exit": 0
+    }
+  ],
+  "images": [
+    {
+      "image": "nesomn-litepod-test:app",
+      "exit": 0
+    },
+    {
+      "image": "nesomn-litepod-test:worker",
+      "exit": 0
+    },
+    {
+      "image": "nesomn-litepod-test:qris",
+      "exit": 0
+    },
+    {
+      "image": "redis:7-alpine",
+      "exit": 0
+    }
+  ],
+  "globalPrune": false,
+  "volumesDeleted": false,
+  "buildCachePruned": false
+}

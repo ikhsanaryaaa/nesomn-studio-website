@@ -7,6 +7,7 @@ import {
   numeric,
   timestamp,
   index,
+  jsonb,
 } from 'drizzle-orm/pg-core';
 import { users } from './auth.ts';
 import { assets } from './catalog.ts';
@@ -40,6 +41,7 @@ export const orderItems = pgTable('order_items', {
   refType: text('ref_type').notNull(),
   refId: text('ref_id').notNull(),
   qty: integer('qty').notNull().default(1),
+  benefitSnapshot: jsonb('benefit_snapshot').$type<Record<string, unknown>>(),
   unitPriceIdr: numeric('unit_price_idr', { precision: 12, scale: 2 }).notNull().default('0'),
   unitPriceUsd: numeric('unit_price_usd', { precision: 12, scale: 2 }).notNull().default('0'),
 });

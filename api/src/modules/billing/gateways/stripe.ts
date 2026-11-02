@@ -1,70 +1,66 @@
-import type {
-  PaymentProvider,
-  CheckoutOrder,
-  CreateCheckoutResult,
-  WebhookResult,
-} from '../gateway.ts';
+import { createHmac, timingSafeEqual } from 'node:crypto';
+import { z } from 'zod';
+import type { PaymentProvider, CreateCheckoutResult, WebhookResult } from '../gateway.ts';
+import { AppError } from '../../../middleware/error.ts';
 
-/**
- * Gateway Stripe (global). Kerangka produksi: membuat Checkout Session
- * dan memverifikasi signature webhook (Stripe-Signature). Aktif saat
- * STRIPE_SECRET_KEY terisi. Pemanggilan API & verifikasi signature
- * disesuaikan saat integrasi nyata (idealnya pakai SDK stripe).
- * Secret hanya dari env.
- */
+/** Legacy history verifier only. New checkout is disabled until the QRIS cutover. */
 export class StripeGateway implements PaymentProvider {
   readonly name = 'stripe' as const;
-  private readonly secretKey: string;
-  private readonly webhookSecret: string;
 
-  constructor() {
-    this.secretKey = process.env.STRIPE_SECRET_KEY ?? '';
-    this.webhookSecret = process.env.STRIPE_WEBHOOK_SECRET ?? '';
-    if (!this.secretKey) throw new Error('STRIPE_SECRET_KEY belum diset.');
+  async createCheckout(): Promise<CreateCheckoutResult> {
+    throw new AppError('LEGACY_PAYMENT_DISABLED', 'Checkout Stripe baru tidak diaktifkan.', 503);
   }
 
-  async createCheckout(order: CheckoutOrder): Promise<CreateCheckoutResult> {
-    // Stripe Checkout Session via REST (form-encoded). USD dalam sen.
-    const body = new URLSearchParams({
-      mode: 'payment',
-      'line_items[0][price_data][currency]': 'usd',
-      'line_items[0][price_data][product_data][name]': order.description,
-      'line_items[0][price_data][unit_amount]': String(Math.round(order.amountUsd * 100)),
-      'line_items[0][quantity]': '1',
-      client_reference_id: order.id,
-      success_url: `${process.env.CLIENT_URL ?? 'http://localhost'}/account?paid=${order.id}`,
-      cancel_url: `${process.env.CLIENT_URL ?? 'http://localhost'}/checkout?order=${order.id}`,
-    });
-    const res = await fetch('https://api.stripe.com/v1/checkout/sessions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${this.secretKey}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body,
-      signal: AbortSignal.timeout(15_000),
-    });
-    if (!res.ok) throw new Error(`Stripe checkout gagal: HTTP ${res.status}`);
-    const data = (await res.json()) as { id?: string; url?: string };
-    if (!data.url || !data.id) throw new Error('Respons Stripe tidak lengkap.');
-    return { checkoutUrl: data.url, gatewayRef: data.id };
-  }
-
-  async verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult> {
-    if (!signature) throw new Error('Header Stripe-Signature hilang.');
-    // Verifikasi penuh idealnya memakai stripe.webhooks.constructEvent.
-    // Di sini kerangka: pastikan secret ada lalu parse event.
-    if (!this.webhookSecret) throw new Error('STRIPE_WEBHOOK_SECRET belum diset.');
-    const event = JSON.parse(rawBody) as {
-      type?: string;
-      data?: { object?: { client_reference_id?: string; id?: string } };
-    };
-    const obj = event.data?.object;
-    if (!obj?.client_reference_id) throw new Error('Webhook Stripe tanpa client_reference_id.');
+  async verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult | null> {
+    const secret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!secret || !signature || signature.length > 4096 || rawBody.length > 1024 * 1024)
+      throw new Error('Invalid webhook.');
+    const fields = signature.split(',').map((field) => field.trim().split('='));
+    const timestamps = fields.filter(([key]) => key === 't').map(([, value]) => value!);
+    if (timestamps.length !== 1 || !/^\d+$/.test(timestamps[0]!))
+      throw new Error('Invalid webhook timestamp.');
+    const timestamp = Number(timestamps[0]);
+    if (!Number.isSafeInteger(timestamp) || Math.abs(Date.now() / 1000 - timestamp) > 300)
+      throw new Error('Webhook timestamp outside tolerance.');
+    const expected = createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest();
+    const valid = fields.some(
+      ([key, value]) =>
+        key === 'v1' &&
+        /^[a-f0-9]{64}$/.test(value ?? '') &&
+        timingSafeEqual(Buffer.from(value!, 'hex'), expected),
+    );
+    if (!valid) throw new Error('Invalid webhook signature.');
+    const event = z
+      .object({
+        id: z.string().min(1).max(255),
+        type: z.string(),
+        data: z.object({ object: z.unknown() }),
+      })
+      .parse(JSON.parse(rawBody));
+    if (
+      !['checkout.session.completed', 'checkout.session.async_payment_succeeded'].includes(
+        event.type,
+      )
+    )
+      return null;
+    const checkout = z
+      .object({
+        id: z.string().min(1).max(255),
+        mode: z.literal('payment'),
+        client_reference_id: z.string().uuid(),
+        payment_status: z.string(),
+        amount_total: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+        currency: z.enum(['usd', 'idr']),
+      })
+      .parse(event.data.object);
+    if (checkout.payment_status !== 'paid') return null;
     return {
-      orderId: obj.client_reference_id,
-      status: event.type === 'checkout.session.completed' ? 'paid' : 'failed',
-      gatewayRef: obj.id ?? obj.client_reference_id,
+      eventId: event.id,
+      orderId: checkout.client_reference_id,
+      status: 'paid',
+      gatewayRef: checkout.id,
+      amountMinor: checkout.amount_total,
+      currency: checkout.currency === 'usd' ? 'USD' : 'IDR',
     };
   }
 }

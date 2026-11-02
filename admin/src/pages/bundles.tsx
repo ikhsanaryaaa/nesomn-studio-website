@@ -20,11 +20,7 @@ export const BundleList = () => {
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="title" title="Title" sorter />
         <Table.Column dataIndex="slug" title="Slug" />
-        <Table.Column
-          dataIndex="type"
-          title="Type"
-          render={(v: string) => <Tag>{v}</Tag>}
-        />
+        <Table.Column dataIndex="type" title="Type" render={(v: string) => <Tag>{v}</Tag>} />
         <Table.Column
           title="Actions"
           render={(_, record: { id: string }) => (
@@ -41,9 +37,9 @@ export const BundleList = () => {
 };
 
 const BundleFields = () => {
-  // Pilihan asset untuk mengisi bundle_items (dikirim ke PUT /bundles/:id/items).
+  // Pilihan asset untuk mengisi bundle_items (disimpan atomik bersama metadata bundle).
   const { selectProps } = useSelect({
-    resource: 'assets',
+    resource: 'bundle-assets',
     optionLabel: 'title',
     optionValue: 'id',
   });
@@ -67,7 +63,7 @@ const BundleFields = () => {
         />
       </Form.Item>
       <Form.Item label="Assets dalam bundle" name="assetIds">
-        <Select mode="multiple" {...selectProps} placeholder="Pilih aset" />
+        <Select mode="multiple" maxCount={200} {...selectProps} placeholder="Pilih aset" />
       </Form.Item>
     </>
   );
