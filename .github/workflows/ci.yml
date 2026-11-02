@@ -81,6 +81,8 @@ jobs:
         with:
           bun-version-file: .bun-version
       - run: bun install --frozen-lockfile
+      - name: Verify Chrome startup in isolated release environment
+        run: node tests/chrome-startup.mjs
       - name: Actual app/gateway, independent workers and production browser acceptance
         env:
           NESOMN_DISPOSABLE_TESTS: '1'

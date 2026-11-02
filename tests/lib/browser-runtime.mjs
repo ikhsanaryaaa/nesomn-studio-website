@@ -1,3 +1,4 @@
+import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 const release = process.env.NESOMN_RELEASE_LAB === '1';
@@ -73,4 +74,26 @@ export function createBrowserDiagnostics() {
     },
   };
   return result;
+}
+
+/** Keep startup failure details: ignored stderr hid Linux sandbox/profile errors in CI. */
+export function launchChrome(executable, args, options = {}) {
+  const child = spawn(executable, args, { ...options, stdio: ['ignore', 'ignore', 'pipe'] });
+  let stderr = '',
+    failure = '';
+  child.stderr?.on('data', (chunk) => {
+    stderr = (stderr + chunk.toString()).slice(-4000);
+  });
+  child.on('error', (error) => {
+    failure = error.code ?? error.name;
+  });
+  child.startupDiagnostics = () =>
+    'Chrome debug endpoint unavailable; ' +
+    JSON.stringify({
+      exitCode: child.exitCode,
+      signalCode: child.signalCode,
+      error: failure,
+      stderr,
+    });
+  return child;
 }

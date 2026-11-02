@@ -4,7 +4,7 @@ import { chromeExecutable } from './lib/browser-runtime.mjs';
 // Production-built assets only; offline API fixture explicitly restricted to this test server.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
+import { launchChrome } from './lib/browser-runtime.mjs';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
 const dist = resolve('client/dist'),
@@ -204,7 +204,7 @@ async function click(text) {
 }
 await assertPortAvailable(9250);
 try {
-  chrome = spawn(
+  chrome = launchChrome(
     chromeExecutable(),
     [
       '--headless=new',
@@ -228,7 +228,7 @@ try {
       await sleep(100);
     }
   }
-  assert.ok(version?.webSocketDebuggerUrl);
+  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {
@@ -484,7 +484,9 @@ try {
   await click('Coba lagi gambar');
   await wait(orangeExpression + '>0');
   results.imageError = { visible: true, exportBlocked: true, retryRecovered: true };
-  await evaluate("(()=>{const control=document.querySelector('[aria-label=\"Tema tampilan\"]');control.value=\"dark\";control.dispatchEvent(new Event(\"change\",{bubbles:true}));})()");
+  await evaluate(
+    '(()=>{const control=document.querySelector(\'[aria-label="Tema tampilan"]\');control.value="dark";control.dispatchEvent(new Event("change",{bubbles:true}));})()',
+  );
   await wait('document.documentElement.dataset.theme === "dark"');
   await shot('2d-mobile-dark');
   assert.deepEqual(exceptions, []);

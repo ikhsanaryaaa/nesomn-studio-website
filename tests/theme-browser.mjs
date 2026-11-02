@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
-import { spawn } from 'node:child_process';
+import { launchChrome } from './lib/browser-runtime.mjs';
 const root = resolve(process.env.NESOMN_UI_DIST ?? 'client/dist');
 const admin = resolve(process.env.NESOMN_ADMIN_DIST ?? 'admin/dist');
 const folder = resolve(artifactDirectory('theme', 'docs/revision/artifacts/phase-6'));
@@ -46,7 +46,7 @@ const server = createServer((req, res) => {
   res.end(readFileSync(file));
 });
 await new Promise((r) => server.listen(18086, '127.0.0.1', r));
-const chrome = spawn(
+const chrome = launchChrome(
   chromeExecutable(),
   [
     '--headless=new',
@@ -153,7 +153,7 @@ try {
       await delay(100);
     }
   }
-  assert.ok(version?.webSocketDebuggerUrl);
+  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (e) => {

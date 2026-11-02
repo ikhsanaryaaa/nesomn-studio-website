@@ -3,7 +3,7 @@ import { chromeExecutable, artifactDirectory, cacheDirectory } from './lib/brows
 // Production-built assets only; offline API fixture explicitly restricted to this test server.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
+import { launchChrome } from './lib/browser-runtime.mjs';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
 const dist = resolve(process.env.NESOMN_VIEWER_DIST ?? 'client/dist'),
@@ -166,7 +166,7 @@ async function wait(e) {
     if (await evaluate('Boolean(' + e + ')')) return;
     await sleep(100);
   }
-  throw Error('Timeout ' + e + ' ' + JSON.stringify({exceptions,diagnostics}));
+  throw Error('Timeout ' + e + ' ' + JSON.stringify({ exceptions, diagnostics }));
 }
 async function go(path) {
   await send('Page.navigate', { url: 'http://127.0.0.1:18090' + path });
@@ -231,7 +231,7 @@ async function capture(name, width) {
 }
 
 try {
-  chrome = spawn(
+  chrome = launchChrome(
     chromeExecutable(),
     [
       '--headless=new',
@@ -259,7 +259,7 @@ try {
       await sleep(100);
     }
   }
-  assert.ok(version?.webSocketDebuggerUrl);
+  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {

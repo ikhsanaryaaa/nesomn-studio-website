@@ -7,7 +7,7 @@ import {
 } from './lib/browser-runtime.mjs';
 // Actual production gateway + disposable database only. No offline API fixtures.
 import assert from 'node:assert/strict';
-import { spawn } from 'node:child_process';
+import { launchChrome } from './lib/browser-runtime.mjs';
 import { resolve } from 'node:path';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 if (process.env.NESOMN_DISPOSABLE_TESTS !== '1') throw Error('Disposable opt-in required');
@@ -98,7 +98,7 @@ async function click(text) {
 }
 
 try {
-  chrome = spawn(
+  chrome = launchChrome(
     chromeExecutable(),
     [
       '--headless=new',
@@ -123,7 +123,7 @@ try {
       await sleep(100);
     }
   }
-  assert.ok(version?.webSocketDebuggerUrl);
+  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {

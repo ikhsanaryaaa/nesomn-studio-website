@@ -93,7 +93,7 @@ async function click(text) {
 }
 
 try {
-  chrome = spawn(
+  chrome = launchChrome(
     chromeExecutable(),
     [
       '--headless=new',
@@ -117,7 +117,7 @@ try {
       await sleep(100);
     }
   }
-  assert.ok(version?.webSocketDebuggerUrl);
+  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {

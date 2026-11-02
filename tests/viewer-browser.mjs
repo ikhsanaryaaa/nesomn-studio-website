@@ -3,7 +3,7 @@ import { chromeExecutable, artifactDirectory, cacheDirectory } from './lib/brows
 // Production-built assets only; offline API fixture explicitly restricted to this test server.
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { spawn } from 'node:child_process';
+import { launchChrome } from './lib/browser-runtime.mjs';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
 const dist = resolve(process.env.NESOMN_VIEWER_DIST ?? 'client/dist'),
@@ -185,7 +185,7 @@ async function ready() {
   );
 }
 try {
-  chrome = spawn(
+  chrome = launchChrome(
     chromeExecutable(),
     [
       '--headless=new',
@@ -212,7 +212,7 @@ try {
       await sleep(100);
     }
   }
-  assert.ok(version?.webSocketDebuggerUrl);
+  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {
