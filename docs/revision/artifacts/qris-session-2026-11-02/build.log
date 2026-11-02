@@ -1,0 +1,48 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from qris.Dockerfile
+#1 transferring dockerfile: 990B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 387B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 13.90kB 0.0s done
+#4 DONE 0.0s
+
+#5 [1/6] FROM docker.io/library/python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb
+#5 resolve docker.io/library/python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb 0.0s done
+#5 DONE 0.0s
+
+#6 [2/6] WORKDIR /opt/qris
+#6 CACHED
+
+#7 [3/6] COPY integrations/qris/requirements.txt ./
+#7 CACHED
+
+#8 [4/6] RUN pip install --no-cache-dir -r requirements.txt && useradd -u 10001 -m qris && mkdir /data && chown qris:qris /data
+#8 CACHED
+
+#9 [5/6] COPY --chown=qris:qris integrations/qris/vendor ./vendor
+#9 CACHED
+
+#10 [6/6] COPY --chown=qris:qris integrations/qris/worker.py integrations/qris/health_http.py integrations/qris/session_manager.py integrations/qris/test_worker.py integrations/qris/test_session_manager.py integrations/qris/vendor-manifest.json ./
+#10 DONE 0.1s
+
+#11 exporting to image
+#11 exporting layers 0.1s done
+#11 exporting manifest sha256:8dcc1cbdda4a13e68eab70b5f749f1ad669c0e78265e49cc23308415151e4e87 0.0s done
+#11 exporting config sha256:1bc299d4f1c8dfc8007c565c6da2989b75d7aeab8f67eff52a1400c96b49546e 0.0s done
+#11 exporting attestation manifest sha256:7e59d1df96001533f460ba1096922469d02240a3ffaba4d4e7b488bb38cf6127 0.0s done
+#11 exporting manifest list sha256:e21856615e3336080be7c56cde849377c25d6b26d48f45c818ab643578ae4cc2 0.0s done
+#11 naming to docker.io/library/nesomn-qris-refresh:test done
+#11 unpacking to docker.io/library/nesomn-qris-refresh:test
+#11 unpacking to docker.io/library/nesomn-qris-refresh:test 0.3s done
+#11 DONE 0.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/88nmkr77im7hbojtz2ptoi5su

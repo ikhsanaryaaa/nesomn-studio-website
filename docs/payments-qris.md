@@ -1,6 +1,8 @@
 # QRIS ShopeePay — as-built phase 5
 
-Adapter tersedia, **disabled secara default dan belum diverifikasi dengan merchant/wallet nyata**. Jangan mengaktifkan dari deskripsi SDK saja. UI baru monokrom/orange tetap fase6. Main Compose tetap tepat `app` dan `gateway`; consumer berikut memiliki lifecycle sendiri.
+**Update session refresh:** mode JSON sesi lengkap kini tersedia dengan refresh otomatis, state rotasi persisten dan status login_required. Ikuti [runbook sesi ShopeePay](qris-session.md); petunjuk token teks di bawah adalah mode legacy tanpa silent refresh.
+
+Adapter tersedia, **disabled secara default dan belum diverifikasi dengan merchant/wallet nyata**. Jangan mengaktifkan dari deskripsi SDK saja. Main Compose tetap tepat `app` dan `gateway`; consumer berikut memiliki lifecycle sendiri.
 
 ## Kontrak yang benar-benar diaudit
 
@@ -53,7 +55,7 @@ docker inspect nesomn-qris-worker --format '{{json .State.Health}}'
 docker logs --tail 30 nesomn-qris-worker
 ```
 
-Tidak ada published port, tidak menambah service/profiles/override Compose utama. HTTPS dapat melewati ingress; private Docker HTTP hanya pilihan eksplisit `QRIS_ALLOW_PRIVATE_HTTP=true` dan URL app3000 yang telah diverifikasi. Jangan mengekspos port app untuk worker. Image Python3.13-slim digest terpin, UID10001, deps exact; token dibaca ulang setiap cycle. Renewal session dilakukan operator lewat alur resmi yang diotorisasi, update file privat, tidak ada login/OTP/token extraction otomatis. Restart policy tidak otomatis restart karena status unhealthy; monitoring operator diperlukan.
+Tidak ada published port, tidak menambah service/profiles/override Compose utama. HTTPS dapat melewati ingress; private Docker HTTP hanya pilihan eksplisit `QRIS_ALLOW_PRIVATE_HTTP=true` dan URL app3000 yang telah diverifikasi. Jangan mengekspos port app untuk worker. Image Python3.13-slim digest terpin, UID10001, deps exact; token dibaca ulang setiap cycle. Refresh otomatis tersedia pada mode JSON; login awal dan login ulang saat account session mati tetap melalui operator. Tidak ada login/OTP/token extraction otomatis. Lihat qris-session.md. Restart policy tidak otomatis restart karena status unhealthy; monitoring operator diperlukan.
 
 ## Recovery, rekonsiliasi, cutover dan rollback
 

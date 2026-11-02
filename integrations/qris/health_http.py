@@ -1,10 +1,11 @@
 """Optional private HTTP health listener for per-container platforms."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import json
 import threading
 import time
 
-def start_health(port, health_path='/tmp/qris-health'):
+def start_health(port, health_path='/tmp/qris-health', session_status_path='/tmp/qris-session-status.json'):
     if not port:
         return None
     if not port.isascii() or not port.isdigit() or not 1024 <= int(port) <= 65535:
@@ -22,7 +23,19 @@ def start_health(port, health_path='/tmp/qris-health'):
                 except (OSError, ValueError):
                     pass
                 status = 200 if ok else 503
-            body = b'{"ok":true}' if ok else b'{"ok":false}'
+            result = {'ok': ok}
+            if self.path in ('/', '/health/ready'):
+                try:
+                    state=json.loads(Path(session_status_path).read_text()).get('state')
+                    if state in ('starting','ready','refreshing','backoff','login_required','session_invalid','busy'):
+                        result['session']=state
+                        if state != 'ready':
+                            status=503
+                            result['ok']=False
+                except (OSError, ValueError, AttributeError):
+                    pass
+            body = json.dumps(result,separators=(',',':')).encode()
+
             self.send_response(status)
             self.send_header('Content-Type', 'application/json')
             self.send_header('Cache-Control', 'no-store')

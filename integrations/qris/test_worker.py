@@ -52,6 +52,25 @@ class TestSpool(unittest.TestCase):
   self.assertEqual(s.db.execute('SELECT count(*) FROM unresolved_review').fetchone()[0],1)
 
 class TestPrivateHealth(unittest.TestCase):
+ def test_login_required_is_unhealthy_even_with_fresh_heartbeat(self):
+  import socket,time,urllib.request,urllib.error
+  from pathlib import Path
+  from health_http import start_health
+  with tempfile.TemporaryDirectory() as d:
+   heartbeat=d+'/health';status=d+'/session'
+   Path(heartbeat).write_text(str(int(time.time())))
+   Path(status).write_text(json.dumps({'state':'login_required','token':'MUST-NOT-LEAK'}))
+   with socket.socket() as s:
+    s.bind(('127.0.0.1',0));port=s.getsockname()[1]
+   server=start_health(str(port),heartbeat,status)
+   try:
+    with self.assertRaises(urllib.error.HTTPError) as error:urllib.request.urlopen('http://127.0.0.1:'+str(port)+'/health/ready')
+    self.assertEqual(error.exception.code,503)
+    body=error.exception.read().decode()
+    self.assertEqual(json.loads(body),{'ok':False,'session':'login_required'})
+    self.assertNotIn('MUST-NOT-LEAK',body)
+   finally:server.shutdown();server.server_close()
+
  def test_disabled_and_invalid_ports(self):
   from health_http import start_health
   self.assertIsNone(start_health(None))
@@ -80,5 +99,7 @@ class TestPrivateHealth(unittest.TestCase):
     with self.assertRaises(urllib.error.HTTPError) as error:urllib.request.urlopen(base+'/receipts')
     self.assertEqual(error.exception.code,404)
    finally:server.shutdown();server.server_close()
+
+from test_session_manager import TestSessionManager
 
 if __name__=='__main__':unittest.main()
