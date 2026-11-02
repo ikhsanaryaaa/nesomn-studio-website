@@ -1,71 +1,93 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Topbar } from '@/components/shell/topbar';
-import { Card, CardContent } from '@/components/ui/card';
+import { Link } from 'react-router';
+import { AuthGate, PageState } from '@/components/page-state';
+import { AssetMedia } from '@/components/store/asset-media';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Seo } from '@/components/seo';
-import { useToast } from '@/components/ui/use-toast';
-import { useAuth } from '@/hooks/use-auth';
 import { api } from '@/lib/api';
-
 export default function LibraryPage() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { toast } = useToast();
-
-  const { data: items, isLoading } = useQuery({
-    queryKey: ['library'],
-    queryFn: () => api.library(),
-    enabled: isAuthenticated,
-  });
-
-  const download = async (id: string) => {
-    try {
-      const { url } = await api.downloadUrl(id);
-      window.open(url, '_blank');
-    } catch {
-      toast({ title: 'Gagal membuat tautan download', variant: 'danger' });
-    }
-  };
-
   return (
-    <>
-      <Seo title="Asset Library" description="Aset yang Anda miliki di Nesomn Studio." />
-      <Topbar title="Asset Library" />
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <h1 className="mb-6 text-2xl font-semibold tracking-tight">Asset Library</h1>
-
-        {!authLoading && !isAuthenticated ? (
-          <p className="text-sm text-muted-foreground">Login untuk melihat aset Anda.</p>
-        ) : isLoading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-[4/5] w-full" />
-            ))}
-          </div>
-        ) : items && items.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {items.map((item) => (
-              <Card key={item.id} className="overflow-hidden">
-                <div className="aspect-[4/5] bg-surface-2">
-                  {item.previews[0] && (
-                    <img src={item.previews[0]} alt={item.title} className="h-full w-full object-cover" />
-                  )}
-                </div>
-                <CardContent className="flex flex-col gap-2 p-3">
-                  <span className="truncate text-[13px] font-medium">{item.title}</span>
-                  <Button size="sm" variant="secondary" onClick={() => download(item.id)}>
-                    Download
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Belum ada aset. Klaim aset gratis atau beli dari Marketplace.
-          </p>
-        )}
-      </div>
-    </>
+    <AuthGate>
+      <LibraryContent />
+    </AuthGate>
+  );
+}
+function LibraryContent() {
+  const query = useQuery({ queryKey: ['library'], queryFn: () => api.library() }),
+    [pending, setPending] = useState<string | null>(null),
+    [error, setError] = useState(''),
+    [download, setDownload] = useState<{ id: string; url: string } | null>(null);
+  async function prepare(id: string) {
+    setPending(id);
+    setError('');
+    setDownload(null);
+    try {
+      const result = await api.downloadUrl(id);
+      const url = new URL(result.url, window.location.origin);
+      if (url.protocol !== 'https:' && url.origin !== window.location.origin)
+        throw Error('Tautan download tidak valid.');
+      setDownload({ id, url: url.href });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Download belum tersedia.');
+    } finally {
+      setPending(null);
+    }
+  }
+  return (
+    <div className="page-wrap">
+      <Seo title="Asset Library" />
+      <header className="page-heading">
+        <div>
+          <h1>Asset Library</h1>
+          <p>Aset milik Anda, siap untuk project berikutnya.</p>
+        </div>
+        <Button asChild variant="secondary">
+          <Link to="/marketplace">Jelajahi katalog</Link>
+        </Button>
+      </header>
+      {query.isLoading ? (
+        <PageState title="Memuat Library…" loading />
+      ) : query.isError ? (
+        <PageState title="Library tidak dapat dimuat" retry={() => void query.refetch()} />
+      ) : query.data?.length ? (
+        <div className="asset-grid">
+          {query.data.map((item) => (
+            <article key={item.id}>
+              <Link to={'/marketplace/' + item.slug}>
+                <AssetMedia src={item.previews[0]} title={item.title} />
+                <h2 className="my-4 font-semibold">{item.title}</h2>
+              </Link>
+              <Button
+                variant="secondary"
+                disabled={pending !== null}
+                onClick={() => void prepare(item.id)}
+              >
+                {pending === item.id ? 'Menyiapkan…' : 'Siapkan download'}
+              </Button>
+              {download?.id === item.id && (
+                <a
+                  className="ml-3 text-accent underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={download.url}
+                >
+                  Buka download
+                </a>
+              )}
+            </article>
+          ))}
+        </div>
+      ) : (
+        <PageState title="Belum ada aset dimiliki">
+          Klaim aset gratis atau beli melalui katalog.
+        </PageState>
+      )}
+      {error && (
+        <p role="alert" className="mt-4 text-danger">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }

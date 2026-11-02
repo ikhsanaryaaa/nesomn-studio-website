@@ -1,0 +1,60 @@
+[
+  {
+    "path": "/health/live",
+    "status": 200,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/health/ready",
+    "status": 200,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/api/catalog/assets",
+    "status": 200,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/api/no-such-route",
+    "status": 404,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/editor/scene",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/admin/subscriptions",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/admin/credit-ledger",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/api/admin/subscriptions",
+    "status": 401,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/api/admin/credit-ledger",
+    "status": 401,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/assets/missing.js",
+    "status": 404,
+    "type": "text/plain; charset=utf-8"
+  },
+  {
+    "path": "/demo/models/nesomn-product-box.glb",
+    "status": 200,
+    "type": "model/gltf-binary"
+  },
+  {
+    "independentWorkerHealth": 0
+  }
+]

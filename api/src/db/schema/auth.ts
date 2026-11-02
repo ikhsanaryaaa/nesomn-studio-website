@@ -15,6 +15,7 @@ export const users = pgTable(
     avatarUrl: text('avatar_url'),
     googleId: text('google_id').unique(),
     emailVerified: boolean('email_verified').notNull().default(false),
+    disabledAt: timestamp('disabled_at', { withTimezone: true }),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },

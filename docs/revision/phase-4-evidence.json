@@ -1,0 +1,595 @@
+{
+  "recordedAt": "2026-10-31T04:26:10.113Z",
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website.git",
+  "branch": "works/runtime-tooling-upgrade",
+  "head": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "uncommitted": true,
+  "productionAccess": false,
+  "runtime": {
+    "bun": "1.4.4",
+    "executable": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/runtime/bun-1.4.4/bun-windows-x64/bun.exe",
+    "globalBunUnchanged": "1.4.0",
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "bunTypes": "1.4.4",
+    "node": "v24.18.0"
+  },
+  "lockfileSha256": "95afff69a5504197a958829f630e8f55e8fbade43a34e43e0721b330f0aaf3e8",
+  "originalMigrations": [
+    {
+      "path": "api/drizzle/0000_worthless_hellcat.sql",
+      "sha256": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed",
+      "currentSha256": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0001_familiar_joshua_kane.sql",
+      "sha256": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c",
+      "currentSha256": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0002_milky_nightshade.sql",
+      "sha256": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf",
+      "currentSha256": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0003_asset_editor_separation.sql",
+      "sha256": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4",
+      "currentSha256": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4",
+      "unchanged": true
+    }
+  ],
+  "newMigrations": [
+    {
+      "path": "api/drizzle/0004_business_integrity.sql",
+      "sha256": "4deef1a73640760d55838d7c0a83f8edacf41700e037ebe9b4af3496725a42bc"
+    },
+    {
+      "path": "api/drizzle/0005_receipt_identity.sql",
+      "sha256": "d96e02ddb5b6319b53cb07447fb8683e84e1b5cfc30903e2b32e460beabb425e"
+    },
+    {
+      "path": "api/drizzle/0006_remote_execution.sql",
+      "sha256": "a790c0b43c56d53d99cbc238bad2f6831244cd7c80495b2d4f5fddfbbf977c49"
+    }
+  ],
+  "disposableSchema": {
+    "publicTables": 25,
+    "migrations": 7,
+    "productionClone": false,
+    "legacyUpgradeFixtures": true,
+    "preflightPassed": true
+  },
+  "checks": [
+    {
+      "name": "format",
+      "exitCode": 0
+    },
+    {
+      "name": "frozen",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "lint",
+      "exitCode": 0
+    },
+    {
+      "name": "security-unit",
+      "exitCode": 0
+    },
+    {
+      "name": "security-integration",
+      "exitCode": 0
+    },
+    {
+      "name": "integration",
+      "exitCode": 0
+    },
+    {
+      "name": "unit",
+      "exitCode": 0
+    },
+    {
+      "name": "node-guards",
+      "exitCode": 0
+    },
+    {
+      "name": "deployment-unit",
+      "exitCode": 0
+    },
+    {
+      "name": "build",
+      "exitCode": 0
+    }
+  ],
+  "groups": [
+    {
+      "name": "security-unit",
+      "status": "PASS",
+      "pass": 9,
+      "assertions": 64,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/security-unit.log",
+      "logSha256": "b68d54f35249cfd753f950de8a6b5f7e78ef07be33d3e93844a28426ff76de53"
+    },
+    {
+      "name": "security-integration",
+      "status": "PASS",
+      "pass": 29,
+      "assertions": 122,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/security-integration.log",
+      "logSha256": "61401a46683cae54726884a53d279543d0173b3b0984c064c78a28a4ef01f3ac"
+    },
+    {
+      "name": "integration",
+      "status": "PASS",
+      "pass": 24,
+      "assertions": 65,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/integration.log",
+      "logSha256": "aaa5d9ca3c2f9c44e08f1ca6f4d8afab5fe4b95fbccd4e9e9e69782fb12211f9"
+    },
+    {
+      "name": "unit",
+      "status": "PASS",
+      "pass": 22,
+      "assertions": 47,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/unit.log",
+      "logSha256": "6fca1d2b1b62617d7140611ca8aad2743012ccaa4e6b6d7d198158e99e36e2e7"
+    },
+    {
+      "name": "node-guards",
+      "status": "PASS",
+      "pass": 11,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/node-guards.log",
+      "logSha256": "fe8c87be68c901d2103802f55d370bb01d695eb3d39437b5a6ebbd211a7c4f23"
+    },
+    {
+      "name": "deployment-unit",
+      "status": "PASS",
+      "pass": 13,
+      "assertions": 93,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/deployment-unit.log",
+      "logSha256": "2cd92089410ee8ca75e0ce2c5a2a513ee0a7d9ffe51f0c9503f23503cb75d678"
+    },
+    {
+      "name": "gateway",
+      "status": "PASS",
+      "pass": 5,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/gateway.log",
+      "logSha256": "e37d4016468de635a4e708389ce37a8d13ec19dd7744cf4510e2ff5833508b0f"
+    },
+    {
+      "name": "worker-drain",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/worker-drain.log",
+      "logSha256": "cf0e0937092e894718bf1263001a8528deb7b69f05ec963b3441ffb1e8a12ec2"
+    },
+    {
+      "name": "outbox-outage",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/outbox-outage.log",
+      "logSha256": "1c0a5af45ef363034027c578e304affebd403cc2451ac8d510cb331d3486a8cc"
+    },
+    {
+      "name": "storage-persistence",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/storage-persistence.log",
+      "logSha256": "dd0f6b7ba21fbf32769e1482a0b8365d51fdbd69c3e75e238e140bb391be42a0"
+    },
+    {
+      "name": "linux-bootstrap",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/linux-bootstrap.log",
+      "logSha256": "cf003a35365705ebeb50cfa82f879c58e30d6b9ab3a1d7ee0b317b9060770797"
+    },
+    {
+      "name": "outbound-runtime",
+      "status": "PASS",
+      "pass": 1,
+      "assertions": 2,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/outbound-runtime.log",
+      "logSha256": "facda1bd50ceec39d94c35697a3f0a73e83e415198fdb31406721f751d337b16"
+    }
+  ],
+  "composeServices": [
+    "app",
+    "gateway"
+  ],
+  "images": [
+    {
+      "name": "nesomn-app:revision-phase4",
+      "id": "sha256:4a4a85acaa6379cf9fec182faf92e340514fbc03b8a264b2fc5b2370b013d0d4"
+    },
+    {
+      "name": "nesomn-ai-worker:revision-phase4",
+      "id": "sha256:bb594e43a7b0a1df993581f04dbbbb43a5e88868af8163ff3c98899e05b05d48"
+    }
+  ],
+  "containers": [
+    {
+      "name": "nesomn-revision-phase4-app-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:4a4a85acaa6379cf9fec182faf92e340514fbc03b8a264b2fc5b2370b013d0d4"
+    },
+    {
+      "name": "nesomn-revision-phase4-gateway-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949"
+    },
+    {
+      "name": "nesomn-revision-ai-worker-phase4",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:bb594e43a7b0a1df993581f04dbbbb43a5e88868af8163ff3c98899e05b05d48"
+    },
+    {
+      "name": "nesomn-revision-ai-worker-phase4-production",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:43de366a06a3a5e4ce5422663e7add44c4195fb0f6c3a50f91661561a8b25df2"
+    },
+    {
+      "name": "nesomn-revision-redis-private",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f"
+    },
+    {
+      "name": "nesomn-revision-test-test-db-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193"
+    },
+    {
+      "name": "nesomn-revision-test-test-redis-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f"
+    }
+  ],
+  "changedInputs": [
+    {
+      "path": "docker-compose.yml",
+      "before": "d68b3ecc7540b37821e3138f8e53cd3e44bacdc58790a9eb600f4449229f7dd1",
+      "after": "0823939983b045742ddebb351a7b3f7ddd62e7b38ca6f299bc39410deff86c3b"
+    },
+    {
+      "path": ".env.example",
+      "before": "2b1304753955a885f5a5604f480f1d076be29cf5ed354195f69ce8ec4ea73cb7",
+      "after": "a5a51556e7779c0846ff3921dac704b192d960175240a793898e6a00c61f736c"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "before": "f56ac3a76154251ac1a8df35a2add3962fbcdcc9da2374ab718b2c71a01453ac",
+      "after": "501ddcbe039e439364e75b898fed81751b538766bfaa0f4a2ac6c4c9bd1b4fb5"
+    },
+    {
+      "path": "api/src/db/migrate.ts",
+      "before": "c094ea030391e1bab273f9d4adf78df6ca6cfaa8c6c128190b83ff6e15cd813f",
+      "after": "dc31bc7392cf5708fb2976413f5b283fcbbea5f28b15b1d323f0404969202655"
+    },
+    {
+      "path": "api/src/db/schema/ai.ts",
+      "before": "f7919f92a9962dcd24ecadefefde074049eba42f2c67138435f04a73ca2238c1",
+      "after": "74bc9751c5daf31dbff74a4e5fe7c925764ade40fe7fa441eac764741885399b"
+    },
+    {
+      "path": "api/src/db/schema/auth.ts",
+      "before": "e4d28701cb313309a7ac6dae4249d84285c7709d4be0d2e8fcd2d46a6a35f53d",
+      "after": "e774d90479128f20c4b8b9e4509550125affd1ca6f41012936033e5233d0a839"
+    },
+    {
+      "path": "api/src/db/schema/billing.ts",
+      "before": "8d40b890aab13a589ad99872ca2f88c8813b8283576bf2187af6ab02450960a1",
+      "after": "a9c5cd4cab25883e88a2eeae01e1bf0dd14dbfcb0e2f1cffe71d71b79e6814f3"
+    },
+    {
+      "path": "api/src/db/schema/index.ts",
+      "before": "d6167475de36422a72a940d506f1d8afdfe81bbd5154fa8e6ff742e0b1c04d4c",
+      "after": "4af93d12f8981edc932f9519b579081515dbb568c8942da69cbebb30fb08c82e"
+    },
+    {
+      "path": "api/src/db/schema/orders.ts",
+      "before": "5a4aa4de5fc87c6f96e40339d670b880d1950cd48f689b87a3c0b4f9d2fe0a26",
+      "after": "d76477bea79316c9ca7cec30e4eaf56b36448579014e8593e8938c99962663d2"
+    },
+    {
+      "path": "api/src/index.ts",
+      "before": "c6b63d197de74265a4ff53d7611bb1d77b8430f0660ff8e853eceef775c8174c",
+      "after": "13de905b23cb806cd5471c5362978591e2a480f3a35a8be3705f98299da25a3c"
+    },
+    {
+      "path": "api/src/lib/feature-access.ts",
+      "before": "9746fd59cf7862ef7e8b185ae32985cb0e2e15ec579c0457d919459da2801d3a",
+      "after": "a496eb22d9f3fd678837610f21de6df8508d3387c2b82563d25cc633d86abad0"
+    },
+    {
+      "path": "api/src/lib/jwt.ts",
+      "before": "db7e9a33ec9dd85d7b398be15cfb223da771a3f079392159f500d293019f9892",
+      "after": "dfadad79db9f6a6305614f619762b067b560ecbbc681d8468bd8a12ddaba6149"
+    },
+    {
+      "path": "api/src/lib/storage/local-fs.ts",
+      "before": "bf030667ae48db3f44e097309a3431381cc00ab4c8e7573c34e274cb59ef5e39",
+      "after": "e2009628da928841e9af293508c01ce18fcf829063941bdac5887849f2bdc0b4"
+    },
+    {
+      "path": "api/src/lib/storage/r2.ts",
+      "before": "8fe7424a1ecd4ccbd9e6bee4240f9fa1592ad5818632edb6891cc8f4e00a6e64",
+      "after": "bd6fdf14b6eb2e4381135f04d535d4a61c398a760323eb2b067cbe5cb34f4e64"
+    },
+    {
+      "path": "api/src/middleware/auth.ts",
+      "before": "0674b4d962ca954f294c2b1d258346f9f3d4c73709c6665e92891bde5dccd5c1",
+      "after": "5b4a8b7cc080f7c884a1db9758f1dfd25215b48f17c0325affdba1a53e22df1c"
+    },
+    {
+      "path": "api/src/middleware/error.ts",
+      "before": "044eb2adb4e589ad43d94aabde50289da695c258a26f0ce4e0bc91027166bfcc",
+      "after": "b528deeecf3052646812fecd292c21e0bfe697409af168808b608e19ccf83d74"
+    },
+    {
+      "path": "api/src/middleware/rate-limit.ts",
+      "before": "d409b78ff392549acaf2b191ba9873f75133e07fd1623622d89a849127402c98",
+      "after": "a24b6d16d94c622decebcab12f905259b2038dffeba38a4c4e79521464ffbab6"
+    },
+    {
+      "path": "api/src/modules/admin/ai-providers.routes.ts",
+      "before": "da8c1953a034f231ec52f7c8e7a34e2a9188110a3fcd19e15d30ea2594802550",
+      "after": "0e0a749750062d748d916e43089e62399ae83a68e4931be8a0ad5f71f5247f05"
+    },
+    {
+      "path": "api/src/modules/admin/assets-3d.routes.ts",
+      "before": "429ee6ae3e5b29dc68b0b80fea49a5fe8a48f175dc6b66819750d05892e569fa",
+      "after": "f82f468c10f8e1b4af085015eae3e8a278b0188a1108444eed0587a91a2f7803"
+    },
+    {
+      "path": "api/src/modules/admin/assets-scene.routes.ts",
+      "before": "34c6805d0973fc2f0632b946b91267a4367afa2de7f66be27c760b31f3077cfe",
+      "after": "ef814bdb778a0c75b7081f0255093cdd313bacee883682f2a8a7a9f9505665f2"
+    },
+    {
+      "path": "api/src/modules/admin/bundles.routes.ts",
+      "before": "40f98864d7f153807ff7a4e729e054caa6a21bd92dd33cbb51676b2cd728d742",
+      "after": "94e06391301c5c0f460c6d684811c664fef4666a21f78d9b044c8b891ca74bcb"
+    },
+    {
+      "path": "api/src/modules/admin/credit-ledger.routes.ts",
+      "before": "b1dff9ba6d045e2ddadcac51a6330c2d879e7117804b911f70cb1cdc37e439fe",
+      "after": "21e2ca64ce422c1a4ced791003ad39e4426274126b6cc5c2b75edfa652bb2e08"
+    },
+    {
+      "path": "api/src/modules/admin/credit-packs.routes.ts",
+      "before": "f41e6b7e261ea367f92b36d3ac7508045cf007d4e8ba7a7442343e147e269387",
+      "after": "cd11dcc63a2ae07a24691749ddec73f51c533609bc875e7b716b3d7862b9eb34"
+    },
+    {
+      "path": "api/src/modules/admin/plans.routes.ts",
+      "before": "f2a1099d86100a301283087f4fb3e50f4724f6be4a36a40e51de13dc6c17abfe",
+      "after": "e739edcafc2b688aa7e793e2a6379551db72fbae9e1be4fefe286f4a12db2b30"
+    },
+    {
+      "path": "api/src/modules/admin/subscriptions.routes.ts",
+      "before": "cccbce5423e84a86a4b1d27f65b81e0752edf9d94a28ef94c4d451b84ed641dc",
+      "after": "d0b534c6ae39a7e1b15cb85e19c87abbee1e4811d4e2e7ba999dd08577653512"
+    },
+    {
+      "path": "api/src/modules/admin/uploads.routes.ts",
+      "before": "6932c8e002e2f1df69673b6a2c67713a500f91c233475008de1758f56bc85542",
+      "after": "a4d2599544f9ecb82b1e475bbbfae0e42a5d95c097e7af8d3526a45130d8932f"
+    },
+    {
+      "path": "api/src/modules/admin/users.routes.ts",
+      "before": "033ebdf40f1dc2525c576a1bdc63581e0b0a4c7d37908915d5dab320c9fa9c4e",
+      "after": "58129d569d32d61ef2478a512ef45d2365961c860b41e4d73d80d69f391d1e68"
+    },
+    {
+      "path": "api/src/modules/ai/credit.ts",
+      "before": "5acb1102246214b5527f9c5b8aa87116cfc113eab036ab0d6ac9a988dac178f0",
+      "after": "a08d644db910e8715c01ef2165ba15d31b4398ab63a70ed9667dcb1dd4e0cbde"
+    },
+    {
+      "path": "api/src/modules/ai/provider.ts",
+      "before": "41b1809c8621829067057a81a7259ef0f9a0a1c2bf4c0562ee7d1f30808fa54f",
+      "after": "96a885db8d9f62eea3e24440b42fb39ce119decde8319220023fccd86c1f9a32"
+    },
+    {
+      "path": "api/src/modules/ai/providers/kie.ts",
+      "before": "9ab3df67ced3feccd342e7f4f733a426e9eef7ca0a8e22b1f67962955d6ba7e8",
+      "after": "374258e690ecdd3f8ada13a0ba7445e040996a8f502930afc6634846fe6fb3ab"
+    },
+    {
+      "path": "api/src/modules/ai/providers/stub.ts",
+      "before": "f138eaa68936f67da554741b2cf4d54bcb61ee9f5a61775d2baedbeea1a0a5ed",
+      "after": "b93d4e563a64201b3a7fbc22ac52d2414489b03ea0dfc7cf0ffa2814918bf7d6"
+    },
+    {
+      "path": "api/src/modules/ai/queue.ts",
+      "before": "de7333ed612fb39af1c338f61fa61ff47114574a32659007af45753f02b10195",
+      "after": "ecc72f101c2e0c0eb489af1cf5e853cb275d5fdc3a78d3041dea5fb4194387ba"
+    },
+    {
+      "path": "api/src/modules/ai/routes.test.ts",
+      "before": "97909f0f36bd1de95d1d6ac70e01cbca293abf63f3362bb46297ad792ded6e64",
+      "after": "048606f22bf6cf9c55f8cc0f0a4b3d10d0bf8986a29ab73b07508e6ca7ef85e4"
+    },
+    {
+      "path": "api/src/modules/ai/routes.ts",
+      "before": "f4afb8e6db0fa37e549d48c72938af18c90944d8c971cf7d9305c4c67f0f90be",
+      "after": "dd9f31de93322ec283ae1f157596f5b1a05ff4e360f2652f6f9805498b802fa6"
+    },
+    {
+      "path": "api/src/modules/auth/routes.ts",
+      "before": "a47f549d2bbc5174a5511146ff836181d58a7ae63691af2e9b587e60a2aa4d79",
+      "after": "5ccd7122f687b08a1a8d699befb05cf208253cd9a6489c5deab065df284f0d13"
+    },
+    {
+      "path": "api/src/modules/auth/schema.ts",
+      "before": "9966dcfd3163428b4c0ebdc394470b2081b218db2a6ad6026988a42e6bb3c5ef",
+      "after": "cae31e8d7d310869223f5f82cc5f75ba1adc78d1698dab72ed59331693257b35"
+    },
+    {
+      "path": "api/src/modules/billing/gateway.ts",
+      "before": "99bdc915e85b9096b100fbc7688d0d2da851b70842879787f8c8930babf21c8f",
+      "after": "5574b3dff6e2ac7194de2147bcff43151b54f7e00518d04951841bd7c88d6658"
+    },
+    {
+      "path": "api/src/modules/billing/gateways/pakasir.ts",
+      "before": "fd09111a07d9d5c5acbc9468c07918f593fafb45ab8c955a4abe49d6edaa3a7a",
+      "after": "25a71c8017c69909a6fe50400de4e53db1c412186b40921bd7201e64558787e2"
+    },
+    {
+      "path": "api/src/modules/billing/gateways/stripe.ts",
+      "before": "52badfc4943b968cfa076d8a6fb12f1c25bb75b612404be7bac4ca9ff796da45",
+      "after": "dfb68b917d8cdcf384fa4fd134980f0516fc1368b9e48d1c5433a9047d6736a0"
+    },
+    {
+      "path": "api/src/modules/billing/gateways/stub.ts",
+      "before": "d2d50d4ea1b7d494841b233bf544f85297bcb0541e3c5d5b110cae4c7b385449",
+      "after": "6543ed3f967d55167743a32d6bb5905060e28da1f232332020750ffb833b69e6"
+    },
+    {
+      "path": "api/src/modules/billing/grant.ts",
+      "before": "d53027c1ec22e31f6f7e106926a758296d9065c1a74bff2c0194e87ea160d145",
+      "after": "24be723fc5f2daf270c1539d0fac9da2217f24f6c84baded4e4f2e33f4e0544f"
+    },
+    {
+      "path": "api/src/modules/billing/retention.ts",
+      "before": "9de3e876af0ada9c26d8c38a6c686680a675d30673425b551b9ea725126a49de",
+      "after": "5401d03b581f70a51813b7cb951da7b8e2e611de3b0053a5f0299990be15b268"
+    },
+    {
+      "path": "api/src/modules/billing/routes.ts",
+      "before": "8b5e85dd27a88be768f3fbdd325f08d8e5935b3b81ee0499b69b275d85645f43",
+      "after": "cc377e0dfdb99a1565fcddec108f49e00162b534ea03571a2576c86c324c21ae"
+    },
+    {
+      "path": "api/src/modules/catalog/routes.ts",
+      "before": "8cbffd1a7986a899857d6c38ed57a35f5309981fead880a6a31ddca3b1cdcb29",
+      "after": "70eaf9df9d7bd12b7c3461d686383030a391e28c183f87b128e5d4e5194595d5"
+    },
+    {
+      "path": "api/src/modules/project/routes.ts",
+      "before": "933a4ba39c185d85d9bd1205de8eae2bd52a75a6505b8af472ea4d8fdb618727",
+      "after": "9bcbebcc3dfe87a8a4a0c1196f3590499710121eda7080feb33b9a9972ed8340"
+    },
+    {
+      "path": "api/src/modules/session/service.ts",
+      "before": "696485653a00ff2d6c9986139d00376486c1a500592104cb665a8c7302ba90bc",
+      "after": "1c74039790ffc5491d854ad01a0b19ee6d0eb8c373d956496795c9b63a4098c1"
+    },
+    {
+      "path": "api/src/modules/storage/routes.ts",
+      "before": "1e53c695b21dccbac1e8c3d890751843609fa989118a3b6c90d000dc78ebc90f",
+      "after": "5fd7ffee8b77f64d958b5f8046831e0b361b30cddd20c3580f323352331a95fb"
+    },
+    {
+      "path": "api/src/modules/store/routes.ts",
+      "before": "665984edde1f3ba28ed3dcf1279b11c585bffb4645f3119a71e7431a6692435d",
+      "after": "4e5d017cb22eaef079e8c14f7f0c25a7a087b8cb4837acb2017d3c00973897a9"
+    },
+    {
+      "path": "api/src/modules/user/routes.ts",
+      "before": "e4126f2bd53dce5ba49965bcc9c0345f7a918290db7935ea6835a82a5c0d7151",
+      "after": "fa4342db592d4ad1b1197d39726e0adb8fd8524d7d5421be3c0bd9a2e555bff6"
+    },
+    {
+      "path": "api/src/server.ts",
+      "before": "b591ec6459bc5057a32a4d34c477407ded64b91f141c8dd432b7ae71bf45b55c",
+      "after": "359d01f6d5ea0db08152c4996ef9eb6718e65cb792ee176a88488f990b24fd31"
+    },
+    {
+      "path": "api/drizzle/meta/_journal.json",
+      "before": "551695b8d1a80140aadfe1f505099d28cc36ad950ebff37299951d9393046158",
+      "after": "615f67342a1929de26c3f1be2d2f0efd486206d2a12951d74736a38ef2d6e41d"
+    },
+    {
+      "path": "worker/src/index.ts",
+      "before": "d16654eb7784b07d10109636090ccad7cf3c7ce60716a77a000437e4d845cdd7",
+      "after": "967ea81ab8413a9bd0de9123c1a65ac2a52b28c1c2bb2e55b20e23f192a9dd6b"
+    },
+    {
+      "path": "worker/src/process-job.test.ts",
+      "before": "7d4ef03ffa7ca8ee44519b9e891106137298654306f19159bd966c4807c920e5",
+      "after": "5ade82eee45a96d92e40ec14569740f068574225321a57dc05f77f3536f01606"
+    },
+    {
+      "path": "worker/src/process-job.ts",
+      "before": "7937523844ad0a343ede597c09603eb8c1144643bfb1a78d661ff3c579264e41",
+      "after": "27e683a5a1a99c52e6aaae7f9cd41438178996c346b09749706c7f5427744d10"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "before": "7efc99130416087c15b1441ac957121576ba5613f55ec23450d0083bf6303f81",
+      "after": "96bfaefc2f815c965405e941b8ebd57c6249b332e9f2ff77c5e401f4ab74f972"
+    },
+    {
+      "path": "admin/src/providers/dataProvider.ts",
+      "before": "d2dcdeac30f0817b19950dd5afda6d7b6859cf53e3b335f65a238c00b3773c28",
+      "after": "f960cc83b4095cdb9294f7a4dd139de087cdb40d6a695cd3323272254db16da5"
+    }
+  ],
+  "review": {
+    "critical": 0,
+    "important": 4,
+    "minor": 2,
+    "minorRegradedForUserEffect": true,
+    "singleFixPass": true,
+    "regressions": "RED -> GREEN",
+    "selfDiscoveredBoundaries": [
+      "initial Redis readiness hang",
+      "Free Basic Pro escalation",
+      "strict remote reference"
+    ],
+    "deferredMinors": [],
+    "liveOrProductionValidation": "SKIPPED"
+  },
+  "notes": [
+    "No commit/push/merge/deploy, database reset/drop, volume deletion or merchant transaction.",
+    "Original baseline migrations unchanged; additive0004-0006 require explicit operator migration.",
+    "Earlier outage RED preserved by ledger and exited137 historical before-review lab container; final containers all exit0.",
+    "Current security groups38tests186assertions; baseline and deployment groups are separate, not unique end-to-end scenarios.",
+    "No new UI screenshots; phase3 screenshots are historical. New light/dark/GLB/editor visual work remains later phases."
+  ],
+  "documentation": [
+    {
+      "path": "REVISION.md",
+      "sha256": "a0f229a03feb1b2bc8832bb4b6ab71ac4565d524c926f29924e7d722ce2f2659"
+    },
+    {
+      "path": "README.md",
+      "sha256": "de9529faa935f86554d38cc607ab5edf18cba9d1f6292e476b8dacb15e67384a"
+    },
+    {
+      "path": "docs/security.md",
+      "sha256": "5164015b1e772bcab66fb65e99bfd92176e70608d1f0521b4e81465b5f8ecfe6"
+    },
+    {
+      "path": "docs/testing-phase4.md",
+      "sha256": "b1e453ed3349336d6c347b89e4992a9f597c8485080436c8253a923e370c93f1"
+    },
+    {
+      "path": "docs/revision/phase-4-report.md",
+      "sha256": "28a018f08c8b2df327b1559d4c2fd2193213231381e5d60f92657282a4e458e4"
+    },
+    {
+      "path": "docs/revision/phase-4-review.md",
+      "sha256": "4608894c80e66bb268a4c312233c1651e0df21d664a3c06a1c9fb90fa6096648"
+    },
+    {
+      "path": "docs/revision/phase-4-progress.md",
+      "sha256": "9c02f8f5d93237e0e8bc6a7110f80868750f0f1c823b56ffef5310fd2b57ebea"
+    }
+  ]
+}

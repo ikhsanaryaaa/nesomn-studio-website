@@ -1,63 +1,47 @@
-import { and, eq, asc } from 'drizzle-orm';
-import { db } from '../../db/client.ts';
-import { sessions, subscriptions, plans } from '../../db/schema/index.ts';
+import { and, eq, asc, gt } from 'drizzle-orm';
+import { AppError } from '../../middleware/error.ts';
+import { sessions, users } from '../../db/schema/index.ts';
+import { withUserTransaction, type Tx } from '../../db/transaction.ts';
+import { effectiveSubscription } from '../../lib/entitlement.ts';
 
-/**
- * Tentukan batas sesi aktif untuk user.
- * Ambil dari plan pada subscription aktif; default Free Basic (1) bila tak ada.
- * null = unlimited (Enterprise).
- */
 export async function getMaxConcurrentSessions(userId: string): Promise<number | null> {
-  const sub = await db.query.subscriptions.findFirst({
-    where: and(eq(subscriptions.userId, userId), eq(subscriptions.status, 'active')),
-  });
-
-  if (!sub) return 1; // default Free Basic
-
-  const plan = await db.query.plans.findFirst({ where: eq(plans.id, sub.planId) });
-  if (!plan) return 1;
-
-  return plan.maxConcurrentSessions; // bisa null = unlimited
+  const sub = await effectiveSubscription(userId);
+  return sub ? sub.benefits.maxConcurrentSessions : 1;
 }
-
-/**
- * Pastikan jumlah sesi aktif tidak melebihi batas plan.
- * Bila melebihi (setelah memperhitungkan slot untuk 1 sesi baru),
- * hapus sesi terlama hingga muat.
- */
-export async function enforceSessionLimit(userId: string): Promise<void> {
-  const max = await getMaxConcurrentSessions(userId);
-  if (max === null) return; // unlimited
-
-  const active = await db.query.sessions.findMany({
-    where: eq(sessions.userId, userId),
-    orderBy: [asc(sessions.createdAt)],
-  });
-
-  // Sisakan ruang untuk satu sesi baru: pertahankan maksimal (max - 1).
-  const keep = Math.max(0, max - 1);
-  const toRemove = active.length - keep;
-  if (toRemove <= 0) return;
-
-  const removeIds = active.slice(0, toRemove).map((s) => s.id);
-  for (const id of removeIds) {
-    await db.delete(sessions).where(eq(sessions.id, id));
-  }
+async function enforce(tx: Tx, userId: string, reserve: number) {
+  const sub = await effectiveSubscription(userId, new Date(), tx);
+  const max = sub ? sub.benefits.maxConcurrentSessions : 1;
+  if (max === null) return;
+  const active = await tx
+    .select()
+    .from(sessions)
+    .where(and(eq(sessions.userId, userId), gt(sessions.expiresAt, new Date())))
+    .orderBy(asc(sessions.createdAt), asc(sessions.id));
+  for (const row of active.slice(0, Math.max(0, active.length - Math.max(0, max - reserve))))
+    await tx.delete(sessions).where(eq(sessions.id, row.id));
 }
-
-/** Buat sesi baru setelah enforcement, kembalikan id sesi. */
-export async function createSession(
+/** Compatibility helper; session creation itself performs enforcement atomically. */
+export function enforceSessionLimit(userId: string) {
+  return withUserTransaction(userId, (tx) => enforce(tx, userId, 1));
+}
+export function createSession(
   userId: string,
   userAgent: string | null,
   ipAddress: string | null,
 ): Promise<string> {
-  await enforceSessionLimit(userId);
-
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 hari
-  const [session] = await db
-    .insert(sessions)
-    .values({ userId, userAgent, ipAddress, expiresAt })
-    .returning({ id: sessions.id });
-
-  return session.id;
+  return withUserTransaction(userId, async (tx) => {
+    const account = await tx.query.users.findFirst({ where: eq(users.id, userId) });
+    if (account?.disabledAt) throw new AppError('FORBIDDEN', 'Akun tidak tersedia.', 403);
+    await enforce(tx, userId, 1);
+    const [session] = await tx
+      .insert(sessions)
+      .values({
+        userId,
+        userAgent: userAgent?.slice(0, 512),
+        ipAddress,
+        expiresAt: new Date(Date.now() + 7 * 86400_000),
+      })
+      .returning();
+    return session!.id;
+  });
 }

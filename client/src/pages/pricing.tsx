@@ -5,7 +5,8 @@ import { Check, Loader2 } from 'lucide-react';
 import { Topbar } from '@/components/shell/topbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { PageState } from '@/components/page-state';
+import { loginUrl } from '@/lib/public-flow';
 import { Switch } from '@/components/ui/switch';
 import { Seo } from '@/components/seo';
 import { cn } from '@/lib/utils';
@@ -62,13 +63,14 @@ export default function PricingPage() {
     try {
       const { checkoutUrl } = await api.billing.checkout({
         type: 'subscription',
-        gateway: 'stub',
+        gateway: 'qris',
         planId: plan.id,
       });
-      navigate(checkoutUrl.replace(window.location.origin, ''));
+      navigate(checkoutUrl);
     } catch (err) {
       const msg = err instanceof ApiRequestError ? err.message : 'Gagal memulai checkout.';
       const needLogin = err instanceof ApiRequestError && err.status === 401;
+      if (needLogin) navigate(loginUrl('/pricing'));
       toast({
         title: needLogin ? 'Perlu masuk' : 'Checkout gagal',
         description: needLogin ? 'Silakan masuk untuk berlangganan.' : msg,
@@ -83,46 +85,59 @@ export default function PricingPage() {
     <>
       <Seo
         title="Pricing"
-        description="Pilih paket Nesomn Studio: Free Basic, Scene Editor, Full Access, atau Enterprise. Harga sudah termasuk pajak."
+        description="Pilih paket Nesomn Studio: Free Basic, Scene Editor, Full Access, atau Enterprise."
       />
       <Topbar title="Pricing" />
-      <div className="mx-auto max-w-7xl px-6 py-12">
-        <div className="mb-10 flex flex-col items-center gap-4 text-center">
+      <div className="page-wrap">
+        <div className="page-heading">
           <h1 className="text-4xl font-bold tracking-tight">Harga yang sederhana dan transparan</h1>
           <p className="max-w-xl text-muted-foreground">
-            Mulai gratis, tingkatkan saat Anda butuh. Semua harga sudah termasuk pajak.
+            Mulai gratis, tingkatkan saat Anda butuh.
           </p>
           <div className="flex items-center gap-3">
-            <span className={cn('text-sm font-medium', !yearly ? 'text-foreground' : 'text-muted-foreground')}>
+            <span
+              className={cn(
+                'text-sm font-medium',
+                !yearly ? 'text-foreground' : 'text-muted-foreground',
+              )}
+            >
               Monthly
             </span>
-            <Switch checked={yearly} onCheckedChange={setYearly} aria-label="Toggle harga tahunan" id="pricing-cycle-toggle" />
-            <span className={cn('text-sm font-medium', yearly ? 'text-foreground' : 'text-muted-foreground')}>
+            <Switch
+              checked={yearly}
+              onCheckedChange={setYearly}
+              aria-label="Toggle harga tahunan"
+              id="pricing-cycle-toggle"
+            />
+            <span
+              className={cn(
+                'text-sm font-medium',
+                yearly ? 'text-foreground' : 'text-muted-foreground',
+              )}
+            >
               Yearly
             </span>
-            <Badge variant="save">Save 17%</Badge>
           </div>
         </div>
 
-        {plansQuery.isLoading ? (
+        {plansQuery.isError ? (
+          <PageState title="Paket tidak dapat dimuat" retry={() => void plansQuery.refetch()} />
+        ) : plansQuery.isLoading ? (
           <div className="flex justify-center py-20">
             <Loader2 className="size-6 animate-spin text-muted-foreground" />
           </div>
+        ) : !visible.length ? (
+          <PageState title="Belum ada paket tersedia untuk siklus ini" />
         ) : (
-          <div className="grid gap-5 lg:grid-cols-4">
+          <div className="grid gap-5 xl:grid-cols-3">
             {visible.map((plan) => {
               const isFree = Number(plan.priceIdr) === 0;
               const popular = plan.code.startsWith('full_');
               return (
                 <Card
                   key={plan.id}
-                  className={cn('relative flex flex-col', popular && 'border-accent shadow-glow surface-glow')}
+                  className={cn('relative flex flex-col', popular && 'border-accent')}
                 >
-                  {popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge variant="popular">Popular</Badge>
-                    </div>
-                  )}
                   <CardHeader>
                     <CardTitle className="text-base">{plan.name}</CardTitle>
                     <div className="mt-2 flex items-baseline gap-1">
@@ -130,8 +145,12 @@ export default function PricingPage() {
                         <span className="text-3xl font-bold">Rp0</span>
                       ) : (
                         <>
-                          <span className="font-mono text-3xl font-bold">{formatIdr(plan.priceIdr)}</span>
-                          <span className="text-sm text-muted-foreground">/{yearly ? 'thn' : 'bln'}</span>
+                          <span className="font-mono text-3xl font-bold">
+                            {formatIdr(plan.priceIdr)}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            /{yearly ? 'thn' : 'bln'}
+                          </span>
                         </>
                       )}
                     </div>
@@ -149,7 +168,7 @@ export default function PricingPage() {
                       id={`subscribe-${plan.code}`}
                       variant={popular ? 'primary' : 'secondary'}
                       className="mt-auto w-full"
-                      disabled={pendingId === plan.id}
+                      disabled={pendingId !== null}
                       onClick={() => handleSubscribe(plan)}
                     >
                       {pendingId === plan.id ? (

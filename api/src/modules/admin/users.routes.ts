@@ -1,7 +1,9 @@
 import { Elysia } from 'elysia';
-import { eq, sql, desc, and } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from '../../db/client.ts';
-import { users, subscriptions, creditLedger, plans } from '../../db/schema/index.ts';
+import { users, plans } from '../../db/schema/index.ts';
+import { getBalance } from '../ai/credit.ts';
+import { effectiveSubscription } from '../../lib/entitlement.ts';
 import { AppError } from '../../middleware/error.ts';
 import { parseListQuery, buildOrderBy, setTotalCount } from '../../lib/admin-query.ts';
 
@@ -13,23 +15,15 @@ const USER_COLUMNS = {
 };
 
 /** Hitung saldo credit user = delta terakhir (balanceAfter) atau 0. */
-async function creditBalance(userId: string): Promise<number> {
-  const [last] = await db
-    .select({ balance: creditLedger.balanceAfter })
-    .from(creditLedger)
-    .where(eq(creditLedger.userId, userId))
-    .orderBy(desc(creditLedger.createdAt))
-    .limit(1);
-  return last?.balance ?? 0;
+async function creditBalance(id: string) {
+  try {
+    return await getBalance(id);
+  } catch (error) {
+    if (error instanceof AppError && error.code === 'CREDIT_RECONCILIATION') return null;
+    throw error;
+  }
 }
-
-/** Ambil langganan aktif user (bila ada). */
-async function activeSubscription(userId: string) {
-  return db.query.subscriptions.findFirst({
-    where: and(eq(subscriptions.userId, userId), eq(subscriptions.status, 'active')),
-    orderBy: [desc(subscriptions.createdAt)],
-  });
-}
+const activeSubscription = effectiveSubscription;
 
 /** List & detail user untuk admin (read-only di sini; mutasi via modul lain). */
 export const userAdminRoutes = new Elysia({ prefix: '/users' })
@@ -44,7 +38,9 @@ export const userAdminRoutes = new Elysia({ prefix: '/users' })
     const enriched = await Promise.all(
       rows.map(async (u) => {
         const sub = await activeSubscription(u.id);
-        const plan = sub ? await db.query.plans.findFirst({ where: eq(plans.id, sub.planId) }) : null;
+        const plan = sub
+          ? await db.query.plans.findFirst({ where: eq(plans.id, sub.planId) })
+          : null;
         return {
           id: u.id,
           email: u.email,

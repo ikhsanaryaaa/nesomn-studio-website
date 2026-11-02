@@ -1,0 +1,142 @@
+{
+  "groups": [
+    {
+      "name": "security-unit",
+      "status": "PASS",
+      "pass": 9,
+      "assertions": 64,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/security-unit.log",
+      "logSha256": "b68d54f35249cfd753f950de8a6b5f7e78ef07be33d3e93844a28426ff76de53"
+    },
+    {
+      "name": "security-integration",
+      "status": "PASS",
+      "pass": 29,
+      "assertions": 122,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/security-integration.log",
+      "logSha256": "61401a46683cae54726884a53d279543d0173b3b0984c064c78a28a4ef01f3ac"
+    },
+    {
+      "name": "integration",
+      "status": "PASS",
+      "pass": 24,
+      "assertions": 65,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/integration.log",
+      "logSha256": "aaa5d9ca3c2f9c44e08f1ca6f4d8afab5fe4b95fbccd4e9e9e69782fb12211f9"
+    },
+    {
+      "name": "unit",
+      "status": "PASS",
+      "pass": 22,
+      "assertions": 47,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/unit.log",
+      "logSha256": "6fca1d2b1b62617d7140611ca8aad2743012ccaa4e6b6d7d198158e99e36e2e7"
+    },
+    {
+      "name": "node-guards",
+      "status": "PASS",
+      "pass": 11,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/node-guards.log",
+      "logSha256": "fe8c87be68c901d2103802f55d370bb01d695eb3d39437b5a6ebbd211a7c4f23"
+    },
+    {
+      "name": "deployment-unit",
+      "status": "PASS",
+      "pass": 13,
+      "assertions": 93,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/deployment-unit.log",
+      "logSha256": "2cd92089410ee8ca75e0ce2c5a2a513ee0a7d9ffe51f0c9503f23503cb75d678"
+    },
+    {
+      "name": "gateway",
+      "status": "PASS",
+      "pass": 5,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/gateway.log",
+      "logSha256": "e37d4016468de635a4e708389ce37a8d13ec19dd7744cf4510e2ff5833508b0f"
+    },
+    {
+      "name": "worker-drain",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/worker-drain.log",
+      "logSha256": "cf0e0937092e894718bf1263001a8528deb7b69f05ec963b3441ffb1e8a12ec2"
+    },
+    {
+      "name": "outbox-outage",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/outbox-outage.log",
+      "logSha256": "1c0a5af45ef363034027c578e304affebd403cc2451ac8d510cb331d3486a8cc"
+    },
+    {
+      "name": "storage-persistence",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/storage-persistence.log",
+      "logSha256": "dd0f6b7ba21fbf32769e1482a0b8365d51fdbd69c3e75e238e140bb391be42a0"
+    },
+    {
+      "name": "linux-bootstrap",
+      "status": "PASS",
+      "pass": 1,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/linux-bootstrap.log",
+      "logSha256": "cf003a35365705ebeb50cfa82f879c58e30d6b9ab3a1d7ee0b317b9060770797"
+    },
+    {
+      "name": "outbound-runtime",
+      "status": "PASS",
+      "pass": 1,
+      "assertions": 2,
+      "log": "C:/Users/ikhsan/Desktop/nesomn-studio-website/.cache/revision-phase-4/outbound-runtime.log",
+      "logSha256": "facda1bd50ceec39d94c35697a3f0a73e83e415198fdb31406721f751d337b16"
+    }
+  ],
+  "containers": [
+    {
+      "name": "nesomn-revision-phase4-app-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:4a4a85acaa6379cf9fec182faf92e340514fbc03b8a264b2fc5b2370b013d0d4"
+    },
+    {
+      "name": "nesomn-revision-phase4-gateway-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949"
+    },
+    {
+      "name": "nesomn-revision-ai-worker-phase4",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:bb594e43a7b0a1df993581f04dbbbb43a5e88868af8163ff3c98899e05b05d48"
+    },
+    {
+      "name": "nesomn-revision-ai-worker-phase4-production",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:43de366a06a3a5e4ce5422663e7add44c4195fb0f6c3a50f91661561a8b25df2"
+    },
+    {
+      "name": "nesomn-revision-redis-private",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f"
+    },
+    {
+      "name": "nesomn-revision-test-test-db-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193"
+    },
+    {
+      "name": "nesomn-revision-test-test-redis-1",
+      "status": "exited",
+      "exitCode": 0,
+      "image": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f"
+    }
+  ],
+  "composeServices": [
+    "app",
+    "gateway"
+  ]
+}

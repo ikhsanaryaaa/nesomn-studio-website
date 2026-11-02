@@ -5,6 +5,7 @@ import {
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl as presign } from '@aws-sdk/s3-request-presigner';
+import { validateStorageKey } from './key.ts';
 import type { StorageDriver } from './index.ts';
 
 /**
@@ -29,6 +30,7 @@ export function createR2Driver(): StorageDriver {
 
   return {
     async put(key, bytes, contentType) {
+      validateStorageKey(key);
       await client.send(
         new PutObjectCommand({
           Bucket: bucket,
@@ -40,11 +42,15 @@ export function createR2Driver(): StorageDriver {
       return key;
     },
     async getSignedUrl(key, ttlSeconds = 300) {
+      validateStorageKey(key);
+      if (!Number.isSafeInteger(ttlSeconds) || ttlSeconds < 1 || ttlSeconds > 3600)
+        throw new Error('Invalid TTL');
       return presign(client, new GetObjectCommand({ Bucket: bucket, Key: key }), {
         expiresIn: ttlSeconds,
       });
     },
     async delete(key) {
+      validateStorageKey(key);
       await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));
     },
   };

@@ -1,17 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { editorEpoch } from '@/lib/editor-session';
+import { RenderBoundary } from '@/components/viewer/render-boundary';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams, useParams } from 'react-router';
 import type { WebGLRenderer } from 'three';
-import { Camera, Video, Save } from 'lucide-react';
-import { Topbar } from '@/components/shell/topbar';
+import type { Scene3DState } from '@nesomn/shared';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
 import { Seo } from '@/components/seo';
 import { useToast } from '@/components/ui/use-toast';
 import { Scene3DViewport } from '@/components/editor3d/scene-3d-viewport';
@@ -20,180 +14,247 @@ import { AddDesign3DDialog } from '@/components/editor3d/add-design-3d-dialog';
 import { useScene3DEditor } from '@/stores/scene-3d-store';
 import { exportRendererImage, type ExportImageFormat } from '@/lib/export-3d';
 import { recordTurntable } from '@/lib/record-3d-video';
-import { api, ApiRequestError } from '@/lib/api';
-import type { Scene3DState } from '@nesomn/shared';
-
-/**
- * 3D Editor: viewport R3F + panel Design/Colour, simpan/muat project 3D.
- * Buka project tersimpan via query `?project=<id>`. Tanpa AI (M6).
- */
+import { api } from '@/lib/api';
+import models from '../../public/demo/models/manifest.json';
 export default function Editor3DPage() {
   const { toast } = useToast();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const projectIdParam = searchParams.get('project');
-  const { slug } = useParams();
-
-  const glRef = useRef<WebGLRenderer | null>(null);
-  const [tab, setTab] = useState<'design' | 'colour'>('design');
-  const [addOpen, setAddOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [recording, setRecording] = useState(false);
-  const [autoRotate, setAutoRotate] = useState(false);
-
-  const title = useScene3DEditor((s) => s.title);
-  const projectId = useScene3DEditor((s) => s.projectId);
-  const setTitle = useScene3DEditor((s) => s.setTitle);
-  const loadState = useScene3DEditor((s) => s.loadState);
-  const toState = useScene3DEditor((s) => s.toState);
-  const markSaved = useScene3DEditor((s) => s.markSaved);
-  const reset = useScene3DEditor((s) => s.reset);
-  const setModelUrl = useScene3DEditor((s) => s.setModelUrl);
-
-  // Muat project 3D dari query, atau reset scene baru.
+  const [params, setParams] = useSearchParams(),
+    { slug } = useParams(),
+    projectParam = params.get('project');
+  const createdProject = useRef<string | null>(null);
+  const activeDocument = useRef(0);
+  const gl = useRef<WebGLRenderer | null>(null),
+    abort = useRef<AbortController | null>(null);
+  const [loading, setLoading] = useState(true),
+    [error, setError] = useState(''),
+    [attempt, setAttempt] = useState(0),
+    [saving, setSaving] = useState(false),
+    [recording, setRecording] = useState(false),
+    [rotate, setRotate] = useState(false),
+    [tab, setTab] = useState<'design' | 'colour'>('design'),
+    [addOpen, setAddOpen] = useState(false),
+    [meshes, setMeshes] = useState<{ path: string; name: string }[]>([]);
+  const state = useScene3DEditor();
+  const bindGl = useCallback((value: WebGLRenderer | null) => {
+      gl.current = value;
+    }, []),
+    bindMeshes = useCallback((value: { path: string; name: string }[]) => setMeshes(value), []);
   useEffect(() => {
-    let active = true;
-    if (projectIdParam) {
-      api.projects
-        .get(projectIdParam)
-        .then((p) => {
-          if (active) loadState(p.state as Scene3DState, p.id, p.title);
-        })
-        .catch((err) => {
-          const msg = err instanceof ApiRequestError ? err.message : 'Gagal memuat project.';
-          toast({ title: 'Tidak dapat membuka project', description: msg, variant: 'danger' });
-        });
-    } else {
-      reset();
+    if (projectParam && createdProject.current === projectParam) {
+      createdProject.current = null;
+      return;
     }
-    return () => {
-      active = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projectIdParam]);
-
-  // Muat GLB dari katalog bila dibuka via /editor/3d/:slug.
-  useEffect(() => {
-    if (!slug) return;
+    const generation = ++activeDocument.current;
     let active = true;
-    api
-      .editorAsset(slug)
-      .then((asset) => {
-        if (!active) return;
-        if (asset.modelUrl) setModelUrl(asset.modelUrl);
-        setTitle(asset.title);
-      })
-      .catch((err) => {
-        const msg = err instanceof ApiRequestError ? err.message : 'Gagal memuat model 3D.';
-        toast({ title: 'Tidak dapat memuat model', description: msg, variant: 'danger' });
-      });
+    setLoading(true);
+    setError('');
+    gl.current = null;
+    useScene3DEditor.getState().reset();
+    void (async () => {
+      try {
+        let key = 'mug';
+        if (projectParam) {
+          const project = await api.projects.get(projectParam);
+          if (!active) return;
+          if (project.kind !== 'scene3d') throw Error('Project bukan scene3D.');
+          const scene = project.state as Scene3DState;
+          useScene3DEditor.getState().loadState(scene, project.id, project.title);
+          key = scene.modelKey ?? 'mug';
+        } else if (slug) {
+          key = slug;
+          useScene3DEditor.getState().setModelKey(key);
+        }
+        if (key.startsWith('sample:')) {
+          const model = models.find((m) => 'sample:' + m.id === key);
+          if (!model) throw Error('Sample model tidak tersedia.');
+          if (active) useScene3DEditor.getState().setModelUrl(model.url);
+        } else if (key !== 'mug' || useScene3DEditor.getState().modelSource === 'catalog') {
+          const asset = await api.editorAsset(key);
+          if (!active) return;
+          if (!['mockup3d', 'asset3d'].includes(asset.type) || !asset.modelUrl)
+            throw Error('Model3D tidak tersedia atau akses ditolak.');
+          useScene3DEditor.getState().setModelUrl(asset.modelUrl);
+          if (!projectParam) useScene3DEditor.getState().setTitle(asset.title);
+        }
+        if (active) setLoading(false);
+      } catch (err) {
+        if (active) {
+          setLoading(false);
+          setError(err instanceof Error ? err.message : 'Model tidak dapat dimuat.');
+        }
+      }
+    })();
     return () => {
       active = false;
+      activeDocument.current = generation + 1;
+      abort.current?.abort();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
-
-  function handleExportImage(format: ExportImageFormat) {
-    if (!glRef.current) return;
-    exportRendererImage(glRef.current, format, title || 'nesomn-3d');
-    toast({ title: 'Export dimulai', description: `Mengunduh ${format.toUpperCase()} (maks 1080p).` });
-  }
-
-  async function handleRenderVideo() {
-    if (!glRef.current || recording) return;
-    const canvas = glRef.current.domElement;
-    setRecording(true);
-    setAutoRotate(true);
+  }, [projectParam, slug, attempt]);
+  useEffect(() => {
+    const document = activeDocument;
+    return () => {
+      document.current++;
+      abort.current?.abort();
+    };
+  }, []);
+  function image(format: ExportImageFormat) {
+    if (!gl.current) return;
     try {
-      await recordTurntable(canvas, () => {}, { durationMs: 4000, fps: 30, fileName: title || 'nesomn-3d' });
-      toast({ title: 'Video tersimpan', description: 'Turntable WebM diunduh (maks 1080p).' });
+      exportRendererImage(gl.current, format, state.title || 'nesomn-3d');
+      toast({ title: 'Export dimulai' });
     } catch {
-      toast({ title: 'Gagal merekam', description: 'Browser tidak mendukung perekaman canvas.', variant: 'danger' });
+      toast({
+        title: 'Export gagal',
+        description: 'Periksa akses CORS/texture dan renderer.',
+        variant: 'danger',
+      });
+    }
+  }
+  async function video() {
+    if (!gl.current || recording) return;
+    const controller = new AbortController();
+    abort.current = controller;
+    setRecording(true);
+    setRotate(true);
+    try {
+      await recordTurntable(gl.current.domElement, () => {}, {
+        durationMs: 4000,
+        fps: 30,
+        fileName: state.title || 'nesomn-3d',
+        signal: controller.signal,
+      });
+      toast({ title: 'Video tersimpan' });
+    } catch (err) {
+      if (!(err instanceof DOMException && err.name === 'AbortError'))
+        toast({ title: 'Rekaman gagal', variant: 'danger' });
     } finally {
       setRecording(false);
-      setAutoRotate(false);
+      setRotate(false);
     }
   }
-
-  async function handleSave() {
+  async function save() {
+    if (saving) return;
     setSaving(true);
+    const document = activeDocument.current;
+    const epoch = editorEpoch();
     try {
-      const state = toState();
-      if (projectId) {
-        const updated = await api.projects.update(projectId, { title, state });
-        markSaved(updated.id, updated.title);
-        toast({ title: 'Tersimpan', description: 'Perubahan project disimpan.' });
-      } else {
-        const created = await api.projects.create({ title, kind: 'scene3d', state });
-        markSaved(created.id, created.title);
-        setSearchParams({ project: created.id }, { replace: true });
-        toast({ title: 'Project dibuat', description: 'Scene 3D baru tersimpan.' });
+      const current = useScene3DEditor.getState();
+      const snapshot = current.toState();
+      const result = current.projectId
+        ? await api.projects.update(current.projectId, {
+            title: current.title,
+            state: snapshot,
+          })
+        : await api.projects.create({
+            title: current.title,
+            kind: 'scene3d',
+            state: snapshot,
+          });
+      if (epoch !== editorEpoch() || document !== activeDocument.current) return;
+      if (!current.markSaved(result.id, current.title, snapshot, current.documentVersion)) return;
+      if (!projectParam) {
+        createdProject.current = result.id;
+        setParams({ project: result.id }, { replace: true });
       }
+      toast({
+        title: 'Snapshot project tersimpan',
+        description: useScene3DEditor.getState().dirty
+          ? 'Perubahan terbaru belum tersimpan. Klik Save kembali.'
+          : undefined,
+      });
     } catch (err) {
-      const msg = err instanceof ApiRequestError ? err.message : 'Gagal menyimpan.';
-      const hint = err instanceof ApiRequestError && err.status === 401 ? ' Login dulu untuk menyimpan.' : '';
-      toast({ title: 'Gagal menyimpan', description: msg + hint, variant: 'danger' });
+      if (epoch !== editorEpoch() || document !== activeDocument.current) return;
+      toast({
+        title: 'Gagal menyimpan',
+        description: err instanceof Error ? err.message : 'Coba lagi.',
+        variant: 'danger',
+      });
     } finally {
       setSaving(false);
     }
   }
-
+  const disabled = loading || !!error || recording;
   return (
     <>
-      <Seo title="3D Editor" description="Editor mockup 3D berbasis browser di Nesomn Studio." />
-      <Topbar
-        title="3D Editor"
-        left={
-          <Tabs value={tab} onValueChange={(v) => setTab(v as 'design' | 'colour')} className="ml-4">
-            <TabsList>
-              <TabsTrigger value="design">Design</TabsTrigger>
-              <TabsTrigger value="colour">Colour</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        }
-        right={
-          <>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button size="sm" variant="secondary">
-                  <Camera className="size-4" />
-                  Render Image
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => handleExportImage('png')}>PNG</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExportImage('jpeg')}>JPEG</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button size="sm" variant="secondary" onClick={handleRenderVideo} disabled={recording}>
-              <Video className="size-4" />
-              {recording ? 'Merekam...' : 'Render Video'}
-            </Button>
-            <Button size="sm" onClick={handleSave} disabled={saving}>
-              <Save className="size-4" />
-              {saving ? 'Menyimpan...' : 'Save'}
-            </Button>
-          </>
-        }
-      />
-
-      <div className="flex h-[calc(100%-3.5rem)]">
-        {/* Viewport 3D */}
-        <div className="flex-1 bg-surface-2">
-          <Scene3DViewport onGlReady={(gl) => (glRef.current = gl)} autoRotate={autoRotate} />
+      <Seo title="3D Editor" />
+      <header className="editor3d-toolbar">
+        <h1>3D Editor</h1>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            aria-pressed={tab === 'design'}
+            variant={tab === 'design' ? 'primary' : 'ghost'}
+            onClick={() => setTab('design')}
+          >
+            Design
+          </Button>
+          <Button
+            aria-pressed={tab === 'colour'}
+            variant={tab === 'colour' ? 'primary' : 'ghost'}
+            onClick={() => setTab('colour')}
+          >
+            Colour
+          </Button>
         </div>
-
-        {/* Panel kanan */}
-        <aside className="flex w-80 shrink-0 flex-col border-l border-border bg-surface">
+        <div className="ml-auto flex flex-wrap gap-2">
+          <Button variant="secondary" disabled={disabled} onClick={() => image('png')}>
+            PNG
+          </Button>
+          <Button variant="secondary" disabled={disabled} onClick={() => image('jpeg')}>
+            JPEG
+          </Button>
+          <Button variant="secondary" disabled={disabled} onClick={() => void video()}>
+            {recording ? 'Merekam…' : 'Render Video'}
+          </Button>
+          <Button disabled={disabled || saving} onClick={() => void save()}>
+            {saving ? 'Menyimpan…' : 'Save'}
+          </Button>
+        </div>
+      </header>
+      <div className="editor3d-workspace">
+        <div className="editor3d-canvas">
+          {loading ? (
+            <p role="status" className="p-6">
+              Memuat scene3D…
+            </p>
+          ) : error ? (
+            <div role="alert" className="p-6">
+              <p>{error}</p>
+              <Button onClick={() => setAttempt((v) => v + 1)}>Coba lagi</Button>
+            </div>
+          ) : (
+            <RenderBoundary
+              key={attempt}
+              fallback={
+                <div role="alert" className="p-6">
+                  <p>Renderer3D tidak tersedia. Periksa dukungan WebGL/model.</p>
+                  <Button onClick={() => setAttempt((v) => v + 1)}>Coba lagi</Button>
+                </div>
+              }
+            >
+              <Scene3DViewport onGlReady={bindGl} autoRotate={rotate} onMeshes={bindMeshes} />
+            </RenderBoundary>
+          )}{' '}
+          {!slug && !projectParam && (
+            <p className="sample-scene-label">
+              Demo / Sample — built-in cylinder, bukan produk katalog.
+            </p>
+          )}
+        </div>
+        <aside className="editor3d-inspector">
           <div className="border-b border-border p-4">
-            <label className="mb-1 block text-xs font-medium text-muted-foreground">
-              Nama project
-            </label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} id="project-title-3d" />
+            <p role="status" className="mb-2 text-xs text-muted-foreground">
+              {state.dirty ? 'Ada perubahan belum tersimpan' : 'Tidak ada perubahan tertunda'}
+            </p>
+            <Input
+              label="Nama project"
+              id="project-title-3d"
+              value={state.title}
+              onChange={(e) => state.setTitle(e.target.value)}
+            />
           </div>
-          <ControlsPanel3D tab={tab} onAddDesign={() => setAddOpen(true)} />
+          <ControlsPanel3D tab={tab} meshes={meshes} onAddDesign={() => setAddOpen(true)} />
         </aside>
       </div>
-
       <AddDesign3DDialog open={addOpen} onOpenChange={setAddOpen} />
     </>
   );

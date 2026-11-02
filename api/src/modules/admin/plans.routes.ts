@@ -1,3 +1,5 @@
+import { parsePatch } from '../../lib/validation.ts';
+import { moneyString } from '../../lib/validation.ts';
 import { Elysia } from 'elysia';
 import { z } from 'zod';
 import { eq, sql } from 'drizzle-orm';
@@ -26,10 +28,10 @@ const planBody = z.object({
   name: z.string().min(1),
   segment: z.enum(['individual', 'team', 'enterprise']),
   cycle: z.enum(['monthly', 'yearly']),
-  priceIdr: z.union([z.string(), z.number()]).transform(String).default('0'),
-  priceUsd: z.union([z.string(), z.number()]).transform(String).default('0'),
-  creditQuota: z.coerce.number().int().default(0),
-  maxConcurrentSessions: z.coerce.number().int().nullish(),
+  priceIdr: moneyString.default('0'),
+  priceUsd: moneyString.default('0'),
+  creditQuota: z.coerce.number().int().min(0).max(100000000).default(0),
+  maxConcurrentSessions: z.coerce.number().int().min(1).max(10000).nullish(),
   editorAccess,
   commercial: z.boolean().default(false),
   isEnterprise: z.boolean().default(false),
@@ -60,7 +62,7 @@ export const planAdminRoutes = new Elysia({ prefix: '/plans' })
     return row;
   })
   .patch('/:id', async ({ params, body }) => {
-    const input = planBody.partial().parse(body);
+    const input = parsePatch(planBody, body);
     const [row] = await db
       .update(plans)
       .set({ ...input, updatedAt: new Date() })

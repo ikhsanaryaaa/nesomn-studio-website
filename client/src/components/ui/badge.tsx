@@ -6,8 +6,8 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        new: 'bg-gradient-accent text-white',
-        popular: 'bg-gradient-accent text-white',
+        new: 'bg-accent text-accent-foreground',
+        popular: 'bg-accent text-accent-foreground',
         beta: 'bg-accent-subtle text-accent',
         save: 'bg-success/15 text-success',
         neutral: 'bg-surface-3 text-muted-foreground',
@@ -21,13 +21,10 @@ const badgeVariants = cva(
 );
 
 export interface BadgeProps
-  extends React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {}
+  extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {}
 
 export function Badge({ className, variant, ...props }: BadgeProps) {
-  return (
-    <span className={cn(badgeVariants({ variant }), className)} {...props} />
-  );
+  return <span className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
 export { badgeVariants };

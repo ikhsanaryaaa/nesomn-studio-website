@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Image as KonvaImage, Text as KonvaText } from 'react-konva';
 import type Konva from 'konva';
 import type { SceneObject } from '@nesomn/shared';
@@ -10,31 +10,15 @@ import type { SceneObject } from '@nesomn/shared';
  */
 type Props = {
   object: SceneObject;
+  image?: HTMLImageElement;
   isSelected: boolean;
   onSelect: (id: string) => void;
   onChange: (id: string, patch: Partial<SceneObject>) => void;
   nodeRef?: (node: Konva.Node | null) => void;
 };
 
-/** Hook kecil untuk memuat HTMLImageElement dari src (data URL / URL). */
-function useImage(src?: string): HTMLImageElement | undefined {
-  const [img, setImg] = useState<HTMLImageElement | undefined>(undefined);
-  useEffect(() => {
-    if (!src) return;
-    const image = new window.Image();
-    image.crossOrigin = 'anonymous';
-    image.src = src;
-    image.onload = () => setImg(image);
-    return () => {
-      image.onload = null;
-    };
-  }, [src]);
-  return img;
-}
-
-export function CanvasObject({ object, isSelected, onSelect, onChange, nodeRef }: Props) {
+export function CanvasObject({ object, image, isSelected, onSelect, onChange, nodeRef }: Props) {
   const shapeRef = useRef<Konva.Image | Konva.Text | null>(null);
-  const image = useImage(object.type === 'image' ? object.src : undefined);
 
   useEffect(() => {
     if (isSelected && nodeRef) nodeRef(shapeRef.current);

@@ -1,0 +1,17 @@
+# Dependency security — phase10
+
+Audit awal Bun 1.4.4 menemukan 66 advisory: 1 critical, 40 high, 23 moderate dan 2 low. Ini inventory advisory, bukan bukti setiap jalur dapat dieksploitasi dari aplikasi. Log awal disimpan di revision/artifacts/phase-10/dependency-audit-before.log. Tidak memakai --force, --latest massal, ignore advisory atau mengabaikan peer dependencies.
+
+## Keputusan dan kompatibilitas
+
+1. Dry-run bun audit fix ditinjau terlebih dahulu. Fix dalam range memperbaiki 55 advisory: antara lain Axios 1.20.0, React Router 7.18.2, Vite 7.3.7, PostCSS 8.5.23, shell-quote 1.11.0 dan dependency kecil. Lockfile diperbarui, framework React Router/Vite tidak dimigrasi ke major terbaru. [Perilaku audit/fix resmi Bun](https://bun.com/docs/pm/cli/audit).
+2. Runtime dipin eksplisit ke Drizzle ORM 0.45.4 pada API/worker, Sharp 0.35.5 dan Zod 4.6.7 pada API berdasarkan npm latest stable dan kebutuhan perbaikan keamanan. Bun 1.4.4/Elysia 1.4.30/CORS 1.4.2 tetap. [Advisory Drizzle](https://github.com/advisories/GHSA-gpj5-g38j-94v9), [Sharp](https://github.com/advisories/GHSA-wq5f-xc86-pv6w), [Zod](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5).
+3. Zod4 memakai record dengan key schema eksplisit. parsePatch menyaring output ke field yang benar-benar dikirim, sehingga default pada optional fields tidak mereset status/tier/cost ketika PATCH. Tes unit dan CRUD integrasi memeriksa field yang tidak berubah. Format scene dan domain model tidak dimigrasi.
+4. Drizzle Kit 0.31.11 tetap menyediakan workflow migration generation existing; migrator aplikasi tetap eksplisit. Check metadata CLI, migrasi kosong dan upgrade legacy fixture diuji. Tidak generate atau menerapkan schema production.
+5. ESLint 10.14.0, @eslint/js 10.0.1, typescript-eslint 8.72.1, Hooks 7.1.1 dan Refresh 0.5.7 dipilih dengan peer ranges yang cocok. Dua Hooks rules existing tetap aktif; project tidak mengaktifkan React Compiler. Lint mencakup semua workspace.
+6. Override transitive yang ditinjau: minimatch 11.0.3 (tooling memakai API object/class modern), esbuild 0.28.1 (menutup versi dev-server lama dari loader Kit dan Vite), path-to-regexp 8.4.0 (same major dengan exact pin Ant Design Pro). Override ini melewati dependency range upstream, bukan peer range. Alasannya keamanan; bukti kompatibilitas berasal dari lint, Drizzle Kit metadata check, build/prerender dan browser admin/client. Tinjau ulang ketika parent package mengadopsi versi aman; jangan menambah override tanpa tes.
+7. @refinedev/simple-rest dihapus untuk menghilangkan chain query-string/decode-uri-component yang terblokir pada versi tidak aman. Refine/Ant Design tetap dipakai. Adapter kecil memakai Axios ber-cookie dan URLSearchParams native, mempertahankan dialect _start/_end/_sort/_order serta x-total-count, PATCH, status/error server, getMany dan custom internal API. Tidak melakukan override CJS utility ke ESM yang tidak kompatibel atau migrasi framework Refine.
+
+## Gerbang berikutnya
+
+bun audit kini bagian dari node scripts/release-check.mjs unit. Audit gagal atau registry tidak dapat diverifikasi membuat gate gagal; tidak dihitung bersih. Audit nol advisory bukan penetration test atau jaminan production-ready. Snapshot registry, audit final, frozen install, source changes dan hasil acceptance dicatat di laporan phase10. Tidak ada perubahan secret, migration SQL, data production atau provider history untuk menghilangkan temuan.

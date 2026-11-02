@@ -1,5 +1,7 @@
 import type { AiJobInput } from '@nesomn/shared';
+import { ProviderFailure, type GenerateContext } from '../provider.ts';
 import type { AIProvider, GenerateResult, ProviderRow } from '../provider.ts';
+import { providerRequest, assertProviderUrl } from '../../../lib/outbound.ts';
 import { decryptSecret } from '../../../lib/crypto.ts';
 
 /**
@@ -50,42 +52,56 @@ export class KieProvider implements AIProvider {
     return { model: this.modelName, kind: this.kind, input };
   }
 
-  async generate(input: AiJobInput): Promise<GenerateResult> {
-    // 1. Submit job.
-    const submitRes = await fetch(`${this.baseUrl}/jobs`, {
-      method: 'POST',
-      headers: this.headers(),
-      body: JSON.stringify(this.buildPayload(input)),
-      signal: AbortSignal.timeout(15_000),
-    });
-    if (!submitRes.ok) {
-      throw new Error(`Submit gagal: HTTP ${submitRes.status}`);
-    }
-    const submit = (await submitRes.json()) as { id?: string };
-    const remoteId = submit.id;
-    if (!remoteId) throw new Error('Respons submit tidak memuat id job.');
-
-    // 2. Poll status sampai selesai atau timeout.
-    const startedAt = Date.now();
-    while (Date.now() - startedAt < POLL_TIMEOUT_MS) {
-      await delay(POLL_INTERVAL_MS);
-      const pollRes = await fetch(`${this.baseUrl}/jobs/${remoteId}`, {
+  async generate(input: AiJobInput, context?: GenerateContext): Promise<GenerateResult> {
+    let acceptedRef: string | undefined;
+    try {
+      // 1. Submit job.
+      const submitRes = await providerRequest(`${this.baseUrl}/jobs`, {
+        method: 'POST',
         headers: this.headers(),
-        signal: AbortSignal.timeout(15_000),
+        body: JSON.stringify(this.buildPayload(input)),
       });
-      if (!pollRes.ok) continue;
-      const poll = (await pollRes.json()) as {
-        status?: string;
-        resultUrl?: string;
-        error?: string;
-      };
-      if (poll.status === 'done' && poll.resultUrl) {
-        return { resultUrl: poll.resultUrl };
+      if (!submitRes.ok) {
+        throw new Error(`Submit gagal: HTTP ${submitRes.status}`);
       }
-      if (poll.status === 'failed') {
-        throw new Error(poll.error || 'Provider melaporkan job gagal.');
+      const submit = (await submitRes.json()) as { id?: string };
+      const remoteId = submit.id;
+      if (typeof remoteId !== 'string' || !/^[a-zA-Z0-9_-]{1,200}$/.test(remoteId))
+        throw new Error('Respons submit tidak memuat id job.');
+
+      acceptedRef = remoteId;
+      await context?.onAccepted(remoteId);
+      // 2. Poll status sampai selesai atau timeout.
+      const startedAt = Date.now();
+      while (Date.now() - startedAt < POLL_TIMEOUT_MS) {
+        await delay(POLL_INTERVAL_MS);
+        const pollRes = await providerRequest(`${this.baseUrl}/jobs/${remoteId}`, {
+          headers: this.headers(),
+        });
+        if (!pollRes.ok) continue;
+        const poll = (await pollRes.json()) as {
+          status?: string;
+          resultUrl?: string;
+          error?: string;
+        };
+        if (poll.status === 'done' && poll.resultUrl) {
+          assertProviderUrl(
+            poll.resultUrl,
+            (process.env.AI_RESULT_HOSTS ?? '')
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean),
+            true,
+          );
+          return { resultUrl: poll.resultUrl };
+        }
+        if (poll.status === 'failed') {
+          throw new Error('Provider melaporkan job gagal.');
+        }
       }
+      throw new Error('Timeout menunggu hasil provider.');
+    } catch {
+      throw new ProviderFailure(false, acceptedRef);
     }
-    throw new Error('Timeout menunggu hasil provider.');
   }
 }

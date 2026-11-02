@@ -1,0 +1,1125 @@
+{
+  "clientDate": "2026-10-30",
+  "recordedAtUtc": "2026-10-30T16:37:09.231Z",
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website.git",
+  "branch": "main",
+  "commit": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "runtime": {
+    "bun": "1.4.0",
+    "node": "v24.18.0"
+  },
+  "checks": [
+    {
+      "name": "runner-guards",
+      "command": "node --test tests/baseline-runner.test.mjs",
+      "exitCode": 0,
+      "error": null,
+      "durationMs": 317,
+      "log": ".cache/revision-phase-1/2026-10-30/runner-guards.log",
+      "status": "PASS",
+      "finalVerification": {
+        "exitCode": 0,
+        "verifiedAtUtc": "2026-10-30T19:34:32.566Z",
+        "log": ".cache/revision-phase-1/2026-10-30/final-runner-guards.log"
+      }
+    },
+    {
+      "name": "unit",
+      "command": "node scripts/test-baseline.mjs unit",
+      "exitCode": 0,
+      "error": null,
+      "durationMs": 1165,
+      "log": ".cache/revision-phase-1/2026-10-30/unit.log",
+      "status": "PASS",
+      "finalVerification": {
+        "exitCode": 0,
+        "verifiedAtUtc": "2026-10-30T19:34:33.838Z",
+        "log": ".cache/revision-phase-1/2026-10-30/final-unit.log"
+      }
+    },
+    {
+      "name": "typecheck",
+      "command": "bun --no-env-file --no-install run typecheck",
+      "exitCode": 2,
+      "error": null,
+      "durationMs": 11002,
+      "log": ".cache/revision-phase-1/2026-10-30/typecheck.log",
+      "status": "FAIL"
+    },
+    {
+      "name": "lint",
+      "command": "bun --no-env-file --no-install run lint",
+      "exitCode": 2,
+      "error": null,
+      "durationMs": 219,
+      "log": ".cache/revision-phase-1/2026-10-30/lint.log",
+      "status": "FAIL"
+    },
+    {
+      "name": "build",
+      "command": "bun --no-env-file --no-install run build",
+      "exitCode": 1,
+      "error": null,
+      "durationMs": 312,
+      "log": ".cache/revision-phase-1/2026-10-30/build.log",
+      "status": "FAIL"
+    },
+    {
+      "name": "disposable-migration",
+      "command": "bun --no-env-file --no-install --cwd api src/db/migrate.ts",
+      "exitCode": 0,
+      "error": null,
+      "status": "PASS",
+      "log": ".cache/revision-phase-1/2026-10-30/disposable-migration.log"
+    },
+    {
+      "name": "disposable-plans-initial-attempt",
+      "command": "docker compose -p nesomn-revision-test -f tests/compose.test.yml exec -T test-db psql -v ON_ERROR_STOP=1 -U nesomn_test -d nesomn_revision_test",
+      "exitCode": 125,
+      "error": null,
+      "status": "FAIL",
+      "log": ".cache/revision-phase-1/2026-10-30/disposable-plans.log"
+    },
+    {
+      "name": "integration",
+      "command": "NESOMN_DISPOSABLE_TESTS=1 node scripts/test-baseline.mjs integration",
+      "exitCode": 1,
+      "error": null,
+      "status": "FAIL",
+      "log": ".cache/revision-phase-1/2026-10-30/integration.log"
+    },
+    {
+      "name": "disposable-plans-successful-retry",
+      "command": "Get-Content -LiteralPath tests/fixtures/baseline-plans.sql -Raw | docker compose -p nesomn-revision-test -f tests/compose.test.yml exec -T test-db psql -v ON_ERROR_STOP=1 -U nesomn_test -d nesomn_revision_test",
+      "status": "PASS",
+      "exitCode": 0,
+      "observedOutput": "BEGIN\nDO\nINSERT 0 1\nCOMMIT",
+      "observedOnClientDate": "2026-10-30",
+      "evidenceOrigin": "Observed tool output in this chat; transcribed into structured evidence on 2026-10-31. Not a fresh rerun and not a raw log file."
+    },
+    {
+      "name": "disposable-database-identity",
+      "command": "docker compose -p nesomn-revision-test -f tests/compose.test.yml exec -T test-db psql -U nesomn_test -d nesomn_revision_test -Atc \"SELECT current_database(), current_user; SELECT count(*) FROM drizzle.__drizzle_migrations; SELECT count(*) FROM plans;\"",
+      "status": "PASS",
+      "exitCode": 0,
+      "observedOutput": "nesomn_revision_test|nesomn_test\n4\n1",
+      "observedOnClientDate": "2026-10-30",
+      "evidenceOrigin": "Observed tool output in this chat; transcribed into structured evidence on 2026-10-31. Not a fresh rerun and not a raw log file."
+    },
+    {
+      "name": "disposable-schema-confirmed",
+      "command": "docker compose -p nesomn-revision-test -f tests/compose.test.yml exec -T test-db psql -U nesomn_test -d nesomn_revision_test -Atc \"SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE'; SELECT count(*) FROM drizzle.__drizzle_migrations;\"",
+      "status": "PASS",
+      "exitCode": 0,
+      "observedOutput": "17\n4",
+      "observedOnClientDate": "2026-10-30",
+      "evidenceOrigin": "Observed tool output in this chat; transcribed into structured evidence on 2026-10-31. Not a fresh rerun and not a raw log file."
+    },
+    {
+      "name": "disposable-redis",
+      "command": "docker compose -p nesomn-revision-test -f tests/compose.test.yml exec -T test-redis redis-cli ping",
+      "status": "PASS",
+      "exitCode": 0,
+      "observedOutput": "PONG",
+      "observedOnClientDate": "2026-10-30",
+      "evidenceOrigin": "Observed tool output in this chat; transcribed into structured evidence on 2026-10-31. Not a fresh rerun and not a raw log file."
+    },
+    {
+      "name": "compose-main-services",
+      "command": "docker compose config --services",
+      "status": "PASS",
+      "exitCode": 0,
+      "services": [
+        "db",
+        "redis",
+        "api",
+        "admin",
+        "client",
+        "worker"
+      ],
+      "note": "Inventory only; two-service deployment target is not met.",
+      "observedOnClientDate": "2026-10-31",
+      "evidenceOrigin": "Observed tool output in this chat; transcribed into structured evidence on 2026-10-31. Not a fresh rerun and not a raw log file."
+    },
+    {
+      "name": "compose-test-services",
+      "command": "docker compose -p nesomn-revision-test -f tests/compose.test.yml config --services",
+      "status": "PASS",
+      "exitCode": 0,
+      "services": [
+        "test-db",
+        "test-redis"
+      ],
+      "observedOnClientDate": "2026-10-31",
+      "evidenceOrigin": "Observed tool output in this chat; transcribed into structured evidence on 2026-10-31. Not a fresh rerun and not a raw log file."
+    }
+  ],
+  "migrations": [
+    {
+      "path": "api/drizzle/0000_worthless_hellcat.sql",
+      "sha256": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed"
+    },
+    {
+      "path": "api/drizzle/0001_familiar_joshua_kane.sql",
+      "sha256": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c"
+    },
+    {
+      "path": "api/drizzle/0002_milky_nightshade.sql",
+      "sha256": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf"
+    },
+    {
+      "path": "api/drizzle/0003_asset_editor_separation.sql",
+      "sha256": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4"
+    }
+  ],
+  "tables": [
+    {
+      "table": "ai_providers",
+      "source": "api/src/db/schema/ai.ts"
+    },
+    {
+      "table": "ai_jobs",
+      "source": "api/src/db/schema/ai.ts"
+    },
+    {
+      "table": "audit_logs",
+      "source": "api/src/db/schema/audit.ts"
+    },
+    {
+      "table": "users",
+      "source": "api/src/db/schema/auth.ts"
+    },
+    {
+      "table": "sessions",
+      "source": "api/src/db/schema/auth.ts"
+    },
+    {
+      "table": "plans",
+      "source": "api/src/db/schema/billing.ts"
+    },
+    {
+      "table": "subscriptions",
+      "source": "api/src/db/schema/billing.ts"
+    },
+    {
+      "table": "credit_packs",
+      "source": "api/src/db/schema/billing.ts"
+    },
+    {
+      "table": "credit_ledger",
+      "source": "api/src/db/schema/billing.ts"
+    },
+    {
+      "table": "assets",
+      "source": "api/src/db/schema/catalog.ts"
+    },
+    {
+      "table": "bundles",
+      "source": "api/src/db/schema/catalog.ts"
+    },
+    {
+      "table": "bundle_items",
+      "source": "api/src/db/schema/catalog.ts"
+    },
+    {
+      "table": "media",
+      "source": "api/src/db/schema/media.ts"
+    },
+    {
+      "table": "orders",
+      "source": "api/src/db/schema/orders.ts"
+    },
+    {
+      "table": "order_items",
+      "source": "api/src/db/schema/orders.ts"
+    },
+    {
+      "table": "licenses",
+      "source": "api/src/db/schema/orders.ts"
+    },
+    {
+      "table": "projects",
+      "source": "api/src/db/schema/projects.ts"
+    }
+  ],
+  "workspaces": [
+    {
+      "path": ".",
+      "name": "nesomn-studio",
+      "scripts": {
+        "dev": "bun --filter '*' dev",
+        "build": "bun --filter '*' build",
+        "lint": "eslint .",
+        "format": "prettier --write .",
+        "typecheck": "bun --filter '*' typecheck"
+      },
+      "dependencies": {},
+      "devDependencies": {
+        "@eslint/js": "^9.17.0",
+        "eslint": "^9.17.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-react-hooks": "^5.1.0",
+        "eslint-plugin-react-refresh": "^0.4.16",
+        "globals": "^15.14.0",
+        "prettier": "^3.4.2",
+        "typescript": "^5.7.2",
+        "typescript-eslint": "^8.18.0"
+      },
+      "packageManager": "bun@1.3.14"
+    },
+    {
+      "path": "client",
+      "name": "@nesomn/client",
+      "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
+      },
+      "dependencies": {
+        "@nesomn/shared": "workspace:*",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "react-router": "^7.6.2",
+        "clsx": "^2.1.1",
+        "tailwind-merge": "^3.3.0",
+        "@tanstack/react-query": "^5.62.0",
+        "zustand": "^5.0.2",
+        "konva": "^9.3.16",
+        "react-konva": "^19.0.3",
+        "three": "^0.171.0",
+        "@react-three/fiber": "^9.0.0",
+        "@react-three/drei": "^10.0.0",
+        "@react-three/postprocessing": "^3.0.4",
+        "postprocessing": "^6.36.0",
+        "framer-motion": "^11.15.0",
+        "lucide-react": "^0.468.0",
+        "class-variance-authority": "^0.7.1",
+        "@radix-ui/react-dialog": "^1.1.4",
+        "@radix-ui/react-tabs": "^1.1.2",
+        "@radix-ui/react-switch": "^1.1.2",
+        "@radix-ui/react-slider": "^1.2.2",
+        "@radix-ui/react-toast": "^1.2.4",
+        "@radix-ui/react-dropdown-menu": "^2.1.4",
+        "@radix-ui/react-slot": "^1.1.1",
+        "@fontsource/inter": "^5.1.0",
+        "@fontsource/jetbrains-mono": "^5.1.1"
+      },
+      "devDependencies": {
+        "@types/react": "^19.1.0",
+        "@types/react-dom": "^19.1.0",
+        "@types/three": "^0.171.0",
+        "@tailwindcss/vite": "^4.1.8",
+        "@vitejs/plugin-react": "^4.3.4",
+        "tailwindcss": "^4.1.8",
+        "typescript": "^5.7.2",
+        "vite": "^7.0.0",
+        "vite-prerender-plugin": "^0.5.13"
+      },
+      "packageManager": null
+    },
+    {
+      "path": "admin",
+      "name": "@nesomn/admin",
+      "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "typecheck": "tsc --noEmit"
+      },
+      "dependencies": {
+        "@nesomn/shared": "workspace:*",
+        "@refinedev/core": "^4.57.0",
+        "@refinedev/antd": "^5.45.0",
+        "@refinedev/react-router": "^1.0.0",
+        "@refinedev/simple-rest": "^5.0.10",
+        "antd": "^5.23.0",
+        "@ant-design/icons": "^5.5.2",
+        "axios": "^1.7.9",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "react-router": "^7.6.2"
+      },
+      "devDependencies": {
+        "@types/react": "^19.1.0",
+        "@types/react-dom": "^19.1.0",
+        "@vitejs/plugin-react": "^4.3.4",
+        "typescript": "^5.7.2",
+        "vite": "^7.0.0"
+      },
+      "packageManager": null
+    },
+    {
+      "path": "api",
+      "name": "@nesomn/api",
+      "scripts": {
+        "dev": "bun --watch run src/index.ts",
+        "start": "bun run src/index.ts",
+        "typecheck": "tsc --noEmit",
+        "test": "bun test",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "bun run src/db/migrate.ts",
+        "db:seed": "bun run src/db/seed.ts"
+      },
+      "dependencies": {
+        "@nesomn/shared": "workspace:*",
+        "elysia": "^1.2.25",
+        "@elysiajs/cors": "^1.1.6",
+        "drizzle-orm": "^0.38.3",
+        "bullmq": "^5.34.5",
+        "jose": "^5.9.6",
+        "postgres": "^3.4.5",
+        "zod": "^3.24.1",
+        "sharp": "^0.33.5",
+        "@aws-sdk/client-s3": "^3.726.0",
+        "@aws-sdk/s3-request-presigner": "^3.726.0"
+      },
+      "devDependencies": {
+        "bun-types": "^1.3.14",
+        "drizzle-kit": "^0.30.1"
+      },
+      "packageManager": null
+    },
+    {
+      "path": "worker",
+      "name": "@nesomn/worker",
+      "scripts": {
+        "dev": "bun --watch run src/index.ts",
+        "start": "bun run src/index.ts",
+        "typecheck": "tsc --noEmit"
+      },
+      "dependencies": {
+        "@nesomn/shared": "workspace:*",
+        "@nesomn/api": "workspace:*",
+        "drizzle-orm": "^0.38.3",
+        "bullmq": "^5.34.5"
+      },
+      "devDependencies": {
+        "bun-types": "^1.3.14"
+      },
+      "packageManager": null
+    },
+    {
+      "path": "packages/shared",
+      "name": "@nesomn/shared",
+      "scripts": {
+        "typecheck": "tsc --noEmit"
+      },
+      "dependencies": {},
+      "devDependencies": {},
+      "packageManager": null
+    }
+  ],
+  "sourceCounts": {
+    "client": 64,
+    "admin": 18,
+    "api": 71,
+    "worker": 3,
+    "packages/shared": 1
+  },
+  "sourceManifest": [
+    {
+      "path": "admin/src/App.tsx",
+      "sha256": "825bdd7a516252ad9e63bddbdeec6f6a3b062f27d593ac505193e2639e1d03f9"
+    },
+    {
+      "path": "admin/src/components/authenticated.tsx",
+      "sha256": "0be363598b8fc50fe7ec94185332f777208d49b2562f321b6cfd5af6e9f4ad8b"
+    },
+    {
+      "path": "admin/src/main.tsx",
+      "sha256": "3a68e9f0381d2e833e9fb5f6c4584313b4562444b334d3d24e739e4a6fb657ff"
+    },
+    {
+      "path": "admin/src/pages/ai-providers.tsx",
+      "sha256": "b1c5bd77d7c4edabd2afb72b9ce5ba663f23a6d2e222fbcbbdad02cb127395b6"
+    },
+    {
+      "path": "admin/src/pages/assets-3d.tsx",
+      "sha256": "5ae0418a16324f8dad419f8194c38e9aed6dd2b3f30ecbf2ee7b0fc820c87ac4"
+    },
+    {
+      "path": "admin/src/pages/assets-scene.tsx",
+      "sha256": "d40619be18509c6f3da1aa76585eb41a14c37d75589a12dcc438fb9da6bdde03"
+    },
+    {
+      "path": "admin/src/pages/audit-logs.tsx",
+      "sha256": "d2ffb1804bd705b42a910a5b14d0b6a965d015587416bfcce9bc5d453bc6b6f6"
+    },
+    {
+      "path": "admin/src/pages/bundles.tsx",
+      "sha256": "3fdf9852f9dce8948a75364d606c7186580aee1f38b34fa4a43e11a524696d86"
+    },
+    {
+      "path": "admin/src/pages/credit-packs.tsx",
+      "sha256": "f8d6b1da363fa0c081164a837e1c73f88838f35ac548f39f9ba82421f90ec827"
+    },
+    {
+      "path": "admin/src/pages/login.tsx",
+      "sha256": "7ee3d12a5581edc3557a708c16d7db02de41bd41733b0f2874aeba3daff02fa9"
+    },
+    {
+      "path": "admin/src/pages/plans.tsx",
+      "sha256": "736147c5800d2c2367b9d1c6a861733a64b7147e2d76585ef91525d2fecd79c2"
+    },
+    {
+      "path": "admin/src/pages/sessions.tsx",
+      "sha256": "294a0a5ddcaef19d84d363f0626e3c5d6cb6e32d62152c1030fd573e6b0841d5"
+    },
+    {
+      "path": "admin/src/pages/usage.tsx",
+      "sha256": "364a1b1f9a6ee2359a51596e68f0d290536d3aa6bea04f7ceb9c2990f9c75893"
+    },
+    {
+      "path": "admin/src/pages/users.tsx",
+      "sha256": "de99ba5176dd94665caf229e8737911027e2e1933b68c81bde22fd119b00fa53"
+    },
+    {
+      "path": "admin/src/providers/authProvider.ts",
+      "sha256": "8c3d5321e468b532fff02b26627d91d204ede3eb53e105198483dabf9c5a41d8"
+    },
+    {
+      "path": "admin/src/providers/dataProvider.ts",
+      "sha256": "d2dcdeac30f0817b19950dd5afda6d7b6859cf53e3b335f65a238c00b3773c28"
+    },
+    {
+      "path": "admin/src/resources.tsx",
+      "sha256": "30746ade414a73519fae154a698488e37096976c75d352f162dffb3e2a8684fa"
+    },
+    {
+      "path": "admin/src/routes.tsx",
+      "sha256": "aff502afb41aa6334d52a3f417718e94839ff2833b74fba1b2430ccf4b461e5d"
+    },
+    {
+      "path": "api/src/db/client.ts",
+      "sha256": "028a5a434c33374b6416ee7ac5ea1ccb1e3508885d38ec48377f703b749220bf"
+    },
+    {
+      "path": "api/src/db/migrate.ts",
+      "sha256": "c094ea030391e1bab273f9d4adf78df6ca6cfaa8c6c128190b83ff6e15cd813f"
+    },
+    {
+      "path": "api/src/db/schema/ai.ts",
+      "sha256": "f7919f92a9962dcd24ecadefefde074049eba42f2c67138435f04a73ca2238c1"
+    },
+    {
+      "path": "api/src/db/schema/audit.ts",
+      "sha256": "acc92af27bd150a5beade661f4ebc551ebea70fe3e10450726846aa4df49d1fe"
+    },
+    {
+      "path": "api/src/db/schema/auth.ts",
+      "sha256": "e4d28701cb313309a7ac6dae4249d84285c7709d4be0d2e8fcd2d46a6a35f53d"
+    },
+    {
+      "path": "api/src/db/schema/billing.ts",
+      "sha256": "8d40b890aab13a589ad99872ca2f88c8813b8283576bf2187af6ab02450960a1"
+    },
+    {
+      "path": "api/src/db/schema/catalog.ts",
+      "sha256": "8260eae0d86d20895e66d8229461bae7fd2cefa9327b5fcc1adb79afe4e35228"
+    },
+    {
+      "path": "api/src/db/schema/index.ts",
+      "sha256": "d6167475de36422a72a940d506f1d8afdfe81bbd5154fa8e6ff742e0b1c04d4c"
+    },
+    {
+      "path": "api/src/db/schema/media.ts",
+      "sha256": "5ee2860c0f2b9cd9f82686d6f5a4eafbd506dac1d474e40ad6f37fe043b665af"
+    },
+    {
+      "path": "api/src/db/schema/orders.ts",
+      "sha256": "5a4aa4de5fc87c6f96e40339d670b880d1950cd48f689b87a3c0b4f9d2fe0a26"
+    },
+    {
+      "path": "api/src/db/schema/projects.ts",
+      "sha256": "32b1f39d9c4b836a4e4911725bcaf842046799426d25b4c2b02cf5465ac8c951"
+    },
+    {
+      "path": "api/src/db/seed.ts",
+      "sha256": "3f4302c5a133c01881c7a176355c1a88f26b61c8c42ff5cc7fc3a28936dbe1a5"
+    },
+    {
+      "path": "api/src/index.ts",
+      "sha256": "c6b63d197de74265a4ff53d7611bb1d77b8430f0660ff8e853eceef775c8174c"
+    },
+    {
+      "path": "api/src/lib/admin-query.test.ts",
+      "sha256": "d871a9d1b09190da0238669aaea730e3ae0fd12649ffdacf591a65700342a896"
+    },
+    {
+      "path": "api/src/lib/admin-query.ts",
+      "sha256": "8081b278c760e9e18e9dbaeb66d0bde02aa2d93399650119c70d66f1584e8138"
+    },
+    {
+      "path": "api/src/lib/audit.ts",
+      "sha256": "32a9796170d6f85a9b9b8c71c36f33b035affe7ab68700924d4c43f9fecd4825"
+    },
+    {
+      "path": "api/src/lib/crypto.test.ts",
+      "sha256": "fbe39dc9f8974a3f17a210b3b9607258939c88a843c3fc3b66d5cc4227d718f7"
+    },
+    {
+      "path": "api/src/lib/crypto.ts",
+      "sha256": "bbe40ca586b9cfdc45eeb91acfaacc6047383ec0e783aa9ba01fbe5033216ef1"
+    },
+    {
+      "path": "api/src/lib/feature-access.ts",
+      "sha256": "9746fd59cf7862ef7e8b185ae32985cb0e2e15ec579c0457d919459da2801d3a"
+    },
+    {
+      "path": "api/src/lib/jwt.ts",
+      "sha256": "db7e9a33ec9dd85d7b398be15cfb223da771a3f079392159f500d293019f9892"
+    },
+    {
+      "path": "api/src/lib/password.test.ts",
+      "sha256": "6e7838082eff466119bf5b93d3168f57263ce5f6aaa3fbdc511c65fd089d4290"
+    },
+    {
+      "path": "api/src/lib/password.ts",
+      "sha256": "b3f65fc28a66e8793e6ed649354374e399c2c215297dd4ab37cbd771bc5d279b"
+    },
+    {
+      "path": "api/src/lib/storage/index.ts",
+      "sha256": "3311214fe8cb57bfcb205c974dc810e2dcdb34d00a9620e1310eeec77e2a2ead"
+    },
+    {
+      "path": "api/src/lib/storage/local-fs.ts",
+      "sha256": "5bcc47caad76089876e488bfa3451918b48969eaba7bc8990fcc4a7fa7efa1f3"
+    },
+    {
+      "path": "api/src/lib/storage/r2.ts",
+      "sha256": "8fe7424a1ecd4ccbd9e6bee4240f9fa1592ad5818632edb6891cc8f4e00a6e64"
+    },
+    {
+      "path": "api/src/middleware/auth.ts",
+      "sha256": "0674b4d962ca954f294c2b1d258346f9f3d4c73709c6665e92891bde5dccd5c1"
+    },
+    {
+      "path": "api/src/middleware/error.ts",
+      "sha256": "044eb2adb4e589ad43d94aabde50289da695c258a26f0ce4e0bc91027166bfcc"
+    },
+    {
+      "path": "api/src/middleware/rate-limit.ts",
+      "sha256": "d409b78ff392549acaf2b191ba9873f75133e07fd1623622d89a849127402c98"
+    },
+    {
+      "path": "api/src/modules/admin/ai-providers.routes.ts",
+      "sha256": "da8c1953a034f231ec52f7c8e7a34e2a9188110a3fcd19e15d30ea2594802550"
+    },
+    {
+      "path": "api/src/modules/admin/assets-3d.routes.ts",
+      "sha256": "429ee6ae3e5b29dc68b0b80fea49a5fe8a48f175dc6b66819750d05892e569fa"
+    },
+    {
+      "path": "api/src/modules/admin/assets-scene.routes.ts",
+      "sha256": "34c6805d0973fc2f0632b946b91267a4367afa2de7f66be27c760b31f3077cfe"
+    },
+    {
+      "path": "api/src/modules/admin/audit-logs.routes.ts",
+      "sha256": "37e5bc4052fe85cededa83c08d6ae5cc1d43d5c8c57e100605582ee6e469a0cb"
+    },
+    {
+      "path": "api/src/modules/admin/bundles.routes.ts",
+      "sha256": "40f98864d7f153807ff7a4e729e054caa6a21bd92dd33cbb51676b2cd728d742"
+    },
+    {
+      "path": "api/src/modules/admin/credit-ledger.routes.ts",
+      "sha256": "b1dff9ba6d045e2ddadcac51a6330c2d879e7117804b911f70cb1cdc37e439fe"
+    },
+    {
+      "path": "api/src/modules/admin/credit-packs.routes.ts",
+      "sha256": "f41e6b7e261ea367f92b36d3ac7508045cf007d4e8ba7a7442343e147e269387"
+    },
+    {
+      "path": "api/src/modules/admin/index.ts",
+      "sha256": "ecb32e9c5cda389c653cef89333cee40473febcb31d6ed7254f3b52a85515143"
+    },
+    {
+      "path": "api/src/modules/admin/plans.routes.ts",
+      "sha256": "f2a1099d86100a301283087f4fb3e50f4724f6be4a36a40e51de13dc6c17abfe"
+    },
+    {
+      "path": "api/src/modules/admin/sessions.routes.ts",
+      "sha256": "a568bbd01cd0a1797ec11ae5951bf745df52eff9231e2211bf58ab51ccbd9e21"
+    },
+    {
+      "path": "api/src/modules/admin/subscriptions.routes.ts",
+      "sha256": "cccbce5423e84a86a4b1d27f65b81e0752edf9d94a28ef94c4d451b84ed641dc"
+    },
+    {
+      "path": "api/src/modules/admin/uploads.routes.ts",
+      "sha256": "6932c8e002e2f1df69673b6a2c67713a500f91c233475008de1758f56bc85542"
+    },
+    {
+      "path": "api/src/modules/admin/users.routes.ts",
+      "sha256": "033ebdf40f1dc2525c576a1bdc63581e0b0a4c7d37908915d5dab320c9fa9c4e"
+    },
+    {
+      "path": "api/src/modules/ai/credit.test.ts",
+      "sha256": "2058a80f2885fe1fb72550d3a31c6d876f3cd693467d169857846fac5522a8eb"
+    },
+    {
+      "path": "api/src/modules/ai/credit.ts",
+      "sha256": "5acb1102246214b5527f9c5b8aa87116cfc113eab036ab0d6ac9a988dac178f0"
+    },
+    {
+      "path": "api/src/modules/ai/provider.ts",
+      "sha256": "41b1809c8621829067057a81a7259ef0f9a0a1c2bf4c0562ee7d1f30808fa54f"
+    },
+    {
+      "path": "api/src/modules/ai/providers/kie.ts",
+      "sha256": "9ab3df67ced3feccd342e7f4f733a426e9eef7ca0a8e22b1f67962955d6ba7e8"
+    },
+    {
+      "path": "api/src/modules/ai/providers/stub.ts",
+      "sha256": "f138eaa68936f67da554741b2cf4d54bcb61ee9f5a61775d2baedbeea1a0a5ed"
+    },
+    {
+      "path": "api/src/modules/ai/queue.ts",
+      "sha256": "f36bcea6e8bb57194e3a73eed975c8ca751936168060b87ce1b6e8a9919ad3b3"
+    },
+    {
+      "path": "api/src/modules/ai/routes.test.ts",
+      "sha256": "97909f0f36bd1de95d1d6ac70e01cbca293abf63f3362bb46297ad792ded6e64"
+    },
+    {
+      "path": "api/src/modules/ai/routes.ts",
+      "sha256": "f4afb8e6db0fa37e549d48c72938af18c90944d8c971cf7d9305c4c67f0f90be"
+    },
+    {
+      "path": "api/src/modules/auth/auth.test.ts",
+      "sha256": "966066ce8283cb0270f2598c4d749fd52f74ace3916f99c3dec2e62225ead632"
+    },
+    {
+      "path": "api/src/modules/auth/routes.ts",
+      "sha256": "a47f549d2bbc5174a5511146ff836181d58a7ae63691af2e9b587e60a2aa4d79"
+    },
+    {
+      "path": "api/src/modules/auth/schema.ts",
+      "sha256": "9966dcfd3163428b4c0ebdc394470b2081b218db2a6ad6026988a42e6bb3c5ef"
+    },
+    {
+      "path": "api/src/modules/billing/gateway.ts",
+      "sha256": "99bdc915e85b9096b100fbc7688d0d2da851b70842879787f8c8930babf21c8f"
+    },
+    {
+      "path": "api/src/modules/billing/gateways/pakasir.ts",
+      "sha256": "fd09111a07d9d5c5acbc9468c07918f593fafb45ab8c955a4abe49d6edaa3a7a"
+    },
+    {
+      "path": "api/src/modules/billing/gateways/stripe.ts",
+      "sha256": "52badfc4943b968cfa076d8a6fb12f1c25bb75b612404be7bac4ca9ff796da45"
+    },
+    {
+      "path": "api/src/modules/billing/gateways/stub.ts",
+      "sha256": "d2d50d4ea1b7d494841b233bf544f85297bcb0541e3c5d5b110cae4c7b385449"
+    },
+    {
+      "path": "api/src/modules/billing/grant.ts",
+      "sha256": "d53027c1ec22e31f6f7e106926a758296d9065c1a74bff2c0194e87ea160d145"
+    },
+    {
+      "path": "api/src/modules/billing/retention.test.ts",
+      "sha256": "3480125a77516e39033102ab8acb236d2fcff9bbd54122413d1005bddacc70a8"
+    },
+    {
+      "path": "api/src/modules/billing/retention.ts",
+      "sha256": "9de3e876af0ada9c26d8c38a6c686680a675d30673425b551b9ea725126a49de"
+    },
+    {
+      "path": "api/src/modules/billing/routes.test.ts",
+      "sha256": "6a507070a7322cae684acb2c0dcdf4be40b75a9cb7fee3a15c4f183f556d74e7"
+    },
+    {
+      "path": "api/src/modules/billing/routes.ts",
+      "sha256": "8b5e85dd27a88be768f3fbdd325f08d8e5935b3b81ee0499b69b275d85645f43"
+    },
+    {
+      "path": "api/src/modules/catalog/pricing.test.ts",
+      "sha256": "923aa148f64c605d71ca768c8dd597d9032be85c113b161d008e2c7c3260dd76"
+    },
+    {
+      "path": "api/src/modules/catalog/pricing.ts",
+      "sha256": "49a85c60ed2bac1fc4b2a96fde29d109bdec6276158aa48f79aa9271db80382c"
+    },
+    {
+      "path": "api/src/modules/catalog/routes.ts",
+      "sha256": "8cbffd1a7986a899857d6c38ed57a35f5309981fead880a6a31ddca3b1cdcb29"
+    },
+    {
+      "path": "api/src/modules/project/routes.test.ts",
+      "sha256": "6c1b1c9bea33b36c7d6b5e6f7ebf8098e49a5611ad4f5f40203463aabd86fae5"
+    },
+    {
+      "path": "api/src/modules/project/routes.ts",
+      "sha256": "933a4ba39c185d85d9bd1205de8eae2bd52a75a6505b8af472ea4d8fdb618727"
+    },
+    {
+      "path": "api/src/modules/session/service.test.ts",
+      "sha256": "e4cbea3ca204e8924ffd2a01f9525fc1281d12c7ae0be1f3b8b69bdfe66a41c6"
+    },
+    {
+      "path": "api/src/modules/session/service.ts",
+      "sha256": "696485653a00ff2d6c9986139d00376486c1a500592104cb665a8c7302ba90bc"
+    },
+    {
+      "path": "api/src/modules/storage/routes.ts",
+      "sha256": "1e53c695b21dccbac1e8c3d890751843609fa989118a3b6c90d000dc78ebc90f"
+    },
+    {
+      "path": "api/src/modules/store/routes.ts",
+      "sha256": "665984edde1f3ba28ed3dcf1279b11c585bffb4645f3119a71e7431a6692435d"
+    },
+    {
+      "path": "api/src/modules/user/routes.ts",
+      "sha256": "e4126f2bd53dce5ba49965bcc9c0345f7a918290db7935ea6835a82a5c0d7151"
+    },
+    {
+      "path": "client/src/App.tsx",
+      "sha256": "f170f1d7340a783b22be4f6560e01105b27b61fa8d54c313dff90bc96a923e65"
+    },
+    {
+      "path": "client/src/components/ai/credit-badge.tsx",
+      "sha256": "e29c72b179f9d28dee338303b4c048671160dfec496ec10144da9b6d3a938158"
+    },
+    {
+      "path": "client/src/components/ai/motion-panel.tsx",
+      "sha256": "1ba3288fe3cfe213d1f85c017fc07c236ae2601fa2e8a025937bd683fa21c6d2"
+    },
+    {
+      "path": "client/src/components/ai/scene-panel.tsx",
+      "sha256": "9b300f3e978dbf65738cdadda32a9651138daba81993d689cf40e3c40b92c623"
+    },
+    {
+      "path": "client/src/components/editor/add-design-dialog.tsx",
+      "sha256": "d9d832c5d7b3ec2ab483e7146bc4b79cf1c8dff5e31509a85414aabe0edca29b"
+    },
+    {
+      "path": "client/src/components/editor/canvas-object.tsx",
+      "sha256": "9a76b9dde2471d823b9566b7d9a6bfd3b9d2cdb599086cfa889f01b9278314dc"
+    },
+    {
+      "path": "client/src/components/editor/color-panel.tsx",
+      "sha256": "762f3c01911c2ef5d63afbd5e9f36beeeffe41dd196c47df07cbea616ccd6440"
+    },
+    {
+      "path": "client/src/components/editor/editor-toolbar.tsx",
+      "sha256": "3051e45d49ea9b4012a22bc5851b173dbd3de695d9fce87a4308b83d29ab654e"
+    },
+    {
+      "path": "client/src/components/editor/scene-canvas.tsx",
+      "sha256": "f54888487fb5f1f517113316ba3c6d7a6f0683f8744104bad6da542e69910840"
+    },
+    {
+      "path": "client/src/components/editor3d/add-design-3d-dialog.tsx",
+      "sha256": "d591d76f1b89981db086e9ce35fd14ff95f8c8fa63b23b108fb12a519aa63b36"
+    },
+    {
+      "path": "client/src/components/editor3d/controls-panel-3d.tsx",
+      "sha256": "39cdea103935da46da33fa3cb05be8b7038c3a28835d719c6cbc7770ea950332"
+    },
+    {
+      "path": "client/src/components/editor3d/model-mesh.tsx",
+      "sha256": "c8506f63067c35c045ed5b8e8bc7c3a077cdcb3a1f3d3be1dc7a94c250764b6d"
+    },
+    {
+      "path": "client/src/components/editor3d/scene-3d-viewport.tsx",
+      "sha256": "2f1bdfa05bb79beec6481f267ccbe9c63e7dfb905c0a64500b83889c05bb8f3a"
+    },
+    {
+      "path": "client/src/components/seo.tsx",
+      "sha256": "d6001a4287a7aff8701903660803ba1149e4ef5bdf516512c72fa0105b141058"
+    },
+    {
+      "path": "client/src/components/shell/app-layout.tsx",
+      "sha256": "43aebd37fa680dfcad24c5cb20e447c44255acecd86c37048ed2d6d8594b46d3"
+    },
+    {
+      "path": "client/src/components/shell/page-transition.tsx",
+      "sha256": "0c4975dccbbcc908a7a3d30239f2fdb12e6ef7819fe453ca853aa0eef437a5d3"
+    },
+    {
+      "path": "client/src/components/shell/sidebar-item.tsx",
+      "sha256": "499aa0ae09ee1341b480f8bedb1bf366a050e144a7bde17202786f311eeb9b0b"
+    },
+    {
+      "path": "client/src/components/shell/sidebar-section.tsx",
+      "sha256": "f0576c57aa333cce9591e63005d6435f6a9e9cd6afb0d082d477c23707761173"
+    },
+    {
+      "path": "client/src/components/shell/sidebar.tsx",
+      "sha256": "159a800dce4e757e6377aa35b23a562a6c7b768f767838255621596adbddca5e"
+    },
+    {
+      "path": "client/src/components/shell/topbar.tsx",
+      "sha256": "fb43fe766dc80215f3586e23cfaf48a0831d0286eaffa6ba67bd6bb8191edfdd"
+    },
+    {
+      "path": "client/src/components/store/asset-card.tsx",
+      "sha256": "5c4813831a61e78bdfd7c14b42d26584967aa53fee5e002108a98ab89d8323a5"
+    },
+    {
+      "path": "client/src/components/store/filter-tabs.tsx",
+      "sha256": "9786b87a6855ae1d46d3e179cd12833b72e65a1a9852e3096466c2f8e190c5d1"
+    },
+    {
+      "path": "client/src/components/ui/badge.tsx",
+      "sha256": "6c588c4765a1bbebb99f7c0e482a872dc9fe7067015a6c6a4d1bdd4b5d31de16"
+    },
+    {
+      "path": "client/src/components/ui/button.tsx",
+      "sha256": "1e6dd19769443286df0e0bdeca3914f480464f42d46ca4ae02510171301c5ee7"
+    },
+    {
+      "path": "client/src/components/ui/card.tsx",
+      "sha256": "4b3e9a7a7fab59433844fe08d6190b846944e2cbff54e53196d8b5d5dd682a29"
+    },
+    {
+      "path": "client/src/components/ui/dialog.tsx",
+      "sha256": "ebcacd378284027b25d02840f9a4f61f29bd388fabdcd33de801c4c388430414"
+    },
+    {
+      "path": "client/src/components/ui/dropdown-menu.tsx",
+      "sha256": "9eaeef73d75d2719b4e84caad223968f98c72e958a6fb4da969a12891838b66b"
+    },
+    {
+      "path": "client/src/components/ui/index.ts",
+      "sha256": "842c08810328bd0ef6a05184e9b94870067319a3ec98d4884764eecfc756f930"
+    },
+    {
+      "path": "client/src/components/ui/input.tsx",
+      "sha256": "d54ce3f3c895e42cfd278c0d8b8a3174aa635df01b4ae67034f7d90c68bb9654"
+    },
+    {
+      "path": "client/src/components/ui/skeleton.tsx",
+      "sha256": "92231cb1eb1a53ccacb0dcb4df9596fc9e083a7dd19522d4365816716e196615"
+    },
+    {
+      "path": "client/src/components/ui/slider.tsx",
+      "sha256": "a4295ca77ecf7185aca96f1575286801feabd4ebd96e6b08b407fc5ee51609dd"
+    },
+    {
+      "path": "client/src/components/ui/switch.tsx",
+      "sha256": "7c3c8b0dd3f1d18d16a1a71adb90abe0dd1384e58bda3a37265e9712e27d8cf6"
+    },
+    {
+      "path": "client/src/components/ui/tabs.tsx",
+      "sha256": "3d7d84e7a869c1d177a185c27f3c03e7b84b49d7cdb4d043a8d62ecc1ba3caf2"
+    },
+    {
+      "path": "client/src/components/ui/toast.tsx",
+      "sha256": "57e6199e1e8de2bdebe514f131c4f73580ecc1e8b781c5b591d95bd8fa88781e"
+    },
+    {
+      "path": "client/src/components/ui/toaster.tsx",
+      "sha256": "b28dcf2843f69e9f3cd6a53bfc29f7bcbd3fa6667998a82cd062cc5053558d4d"
+    },
+    {
+      "path": "client/src/components/ui/use-toast.ts",
+      "sha256": "6a9f6495cc464eb9c2cec53f7d7a2805f7e3a709ccdf30ff9e9a77dbf94af157"
+    },
+    {
+      "path": "client/src/hooks/use-ai-job.ts",
+      "sha256": "f59f81d0ca4a7d2f724047e544fb12c119a81da9679eb759c80e84c2958b9fd2"
+    },
+    {
+      "path": "client/src/hooks/use-auth.ts",
+      "sha256": "15ef35200313ba80403cf8a84c9fa2de038364e28df69ce9155bc8bf13e9c21b"
+    },
+    {
+      "path": "client/src/hooks/use-feature-access.ts",
+      "sha256": "a00ba53a4d973a2f2298f02b63e5f1370284144004e36e3f8addc5db7cc81d4c"
+    },
+    {
+      "path": "client/src/index.css",
+      "sha256": "5484da76f9468c4fefdbeb1dcc41d5378cf1739f6527a5b17dcdb4d97401c594"
+    },
+    {
+      "path": "client/src/lib/api.ts",
+      "sha256": "7a915224b6e586280b117896291c1c9a7a3bd3266db15078631f6eb21d5cba0c"
+    },
+    {
+      "path": "client/src/lib/export-3d.ts",
+      "sha256": "157428afd6a8720afd7b446562127ab80c0deb814f9d6642c2d862e7063433d4"
+    },
+    {
+      "path": "client/src/lib/export-image.ts",
+      "sha256": "0f5cc2f8bdbf474a41d6c77fb15e3b3d4b8ed20aa89d8cb5df7cce7a178dc555"
+    },
+    {
+      "path": "client/src/lib/query.ts",
+      "sha256": "b8aeca20848fa86c178c0a8ec1befdd153be4d576c3ee26b4ae4f31022c59b4d"
+    },
+    {
+      "path": "client/src/lib/record-3d-video.ts",
+      "sha256": "078bed811ada9eed555a39ddaaa45d382a406bb4815a1f688ec559869494c1ba"
+    },
+    {
+      "path": "client/src/lib/seo-config.ts",
+      "sha256": "d35d1986ce8f1b6e2ee911cc8d87c39eeb6d2edb43ab8360e50dbdc158524359"
+    },
+    {
+      "path": "client/src/lib/utils.ts",
+      "sha256": "52809d249fba3d497f01505af1da566e4edc729ee9501a406b610aaa8ee79be1"
+    },
+    {
+      "path": "client/src/main.tsx",
+      "sha256": "a1f7d6633d9b00e9557564bc448da9f6a13c7320a5e2e8ffd3d05a0af290f982"
+    },
+    {
+      "path": "client/src/pages/account.tsx",
+      "sha256": "a03c6861e83a1eaf29ff2afd7b67289a8d8c4418c1142f0d258c18df89b632b2"
+    },
+    {
+      "path": "client/src/pages/asset-detail.tsx",
+      "sha256": "8941fb208ceb1526aaa82980aac80150f9eae6f4f7ca1bb7cd24656e00c4c2f8"
+    },
+    {
+      "path": "client/src/pages/bundle-builder.tsx",
+      "sha256": "6208d59b709fa89466cf08d6db3cbd0737e2bdf328173f4b796c57eb28903f66"
+    },
+    {
+      "path": "client/src/pages/checkout.tsx",
+      "sha256": "0c4d07b273216e92c57a5786815a641dfd335b7e3a225616950d500a42c79eb6"
+    },
+    {
+      "path": "client/src/pages/editor-3d.tsx",
+      "sha256": "8bd81dba1e2054a7544774cdc5fcf0ac97bc23094049355d60874542f471e20b"
+    },
+    {
+      "path": "client/src/pages/home.tsx",
+      "sha256": "636de7ba7e12e7ba92f6f08b182270f4ac2cb51848193549e1d6aad0cf3cf6e6"
+    },
+    {
+      "path": "client/src/pages/library.tsx",
+      "sha256": "797e82a908dbbac6256e9876a1059abe0bbbaba7d90ce322721a82fbaa77e625"
+    },
+    {
+      "path": "client/src/pages/marketplace.tsx",
+      "sha256": "1e4637f0c4f7c7320a42a2a5033e885c2aa5ae3749f9f0c8407f07fc38161cea"
+    },
+    {
+      "path": "client/src/pages/not-found.tsx",
+      "sha256": "c3efdcc0387aebc671e626eef60c736affb8a996994759903eb3bc154bd711f8"
+    },
+    {
+      "path": "client/src/pages/pricing.tsx",
+      "sha256": "54ca450e610a5829f01a92726ae687c8fe712c6a5c8f142c8481c772b6de4fd7"
+    },
+    {
+      "path": "client/src/pages/projects.tsx",
+      "sha256": "ba8d4daf7dc1c841640697e23888bcc8f0fde8ad7ae8cbe8871f03f140359019"
+    },
+    {
+      "path": "client/src/pages/scene-editor.tsx",
+      "sha256": "d11e4b8aeb4fcf928ef8bada4fad9e63e7128d9a03bb83818f5499e44e19d498"
+    },
+    {
+      "path": "client/src/stores/cart-store.ts",
+      "sha256": "8235099af3d9294c41fd9bb24bd843fa5e44f7c6ac7a68b20cea84da0fd194f9"
+    },
+    {
+      "path": "client/src/stores/scene-3d-store.ts",
+      "sha256": "e42420ffc7b24a7d544f328b7dcb15f1506c943ff83130459fd07577ffa3c5e7"
+    },
+    {
+      "path": "client/src/stores/scene-editor-store.ts",
+      "sha256": "422ce21751a4e0f67c57c7d7020468f4f83cf2b1ae41e0d2a20862653d3b270a"
+    },
+    {
+      "path": "client/src/stores/ui-store.ts",
+      "sha256": "8ba0b2e6203ef4862ba7063190a5696aa006faf5df5d14dc1d1742e1891acef7"
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "sha256": "7efc99130416087c15b1441ac957121576ba5613f55ec23450d0083bf6303f81"
+    },
+    {
+      "path": "worker/src/index.ts",
+      "sha256": "b51126ee94b6681c06606928fadc100d1309fd5f5e7d884367e1257be9c28bc5"
+    },
+    {
+      "path": "worker/src/process-job.test.ts",
+      "sha256": "7d4ef03ffa7ca8ee44519b9e891106137298654306f19159bd966c4807c920e5"
+    },
+    {
+      "path": "worker/src/process-job.ts",
+      "sha256": "7937523844ad0a343ede597c09603eb8c1144643bfb1a78d661ff3c579264e41"
+    }
+  ],
+  "testEnvironment": {
+    "project": "nesomn-revision-test",
+    "database": "nesomn_revision_test",
+    "role": "nesomn_test",
+    "ports": {
+      "postgres": "127.0.0.1:55432",
+      "redis": "127.0.0.1:56379"
+    },
+    "storage": "tmpfs; no named volumes",
+    "initialState": "Both healthy before original integration run",
+    "finalStateObservedOnClientDate": "2026-10-31",
+    "finalState": "Both exited (255) before requested cleanup; cause unknown; no restart or stop executed during final verification",
+    "containers": [
+      {
+        "id": "d1d1e45b7f55",
+        "service": "test-db",
+        "image": "postgres:17-alpine",
+        "imageDigest": "postgres@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193",
+        "state": "exited",
+        "exitCode": 255
+      },
+      {
+        "id": "941f77a1e313",
+        "service": "test-redis",
+        "image": "redis:7-alpine",
+        "imageDigest": "redis@sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f",
+        "state": "exited",
+        "exitCode": 255
+      }
+    ],
+    "note": "Image digests and healthy schema/Redis results observed on original run. Final exited state does not establish graceful shutdown."
+  },
+  "results": {
+    "runnerGuards": {
+      "passed": 5,
+      "failed": 0
+    },
+    "unit": {
+      "passed": 22,
+      "failed": 0,
+      "existing": 19,
+      "newSceneContract": 3
+    },
+    "integration": {
+      "passed": 12,
+      "failed": 4,
+      "errors": 4,
+      "cause": "Missing memoirist prevents four route test files from loading"
+    },
+    "migrations": {
+      "journalEntries": 4,
+      "publicTables": 17,
+      "syntheticPlans": 1
+    },
+    "typecheck": "FAIL",
+    "lint": "FAIL: missing debug",
+    "build": "FAIL: missing rollup"
+  },
+  "review": {
+    "scope": "Audit preparation, not platform readiness",
+    "independentReviewer": "phase1_review",
+    "sourceHashesVerified": 157,
+    "migrationHashesVerified": 4,
+    "criticalFindings": 0,
+    "evidenceFinding": "Successful historical observations added while retaining failed attempt",
+    "imageFinding": "Original digests recorded; tags remain mutable in test config"
+  },
+  "completedOnClientDate": "2026-10-31",
+  "finalVerification": {
+    "clientDate": "2026-10-31",
+    "sourceHashesMatched": 157,
+    "migrationHashesMatched": 4,
+    "applicationSourceChanged": false,
+    "productionDataAccessed": false
+  }
+}

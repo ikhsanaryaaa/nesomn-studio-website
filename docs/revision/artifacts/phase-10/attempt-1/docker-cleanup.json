@@ -1,0 +1,31 @@
+{
+  "time": "2026-10-31T13:05:24.558Z",
+  "removed": [
+    {
+      "name": "/nesomn-revision-test-test-db-1",
+      "id": "a6aae55bccb8b4b6b421e8390feb6b3b3d84affbce5400eae4dd1f8c78e4be6e",
+      "exit": 0
+    },
+    {
+      "name": "/nesomn-revision-test-test-redis-1",
+      "id": "04186b4a6f8c2437cccd3f955f9e7d5b1286d0a3512f276fae41c78b77c1a0ef",
+      "exit": 0
+    }
+  ],
+  "images": [
+    {
+      "reference": "postgres:17-alpine",
+      "status": "SKIPPED",
+      "reason": "Used by another container"
+    },
+    {
+      "reference": "redis:7-alpine",
+      "status": "PASS",
+      "output": "Untagged: redis:7-alpine\nDeleted: sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f\n"
+    }
+  ],
+  "remainingOwned": [],
+  "volumesRemoved": false,
+  "networksRemoved": false,
+  "globalPrune": false
+}

@@ -1,3 +1,4 @@
+import { ProviderFailure } from '../provider.ts';
 import type { AiJobInput } from '@nesomn/shared';
 import type { AIProvider, GenerateResult, ProviderRow } from '../provider.ts';
 
@@ -8,8 +9,7 @@ import type { AIProvider, GenerateResult, ProviderRow } from '../provider.ts';
  */
 
 /** Placeholder hasil per jenis output. Gambar/video contoh statis. */
-const PLACEHOLDER_IMAGE =
-  'https://placehold.co/1024x1024/1b1f2a/d6d3cc/png?text=AI+Scene';
+const PLACEHOLDER_IMAGE = 'https://placehold.co/1024x1024/1b1f2a/d6d3cc/png?text=AI+Scene';
 const PLACEHOLDER_VIDEO =
   'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
@@ -33,7 +33,7 @@ export class StubProvider implements AIProvider {
 
     // Jalur gagal terkontrol untuk menguji refund.
     if (typeof input.prompt === 'string' && input.prompt.includes('__fail__')) {
-      throw new Error('Stub provider dipaksa gagal (uji refund).');
+      throw new ProviderFailure(true);
     }
 
     return {

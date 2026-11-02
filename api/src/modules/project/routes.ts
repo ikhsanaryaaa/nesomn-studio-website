@@ -2,7 +2,9 @@ import { Elysia } from 'elysia';
 import { z } from 'zod';
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '../../db/client.ts';
-import { projects } from '../../db/schema/index.ts';
+import { getFeatureAccess, canUseAsset } from '../../lib/feature-access.ts';
+import { validateStorageKey } from '../../lib/storage/key.ts';
+import { projects, media, assets } from '../../db/schema/index.ts';
 import { AppError } from '../../middleware/error.ts';
 import { authPlugin, type AuthUser } from '../../middleware/auth.ts';
 
@@ -17,23 +19,52 @@ const projectKindSchema = z.enum(['scene2d', 'scene3d']);
 const createBody = z.object({
   title: z.string().min(1).max(200),
   kind: projectKindSchema,
-  state: z.record(z.unknown()).optional(),
+  state: z.record(z.string(), z.unknown()).optional(),
   thumbnailKey: z.string().optional(),
 });
 
 const updateBody = z.object({
   title: z.string().min(1).max(200).optional(),
-  state: z.record(z.unknown()).optional(),
+  state: z.record(z.string(), z.unknown()).optional(),
   thumbnailKey: z.string().nullable().optional(),
 });
 
 /** Ambil project milik user (atau lempar 404 jika tidak ada / bukan miliknya). */
 async function getOwned(userId: string, id: string) {
+  z.string().uuid().parse(id);
   const project = await db.query.projects.findFirst({
     where: and(eq(projects.id, id), eq(projects.userId, userId)),
   });
   if (!project) throw new AppError('NOT_FOUND', 'Project tidak ditemukan.', 404);
   return project;
+}
+
+async function validateMutation(
+  user: AuthUser,
+  kind: 'scene2d' | 'scene3d',
+  state?: Record<string, unknown>,
+  thumbnailKey?: string | null,
+) {
+  if (kind === 'scene3d' && user.role !== 'admin' && !(await getFeatureAccess(user.id)).editor3d) {
+    const model =
+      typeof state?.modelKey === 'string'
+        ? await db.query.assets.findFirst({ where: eq(assets.slug, state.modelKey) })
+        : undefined;
+    if (
+      !model ||
+      model.editorType !== 'product_3d_editor' ||
+      !(await canUseAsset(user.id, model.id))
+    )
+      throw new AppError('FORBIDDEN', 'Editor 3D memerlukan plan atau lisensi model.', 403);
+  }
+  if (state && JSON.stringify(state).length > 8 * 1024 * 1024)
+    throw new AppError('TOO_LARGE', 'Dokumen project terlalu besar.', 413);
+  if (thumbnailKey) {
+    validateStorageKey(thumbnailKey);
+    const row = await db.query.media.findFirst({ where: eq(media.key, thumbnailKey) });
+    if (!row || (row.ownerId !== user.id && user.role !== 'admin'))
+      throw new AppError('FORBIDDEN', 'Thumbnail bukan media milik Anda.', 403);
+  }
 }
 
 export const projectRoutes = new Elysia({ prefix: '/projects' })
@@ -61,6 +92,7 @@ export const projectRoutes = new Elysia({ prefix: '/projects' })
     async ({ body, user }) => {
       const u = user as AuthUser;
       const input = createBody.parse(body);
+      await validateMutation(u, input.kind, input.state, input.thumbnailKey);
       const [project] = await db
         .insert(projects)
         .values({
@@ -89,8 +121,14 @@ export const projectRoutes = new Elysia({ prefix: '/projects' })
     '/:id',
     async ({ params, body, user }) => {
       const u = user as AuthUser;
-      await getOwned(u.id, params.id);
+      const existing = await getOwned(u.id, params.id);
       const input = updateBody.parse(body);
+      await validateMutation(
+        u,
+        existing.kind,
+        input.state ?? (existing.state as Record<string, unknown>),
+        input.thumbnailKey,
+      );
       const [updated] = await db
         .update(projects)
         .set({ ...input, updatedAt: new Date() })

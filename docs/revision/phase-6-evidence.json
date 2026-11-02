@@ -1,0 +1,221 @@
+{
+  "date": "2026-10-31",
+  "origin": "https://github.com/ikhsanaryaaa/nesomn-studio-website",
+  "branch": "works/runtime-tooling-upgrade",
+  "head": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "committed": false,
+  "runtime": {
+    "actualBun": "1.4.4",
+    "globalBun": "1.4.0",
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "manrope": "5.3.0",
+    "bricolage": "5.3.0"
+  },
+  "lockSha256": "a8125a3484e632f857531e014b78f6e6b5cf59f57d339f0588a113c25ca2d5e6",
+  "checks": [
+    {
+      "name": "contrast",
+      "exit": 0
+    },
+    {
+      "name": "format",
+      "exit": 0
+    },
+    {
+      "name": "frozen",
+      "exit": 0
+    },
+    {
+      "name": "theme",
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "unit",
+      "exit": 0
+    },
+    {
+      "name": "qris-pure",
+      "exit": 0
+    },
+    {
+      "name": "deployment",
+      "exit": 0
+    },
+    {
+      "name": "compose",
+      "exit": 0
+    },
+    {
+      "name": "node-guards",
+      "exit": 0
+    },
+    {
+      "name": "build",
+      "exit": 0
+    }
+  ],
+  "dockerBuild": "PASS",
+  "browserAssetsMatchFinalImage": {
+    "client": true,
+    "admin": true
+  },
+  "browser": {
+    "fixture": "Compiled assets + explicit HTTP401/503 API fixture, no real DB/user/merchant",
+    "browser": "Chrome/156.0.8078.74",
+    "viewports": [
+      {
+        "mode": "light",
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "mode": "light",
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "mode": "light",
+        "width": 768,
+        "scroll": 768
+      },
+      {
+        "mode": "light",
+        "width": 1024,
+        "scroll": 1024
+      },
+      {
+        "mode": "light",
+        "width": 1440,
+        "scroll": 1440
+      },
+      {
+        "mode": "dark",
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "mode": "dark",
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "mode": "dark",
+        "width": 768,
+        "scroll": 768
+      },
+      {
+        "mode": "dark",
+        "width": 1024,
+        "scroll": 1024
+      },
+      {
+        "mode": "dark",
+        "width": 1440,
+        "scroll": 1440
+      }
+    ],
+    "persistence": true,
+    "clientAdminSync": true,
+    "drawerTabTrap": 20,
+    "escapeFocusRecovery": true,
+    "reducedMotion": true,
+    "storeFailure": true,
+    "fonts": {
+      "body": "\"Manrope Variable\", system-ui, -apple-system, sans-serif",
+      "heading": "\"Bricolage Grotesque Variable\", \"Manrope Variable\", system-ui, sans-serif",
+      "loaded": true,
+      "displayLoaded": true
+    },
+    "exceptions": []
+  },
+  "navigation": {
+    "activeBefore": 1,
+    "drawerRemainedOpen": false
+  },
+  "restoredUnrelatedFormatting": [
+    "client/src/components/ui/use-toast.ts",
+    "client/src/components/ui/toaster.tsx",
+    "client/src/components/ui/toast.tsx",
+    "client/src/components/ui/skeleton.tsx",
+    "client/src/components/ui/index.ts",
+    "client/src/components/ui/card.tsx",
+    "client/src/components/seo.tsx",
+    "client/src/components/store/asset-card.tsx",
+    "client/src/components/editor/scene-canvas.tsx",
+    "client/src/components/editor/editor-toolbar.tsx",
+    "client/src/components/editor/color-panel.tsx",
+    "client/src/components/editor/canvas-object.tsx",
+    "client/src/components/editor/add-design-dialog.tsx",
+    "client/src/components/ai/credit-badge.tsx",
+    "client/src/components/ai/motion-panel.tsx",
+    "client/src/components/ai/scene-panel.tsx",
+    "client/src/components/editor3d/controls-panel-3d.tsx",
+    "client/src/components/editor3d/add-design-3d-dialog.tsx",
+    "client/src/components/editor3d/model-mesh.tsx",
+    "client/src/components/editor3d/scene-3d-viewport.tsx"
+  ],
+  "changedBaselinePaths": [
+    "admin/package.json",
+    "client/package.json",
+    "bun.lock",
+    "admin/index.html",
+    "client/index.html",
+    "client/src/main.tsx",
+    "client/src/index.css",
+    "packages/shared/tsconfig.json",
+    "packages/shared/package.json",
+    "client/src/components/ui/tabs.tsx",
+    "client/src/components/ui/switch.tsx",
+    "client/src/components/ui/slider.tsx",
+    "client/src/components/ui/input.tsx",
+    "client/src/components/ui/dropdown-menu.tsx",
+    "client/src/components/ui/dialog.tsx",
+    "client/src/components/ui/button.tsx",
+    "client/src/components/ui/badge.tsx",
+    "admin/src/main.tsx",
+    "admin/src/App.tsx",
+    "client/src/components/store/filter-tabs.tsx",
+    "client/src/components/shell/app-layout.tsx",
+    "client/src/components/shell/topbar.tsx",
+    "client/src/components/shell/sidebar.tsx",
+    "client/src/components/shell/sidebar-section.tsx",
+    "client/src/components/shell/sidebar-item.tsx",
+    "client/src/components/shell/page-transition.tsx"
+  ],
+  "skipped": [
+    "live backend/DB/auth/payment integration (phase5 historical)",
+    "full editor mobile/export/WebGL4GLB (later phases)",
+    "full admin authenticated CRUD",
+    "remote CI/deployment/provider/merchant",
+    "complete WCAG/console-network/resource audit"
+  ],
+  "cleanup": {
+    "headlessBrowserClosed": true,
+    "fixtureServerClosed": true,
+    "extractionContainersRemoved": true,
+    "servicesStarted": false,
+    "volumesDeleted": false,
+    "networksDeleted": false
+  },
+  "logoCopies": [
+    {
+      "color": "black",
+      "identical": true
+    },
+    {
+      "color": "white",
+      "identical": true
+    }
+  ],
+  "actualLinuxBootstrap": "PASS",
+  "diffCheck": "PASS"
+}

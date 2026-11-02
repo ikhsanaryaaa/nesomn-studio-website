@@ -1,3 +1,4 @@
+import { parsePatch } from '../../lib/validation.ts';
 import { Elysia } from 'elysia';
 import { z } from 'zod';
 import { eq, sql } from 'drizzle-orm';
@@ -5,6 +6,7 @@ import { db } from '../../db/client.ts';
 import { aiProviders } from '../../db/schema/index.ts';
 import { AppError } from '../../middleware/error.ts';
 import { encryptSecret, decryptSecret } from '../../lib/crypto.ts';
+import { providerRequest, assertProviderUrl } from '../../lib/outbound.ts';
 import { writeAudit } from '../../lib/audit.ts';
 import { parseListQuery, buildOrderBy, setTotalCount } from '../../lib/admin-query.ts';
 import { authPlugin, type AuthUser } from '../../middleware/auth.ts';
@@ -22,7 +24,18 @@ const providerBody = z.object({
   kind: z.enum(['image', 'video']),
   modelName: z.string().min(1),
   apiKey: z.string().optional(),
-  baseUrl: z.string().nullish(),
+  baseUrl: z
+    .string()
+    .max(1000)
+    .refine((value) => {
+      try {
+        assertProviderUrl(value);
+        return true;
+      } catch {
+        return false;
+      }
+    }, 'Hostname HTTPS provider belum diizinkan.')
+    .nullish(),
   enabled: z.boolean().default(true),
   creditCost: z.coerce.number().int().min(0).default(0),
   tab: z.enum(['scene', 'motion']),
@@ -32,7 +45,11 @@ const providerBody = z.object({
 /** Sembunyikan apiKey: jangan pernah kirim mentah, cukup penanda. */
 function maskProvider<T extends { apiKeyEncrypted: string | null }>(row: T) {
   const { apiKeyEncrypted, ...rest } = row;
-  return { ...rest, hasApiKey: Boolean(apiKeyEncrypted), apiKeyMask: apiKeyEncrypted ? '••••••••' : null };
+  return {
+    ...rest,
+    hasApiKey: Boolean(apiKeyEncrypted),
+    apiKeyMask: apiKeyEncrypted ? '••••••••' : null,
+  };
 }
 
 /** CRUD AI provider registry. apiKey terenkripsi & ter-mask. */
@@ -66,7 +83,7 @@ export const aiProviderAdminRoutes = new Elysia({ prefix: '/ai-providers' })
     return maskProvider(row);
   })
   .patch('/:id', async ({ params, body, user }) => {
-    const input = providerBody.partial().parse(body);
+    const input = parsePatch(providerBody, body);
     const { apiKey, ...rest } = input;
     const patch: Record<string, unknown> = { ...rest, updatedAt: new Date() };
     // Hanya timpa apiKey bila dikirim non-kosong (kosong = pertahankan lama).
@@ -96,18 +113,17 @@ export const aiProviderAdminRoutes = new Elysia({ prefix: '/ai-providers' })
     if (!row.baseUrl) throw new AppError('NO_BASE_URL', 'baseUrl belum diisi.', 400);
 
     let ok = false;
-    let detail = '';
+    let detail: string;
     try {
       const apiKey = row.apiKeyEncrypted ? decryptSecret(row.apiKeyEncrypted) : '';
-      const res = await fetch(row.baseUrl, {
+      const res = await providerRequest(row.baseUrl, {
         method: 'GET',
         headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {},
-        signal: AbortSignal.timeout(8000),
       });
-      ok = res.ok || res.status === 401; // 401 = endpoint hidup, auth saja
+      ok = res.ok; // Authentication errors are not a successful provider test.
       detail = `HTTP ${res.status}`;
-    } catch (err) {
-      detail = err instanceof Error ? err.message : 'gagal terhubung';
+    } catch {
+      detail = 'Koneksi provider ditolak/tidak tersedia.';
     }
     await writeAudit((user as AuthUser).id, 'test', 'ai_provider', row.id, { ok, detail });
     return { ok, detail };

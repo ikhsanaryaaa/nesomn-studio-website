@@ -1,0 +1,44 @@
+# syntax=docker/dockerfile:1
+FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS manifests
+WORKDIR /app
+COPY package.json bun.lock .bun-version ./
+COPY scripts/check-runtime.mjs ./scripts/check-runtime.mjs
+COPY client/package.json ./client/
+COPY admin/package.json ./admin/
+COPY api/package.json ./api/
+COPY worker/package.json ./worker/
+COPY packages/shared/package.json ./packages/shared/
+
+FROM manifests AS build
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
+COPY packages/shared ./packages/shared
+COPY client ./client
+COPY admin ./admin
+COPY tsconfig.base.json ./
+ENV NODE_ENV=production VITE_API_URL=/api
+RUN bun run build
+
+FROM manifests AS production-deps
+RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --production --filter @nesomn/api --filter @nesomn/worker --filter @nesomn/shared
+
+FROM oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a AS runtime
+WORKDIR /app
+ENV NODE_ENV=production PORT=3000 STORAGE_PATH=/data/storage
+COPY --from=production-deps --chown=bun:bun /app/ ./
+COPY --chown=bun:bun packages/shared ./packages/shared
+COPY --chown=bun:bun api ./api
+COPY --chown=bun:bun tsconfig.base.json ./
+RUN mkdir -p /data/storage && chown bun:bun /data/storage
+USER bun
+
+FROM runtime AS worker
+COPY --chown=bun:bun worker ./worker
+HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=3 CMD ["bun", "--no-env-file", "--no-install", "api/src/healthcheck.ts", "worker"]
+CMD ["bun", "--no-env-file", "--no-install", "worker/src/index.ts"]
+
+FROM runtime AS app
+COPY --from=build --chown=bun:bun /app/client/dist ./client/dist
+COPY --from=build --chown=bun:bun /app/admin/dist ./admin/dist
+EXPOSE 3000
+HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=3 CMD ["bun", "--no-env-file", "--no-install", "api/src/healthcheck.ts"]
+CMD ["bun", "--no-env-file", "--no-install", "api/src/server.ts"]

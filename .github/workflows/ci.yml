@@ -1,0 +1,102 @@
+name: Workspace release checks
+
+on:
+  pull_request:
+  push:
+    branches: [main, 'works/**', 'codex/**']
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Disposable CI dependencies; not part of the deployment Compose.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: nesomn_test
+          POSTGRES_PASSWORD: nesomn_test
+          POSTGRES_DB: nesomn_revision_test
+        ports: ['55432:5432']
+        options: >-
+          --health-cmd "pg_isready -U nesomn_test -d nesomn_revision_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+      redis:
+        image: redis:7-alpine
+        ports: ['56379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://nesomn_test:nesomn_test@127.0.0.1:55432/nesomn_revision_test
+      REDIS_URL: redis://127.0.0.1:56379/0
+      NODE_ENV: test
+      JWT_SECRET: synthetic-ci-jwt-secret-never-production
+      ENCRYPTION_KEY: synthetic-ci-encryption-key-never-production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
+      - run: node scripts/release-check.mjs unit
+      - name: Migrate disposable database
+        run: bun --no-env-file --no-install --cwd api src/db/migrate.ts
+      - name: Load synthetic plan fixture
+        run: docker exec -i ${{ job.services.postgres.id }} psql -v ON_ERROR_STOP=1 -U nesomn_test -d nesomn_revision_test < tests/fixtures/baseline-plans.sql
+      - name: Integration including phase9 and admin contracts
+        env:
+          NESOMN_DISPOSABLE_TESTS: '1'
+        run: node scripts/release-check.mjs integration
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workspace-release-checks
+          retention-days: 7
+          include-hidden-files: true
+          path: |
+            .cache/revision-phase-10/unit/*.log
+            .cache/revision-phase-10/unit/results.json
+            .cache/revision-phase-10/integration/*.log
+            .cache/revision-phase-10/integration/results.json
+
+  production-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.18.0'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
+      - run: bun install --frozen-lockfile
+      - name: Actual app/gateway, independent workers and production browser acceptance
+        env:
+          NESOMN_DISPOSABLE_TESTS: '1'
+        run: node scripts/release-lab.mjs run
+      - name: Cleanup verified test containers/images on failure
+        if: always()
+        env:
+          NESOMN_DISPOSABLE_TESTS: '1'
+        run: node scripts/release-lab.mjs cleanup
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: production-browser-acceptance
+          retention-days: 7
+          include-hidden-files: true
+          path: |
+            docs/revision/artifacts/phase-10
+            .cache/revision-phase-10/lab/*.log
+            .cache/revision-phase-10/integration/*.log

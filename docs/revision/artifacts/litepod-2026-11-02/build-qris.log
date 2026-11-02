@@ -1,0 +1,50 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from qris.Dockerfile
+#1 transferring dockerfile: 911B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 230B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/library/python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb
+#4 resolve docker.io/library/python:3.13-slim@sha256:2d44738ebf4ce5f63b9d9ea871e9c7cfdc0426f7b0c97cac915fd88ded1d86bb 0.1s done
+#4 DONE 0.1s
+
+#5 [internal] load build context
+#5 transferring context: 129.74kB 0.0s done
+#5 DONE 0.1s
+
+#6 [2/6] WORKDIR /opt/qris
+#6 CACHED
+
+#7 [3/6] COPY integrations/qris/requirements.txt ./
+#7 CACHED
+
+#8 [4/6] RUN pip install --no-cache-dir -r requirements.txt && useradd -u 10001 -m qris && mkdir /data && chown qris:qris /data
+#8 CACHED
+
+#9 [5/6] COPY --chown=qris:qris integrations/qris/vendor ./vendor
+#9 CACHED
+
+#10 [6/6] COPY --chown=qris:qris integrations/qris/worker.py integrations/qris/health_http.py integrations/qris/test_worker.py integrations/qris/vendor-manifest.json ./
+#10 CACHED
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers done
+#11 exporting manifest sha256:fbe8aa780be86d694da85311e6d5ed33f4095287374b85ee0cfac7577cd5f46f 0.0s done
+#11 exporting config sha256:3cf771f1567b86cd9cd24ea72e26da43dca09c78370a4520f5e52b354d382e1f 0.0s done
+#11 exporting attestation manifest sha256:5a4dccf619caac69f2167dd1f54754246ceda98c9752c398ccdc77711eb8c463 0.1s done
+#11 exporting manifest list sha256:095e539deaca69b878526d5574b0400b58802941e1d7da3ef2f734712b0c9443
+#11 exporting manifest list sha256:095e539deaca69b878526d5574b0400b58802941e1d7da3ef2f734712b0c9443 0.0s done
+#11 naming to docker.io/library/nesomn-litepod-test:qris done
+#11 unpacking to docker.io/library/nesomn-litepod-test:qris
+#11 unpacking to docker.io/library/nesomn-litepod-test:qris 0.3s done
+#11 DONE 0.6s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/bvuw5gml4pdeg9k8kilpyvjkz

@@ -32,6 +32,9 @@ out/
 .env
 .env.*
 !.env.example
+*.env
+*.env.*
+!*.env.example
 
 # ───────────────────────────────────────────────
 # Logs
@@ -72,3 +75,6 @@ api/.storage/
 *.local
 .cache/
 tmp/
+
+# Reviewed synthetic acceptance logs referenced by revision reports.
+!docs/revision/artifacts/**/*.log

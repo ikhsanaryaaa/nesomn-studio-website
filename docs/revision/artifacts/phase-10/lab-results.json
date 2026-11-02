@@ -1,0 +1,140 @@
+[
+  {
+    "name": "compose-services",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 332
+  },
+  {
+    "name": "test-services",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 12515
+  },
+  {
+    "name": "migration",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 327
+  },
+  {
+    "name": "fixture",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 233
+  },
+  {
+    "name": "build-app",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 20024
+  },
+  {
+    "name": "build-worker",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 1824
+  },
+  {
+    "name": "build-qris",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 2688
+  },
+  {
+    "name": "qris-offline",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 1047
+  },
+  {
+    "name": "connect-db",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 322
+  },
+  {
+    "name": "private-redis",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 398
+  },
+  {
+    "name": "compose-up",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 23301
+  },
+  {
+    "name": "worker-up",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 395
+  },
+  {
+    "name": "image-hygiene",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 250
+  },
+  {
+    "name": "client-assets",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 232
+  },
+  {
+    "name": "admin-assets",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 187
+  },
+  {
+    "name": "linux-bootstrap",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 271
+  },
+  {
+    "name": "browser-theme",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 13437
+  },
+  {
+    "name": "browser-public",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 22268
+  },
+  {
+    "name": "browser-editor-gateway",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 5326
+  },
+  {
+    "name": "browser-editor-admin",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 24500
+  },
+  {
+    "name": "browser-viewer",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 56025
+  },
+  {
+    "name": "browser-admin",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 16398
+  },
+  {
+    "name": "worker-health",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 232
+  }
+]

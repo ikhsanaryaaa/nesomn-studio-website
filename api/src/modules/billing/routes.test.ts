@@ -33,7 +33,9 @@ describe('billing checkout + grant', () => {
     const u = await db.query.users.findFirst({ where: eq(users.email, email) });
     userId = u!.id;
     // Pakai plan berbayar dengan credit quota dari seed.
-    const plan = await db.query.plans.findFirst({ where: eq(plans.code, 'scene_individual_monthly') });
+    const plan = await db.query.plans.findFirst({
+      where: eq(plans.code, 'scene_individual_monthly'),
+    });
     planId = plan!.id;
   });
 
@@ -53,7 +55,10 @@ describe('billing checkout + grant', () => {
       }),
     );
     expect(res.status).toBe(200);
-    const data = (await res.json()) as { order: { id: string; status: string }; checkoutUrl: string };
+    const data = (await res.json()) as {
+      order: { id: string; status: string };
+      checkoutUrl: string;
+    };
     expect(data.order.status).toBe('pending');
     expect(data.checkoutUrl).toContain('/checkout?order=');
   });

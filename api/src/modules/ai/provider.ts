@@ -1,4 +1,7 @@
 import type { AiJobInput, AiKind, AiTab } from '@nesomn/shared';
+import { assertProviderUrl } from '../../lib/outbound.ts';
+import { AppError } from '../../middleware/error.ts';
+import { assertStubAllowed } from '../../lib/demo-policy.ts';
 
 /**
  * Kontrak adapter provider AI. Setiap provider (stub/kie/vendor lain)
@@ -11,10 +14,19 @@ export type GenerateResult = {
   resultUrl: string;
 };
 
+export class ProviderFailure extends Error {
+  constructor(
+    public readonly confirmed: boolean,
+    public readonly remoteRef?: string,
+  ) {
+    super(confirmed ? 'Provider confirmed failure.' : 'Provider execution is unconfirmed.');
+  }
+}
+export type GenerateContext = { onAccepted: (remoteRef: string) => Promise<void> };
 export interface AIProvider {
   readonly kind: AiKind;
   readonly tab: AiTab;
-  generate(input: AiJobInput): Promise<GenerateResult>;
+  generate(input: AiJobInput, context?: GenerateContext): Promise<GenerateResult>;
 }
 
 /** Baris registry yang relevan untuk memilih adapter. */
@@ -27,17 +39,28 @@ export type ProviderRow = {
   apiKeyEncrypted: string | null;
 };
 
-/**
- * Pilih adapter dari baris registry. Bila baseUrl + apiKey terisi,
- * pakai KieProvider (produksi). Selain itu pakai StubProvider (dev).
- * Import adapter dilakukan dinamis agar StubProvider tidak menyeret
- * dependensi crypto bila tak diperlukan.
- */
+/** Registry credentials select the legacy adapter only with explicit production opt-in and allowed hosts.
+ * Missing configuration fails closed; named samples require explicit nonproduction flags. */
 export async function resolveProvider(row: ProviderRow): Promise<AIProvider> {
   if (row.baseUrl && row.apiKeyEncrypted) {
+    if (process.env.NODE_ENV === 'production' && process.env.AI_LEGACY_ADAPTER_ENABLED !== 'true') {
+      throw new AppError(
+        'PROVIDER_UNVERIFIED',
+        'Adapter provider legacy belum diverifikasi/diaktifkan.',
+        503,
+      );
+    }
+    assertProviderUrl(row.baseUrl);
     const { KieProvider } = await import('./providers/kie.ts');
     return new KieProvider(row);
   }
+  assertStubAllowed('ai');
+  if (!/^(?:stub|sample|demo)-/.test(row.key))
+    throw new AppError(
+      'PROVIDER_NOT_CONFIGURED',
+      'Provider belum dikonfigurasi; tidak ada fallback simulasi.',
+      503,
+    );
   const { StubProvider } = await import('./providers/stub.ts');
   return new StubProvider(row);
 }

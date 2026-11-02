@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { Topbar } from '@/components/shell/topbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Seo } from '@/components/seo';
 import { AssetCard } from '@/components/store/asset-card';
 import { FilterTabs } from '@/components/store/filter-tabs';
@@ -32,10 +33,29 @@ function filterToParams(filter: string, q: string) {
 }
 
 export default function MarketplacePage() {
-  const [filter, setFilter] = useState('all');
-  const [q, setQ] = useState('');
+  const [params, setParams] = useSearchParams();
+  const filter = FILTERS.some((f) => f.value === params.get('type')) ? params.get('type')! : 'all';
+  const q = params.get('q') ?? '';
+  const setFilter = (value: string) =>
+    setParams((previous) => {
+      previous.set('type', value);
+      return previous;
+    });
+  const setQ = (value: string) =>
+    setParams(
+      (previous) => {
+        previous.set('q', value);
+        return previous;
+      },
+      { replace: true },
+    );
 
-  const { data: assets, isLoading } = useQuery({
+  const {
+    data: assets,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ['catalog', filter, q],
     queryFn: () => api.catalogAssets(filterToParams(filter, q)),
   });
@@ -47,9 +67,9 @@ export default function MarketplacePage() {
         description="Jelajahi katalog mockup, aset 3D, font, dan motion pack premium di Nesomn Studio."
       />
       <Topbar title="Marketplace" />
-      <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="mb-6 flex flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Full Catalogue</h1>
+      <div className="page-wrap">
+        <div className="page-heading">
+          <h1 className="font-semibold tracking-tight">Full Catalogue</h1>
           <p className="text-sm text-muted-foreground">
             Browser-based. No software needed. Temukan aset siap pakai untuk scene dan mockup Anda.
           </p>
@@ -57,6 +77,7 @@ export default function MarketplacePage() {
 
         <div className="mb-4 max-w-md">
           <Input
+            label="Cari aset"
             placeholder="Cari aset (mis. mockup, kaos, poster)..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
@@ -67,8 +88,15 @@ export default function MarketplacePage() {
           <FilterTabs options={FILTERS} active={filter} onChange={setFilter} />
         </div>
 
-        {isLoading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {isError ? (
+          <div role="alert" className="flex flex-col items-start gap-3 py-12">
+            <p>Katalog tidak dapat dimuat. Silakan coba lagi.</p>
+            <Button variant="secondary" onClick={() => void refetch()}>
+              Coba lagi
+            </Button>
+          </div>
+        ) : isLoading ? (
+          <div className="asset-grid">
             {Array.from({ length: 8 }).map((_, i) => (
               <Card key={i} className="overflow-hidden">
                 <Skeleton className="aspect-[4/5] w-full rounded-none" />
@@ -79,7 +107,7 @@ export default function MarketplacePage() {
             ))}
           </div>
         ) : assets && assets.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="asset-grid">
             {assets.map((asset) => (
               <AssetCard key={asset.id} asset={asset} />
             ))}

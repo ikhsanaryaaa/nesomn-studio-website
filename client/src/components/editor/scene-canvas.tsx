@@ -1,3 +1,5 @@
+import { useSceneImages } from '@/hooks/use-scene-images';
+import { Button } from '@/components/ui/button';
 import { forwardRef, useEffect, useRef } from 'react';
 import { Stage, Layer, Rect, Transformer } from 'react-konva';
 import type Konva from 'konva';
@@ -17,6 +19,8 @@ type Props = {
 export const SceneCanvas = forwardRef<Konva.Stage, Props>(function SceneCanvas({ scale }, ref) {
   const canvas = useSceneEditor((s) => s.canvas);
   const objects = useSceneEditor((s) => s.objects);
+  const media = useSceneImages(objects);
+  const stageNode = useRef<Konva.Stage | null>(null);
   const selectedId = useSceneEditor((s) => s.selectedId);
   const select = useSceneEditor((s) => s.select);
   const updateObject = useSceneEditor((s) => s.updateObject);
@@ -36,50 +40,83 @@ export const SceneCanvas = forwardRef<Konva.Stage, Props>(function SceneCanvas({
     tr.getLayer()?.batchDraw();
   }, [selectedId, objects]);
 
+  useEffect(() => {
+    // Size changes clear backing canvases; redraw before a later interaction.
+    transformerRef.current?.getStage()?.draw();
+  }, [scale, canvas.width, canvas.height]);
+
+  useEffect(() => {
+    stageNode.current?.setAttr('nesomnImagesReady', !media.loading && media.errors === 0);
+  }, [media.loading, media.errors]);
+
   return (
-    <Stage
-      ref={ref}
-      width={canvas.width}
-      height={canvas.height}
-      scaleX={scale}
-      scaleY={scale}
-      style={{ width: canvas.width * scale, height: canvas.height * scale }}
-      onMouseDown={(e) => {
-        // Klik di area kosong (stage atau background rect) = deselect.
-        if (e.target === e.target.getStage() || e.target.name() === 'bg') {
-          select(null);
-        }
-      }}
-    >
-      <Layer>
-        <Rect
-          name="bg"
-          x={0}
-          y={0}
-          width={canvas.width}
-          height={canvas.height}
-          fill={canvas.background}
-        />
-        {objects.map((obj) => (
-          <CanvasObject
-            key={obj.id}
-            object={obj}
-            isSelected={obj.id === selectedId}
-            onSelect={select}
-            onChange={updateObject}
-            nodeRef={(node) => {
-              if (obj.id === selectedId) selectedNodeRef.current = node;
-            }}
-          />
-        ))}
-        <Transformer
-          ref={transformerRef}
-          rotateEnabled
-          boundBoxFunc={(oldBox, newBox) =>
-            newBox.width < 8 || newBox.height < 8 ? oldBox : newBox
+    <>
+      {media.loading && (
+        <p role="status" className="p-3 text-sm leading-normal">
+          Memuat gambar scene…
+        </p>
+      )}
+      {media.errors > 0 && (
+        <div role="alert" className="max-w-sm p-3 text-sm leading-normal">
+          {media.errors} gambar gagal dimuat. Periksa lisensi atau buka kembali aset dari katalog.
+          Export diblokir sampai semua gambar siap.
+          <Button variant="secondary" onClick={media.retry}>
+            Coba lagi gambar
+          </Button>
+        </div>
+      )}
+      <Stage
+        ref={(node) => {
+          stageNode.current = node;
+          if (typeof ref === 'function') ref(node);
+          else if (ref) ref.current = node;
+        }}
+        width={canvas.width * scale}
+        height={canvas.height * scale}
+        scaleX={scale}
+        scaleY={scale}
+        style={{ width: canvas.width * scale, height: canvas.height * scale }}
+        onTouchStart={(e) => {
+          if (e.target === e.target.getStage() || e.target.name() === 'bg') select(null);
+        }}
+        onMouseDown={(e) => {
+          // Klik di area kosong (stage atau background rect) = deselect.
+          if (e.target === e.target.getStage() || e.target.name() === 'bg') {
+            select(null);
           }
-        />
-      </Layer>
-    </Stage>
+        }}
+      >
+        <Layer>
+          <Rect
+            name="bg"
+            x={0}
+            y={0}
+            width={canvas.width}
+            height={canvas.height}
+            fill={canvas.background}
+          />
+          {objects.map((obj) => (
+            <CanvasObject
+              key={obj.id}
+              object={obj}
+              image={media.images?.get(obj.src ?? '')}
+              isSelected={obj.id === selectedId}
+              onSelect={select}
+              onChange={updateObject}
+              nodeRef={(node) => {
+                if (obj.id === selectedId) selectedNodeRef.current = node;
+              }}
+            />
+          ))}
+          <Transformer
+            ref={transformerRef}
+            rotateEnabled
+            boundBoxFunc={(oldBox, newBox) =>
+              newBox.width < 8 || newBox.height < 8 ? oldBox : newBox
+            }
+          />
+        </Layer>
+      </Stage>
+    </>
   );
 });

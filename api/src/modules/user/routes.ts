@@ -13,7 +13,7 @@ export const userRoutes = new Elysia()
   .get('/me/access', async ({ user }) => getFeatureAccess(user!.id), { requireAuth: true })
   .get(
     '/sessions',
-    async ({ user }) => {
+    async ({ user, sessionId }) => {
       const rows = await db.query.sessions.findMany({
         where: eq(sessions.userId, user!.id),
         orderBy: [desc(sessions.lastSeenAt)],
@@ -24,7 +24,7 @@ export const userRoutes = new Elysia()
         ipAddress: s.ipAddress,
         createdAt: s.createdAt,
         lastSeenAt: s.lastSeenAt,
-        current: s.id === undefined ? false : undefined,
+        current: s.id === sessionId,
       }));
     },
     { requireAuth: true },

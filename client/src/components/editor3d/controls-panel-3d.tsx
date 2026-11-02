@@ -30,6 +30,7 @@ const CAMERA_PRESETS: { value: CameraPreset; label: string }[] = [
 ];
 
 type Props = {
+  meshes?: { path: string; name: string }[];
   tab: 'design' | 'colour';
   onAddDesign: () => void;
 };
@@ -66,7 +67,7 @@ function Swatches({ value, onPick }: { value: string; onPick: (c: string) => voi
   );
 }
 
-export function ControlsPanel3D({ tab, onAddDesign }: Props) {
+export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
   const materialColor = useScene3DEditor((s) => s.materialColor);
   const background = useScene3DEditor((s) => s.background);
   const grain = useScene3DEditor((s) => s.grain);
@@ -77,6 +78,10 @@ export function ControlsPanel3D({ tab, onAddDesign }: Props) {
   const setGrain = useScene3DEditor((s) => s.setGrain);
   const setCamera = useScene3DEditor((s) => s.setCamera);
   const removeDecal = useScene3DEditor((s) => s.removeDecal);
+  const selected = useScene3DEditor((s) => s.selectedDecalId);
+  const select = useScene3DEditor((s) => s.selectDecal);
+  const update = useScene3DEditor((s) => s.updateDecal);
+  const decal = decals.find((d) => d.id === selected);
 
   if (tab === 'design') {
     return (
@@ -85,6 +90,68 @@ export function ControlsPanel3D({ tab, onAddDesign }: Props) {
           <Plus className="size-4" />
           Add Design
         </Button>
+        {decal && (
+          <section className="flex flex-col gap-3" aria-label="Properties decal">
+            <h3 className="font-semibold">Properties decal</h3>
+            <label className="text-sm">
+              Target mesh
+              <select
+                className="theme-select w-full"
+                value={decal.meshPath ?? ''}
+                onChange={(e) => update(decal.id, { meshPath: e.target.value || undefined })}
+              >
+                <option value="">Otomatis (mesh terbesar)</option>
+                {meshes.map((m) => (
+                  <option key={m.path} value={m.path}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {(['position', 'rotation'] as const).map((field) => (
+              <div key={field}>
+                <span className="text-sm">
+                  {field === 'position' ? 'Posisi lokal' : 'Rotasi (radian)'}
+                </span>
+                <div className="grid grid-cols-3 gap-2">
+                  {[0, 1, 2].map((axis) => (
+                    <label key={axis} className="text-xs">
+                      {['X', 'Y', 'Z'][axis]}
+                      <input
+                        type="number"
+                        className="h-11 w-full rounded-md border bg-surface-2 px-2"
+                        step="0.1"
+                        value={decal[field][axis]}
+                        onChange={(e) => {
+                          const n = e.target.valueAsNumber;
+                          if (!Number.isFinite(n)) return;
+                          const next = [...decal[field]] as [number, number, number];
+                          next[axis] = n;
+                          update(decal.id, { [field]: next });
+                        }}
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <label className="text-sm">
+              Skala
+              <input
+                type="number"
+                className="h-11 w-full rounded-md border bg-surface-2 px-2"
+                min="0.01"
+                max="100"
+                step="0.1"
+                value={decal.scale}
+                onChange={(e) => {
+                  const n = e.target.valueAsNumber;
+                  if (Number.isFinite(n) && n > 0 && n <= 100) update(decal.id, { scale: n });
+                }}
+              />
+            </label>
+          </section>
+        )}
 
         <section>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -101,11 +168,17 @@ export function ControlsPanel3D({ tab, onAddDesign }: Props) {
                   key={d.id}
                   className="flex items-center justify-between rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
                 >
-                  <span className="truncate">Decal {i + 1}</span>
+                  <button
+                    className="min-h-11 truncate"
+                    aria-pressed={selected === d.id}
+                    onClick={() => select(d.id)}
+                  >
+                    Decal {i + 1}
+                  </button>
                   <button
                     type="button"
                     onClick={() => removeDecal(d.id)}
-                    className="text-xs text-muted-foreground hover:text-danger"
+                    className="min-h-11 px-2 text-xs text-muted-foreground hover:text-danger"
                   >
                     Hapus
                   </button>
@@ -159,12 +232,7 @@ export function ControlsPanel3D({ tab, onAddDesign }: Props) {
           </h3>
           <span className="font-mono text-xs text-foreground">{grain}</span>
         </div>
-        <Slider
-          value={[grain]}
-          onValueChange={(v) => setGrain(v[0])}
-          max={100}
-          step={1}
-        />
+        <Slider value={[grain]} onValueChange={(v) => setGrain(v[0])} max={100} step={1} />
       </section>
     </div>
   );

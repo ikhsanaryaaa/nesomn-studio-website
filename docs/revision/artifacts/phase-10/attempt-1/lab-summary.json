@@ -1,0 +1,5 @@
+{
+  "status": "FAIL",
+  "error": "Release check failed: preview-upload",
+  "productionReady": false
+}

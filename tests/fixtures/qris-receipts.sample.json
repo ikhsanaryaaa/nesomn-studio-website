@@ -1,0 +1,13 @@
+{
+  "synthetic": true,
+  "purpose": "Skenario normalized feed untuk adapter QRIS fase 5, bukan kontrak endpoint Nesomn yang sudah tersedia.",
+  "cases": [
+    { "scenario": "completed", "id": "900000000000000001", "store_id": "sample-store", "merchant_id": "sample-merchant", "amount_idr": 100123, "create_time": 1793314800, "status": 3, "completed": true },
+    { "scenario": "pending-same-reference", "id": "900000000000000001", "store_id": "sample-store", "merchant_id": "sample-merchant", "amount_idr": 100123, "create_time": 1793314800, "status": 1, "completed": false },
+    { "scenario": "duplicate", "id": "900000000000000001", "store_id": "sample-store", "merchant_id": "sample-merchant", "amount_idr": 100123, "create_time": 1793314800, "status": 3, "completed": true },
+    { "scenario": "wrong-store", "id": "900000000000000002", "store_id": "other-sample-store", "merchant_id": "sample-merchant", "amount_idr": 100123, "create_time": 1793314800, "status": 3, "completed": true },
+    { "scenario": "wrong-merchant", "id": "900000000000000003", "store_id": "sample-store", "merchant_id": "other-sample-merchant", "amount_idr": 100123, "create_time": 1793314800, "status": 3, "completed": true },
+    { "scenario": "unmatched-amount", "id": "900000000000000004", "store_id": "sample-store", "merchant_id": "sample-merchant", "amount_idr": 100124, "create_time": 1793314800, "status": 3, "completed": true },
+    { "scenario": "late", "id": "900000000000000005", "store_id": "sample-store", "merchant_id": "sample-merchant", "amount_idr": 100123, "create_time": 1793318400, "status": 3, "completed": true }
+  ]
+}

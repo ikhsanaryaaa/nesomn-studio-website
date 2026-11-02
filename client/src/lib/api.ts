@@ -1,3 +1,4 @@
+import { editorEpoch } from './editor-session';
 import type {
   UserDTO,
   SessionDTO,
@@ -41,15 +42,16 @@ export class ApiRequestError extends Error {
   fields?: ApiError['error']['fields'];
 
   constructor(status: number, body: ApiError) {
-    super(body.error?.message ?? 'Terjadi kesalahan');
+    super(body?.error?.message ?? 'Terjadi kesalahan. Silakan coba lagi.');
     this.name = 'ApiRequestError';
     this.status = status;
-    this.code = body.error?.code ?? 'unknown';
-    this.fields = body.error?.fields;
+    this.code = body?.error?.code ?? 'unknown';
+    this.fields = body?.error?.fields;
   }
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const epoch = editorEpoch();
   const res = await fetch(`${BASE_URL}${path}`, {
     credentials: 'include',
     headers: {
@@ -60,7 +62,18 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  if (epoch !== editorEpoch()) throw new DOMException('Session changed', 'AbortError');
+  let data;
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    throw new ApiRequestError(res.status, {
+      error: {
+        code: 'INVALID_RESPONSE',
+        message: 'Respons server tidak valid. Silakan coba lagi.',
+      },
+    });
+  }
 
   if (!res.ok) {
     throw new ApiRequestError(res.status, data as ApiError);
@@ -69,28 +82,47 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return data as T;
 }
 
+async function checkoutRequest(payload: CheckoutInput): Promise<CheckoutResult> {
+  const slot = 'nesomn-checkout:' + JSON.stringify(payload);
+  let key: string = crypto.randomUUID();
+  try {
+    key = sessionStorage.getItem(slot) ?? key;
+    sessionStorage.setItem(slot, key);
+  } catch {
+    /* Private browser storage may be unavailable. */
+  }
+  const result = await request<CheckoutResult>('/billing/checkout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Idempotency-Key': key },
+    body: JSON.stringify(payload),
+  });
+  try {
+    sessionStorage.removeItem(slot);
+  } catch {
+    /* Request already succeeded. */
+  }
+  return result;
+}
 export const api = {
+  login: (payload: { email: string; password: string }) =>
+    request<UserDTO>('/auth/login', { method: 'POST', body: JSON.stringify(payload) }),
+  register: (payload: { name: string; email: string; password: string }) =>
+    request<UserDTO>('/auth/register', { method: 'POST', body: JSON.stringify(payload) }),
   /** Ambil profil user terautentikasi. Melempar 401 bila belum login. */
   me: () => request<UserDTO>('/me'),
 
   /** Daftar sesi aktif milik user. */
-  sessions: () => request<SessionDTO[]>('/sessions'),
+  sessions: () => request<(SessionDTO & { current: boolean })[]>('/sessions'),
 
   /** Cabut sesi milik sendiri. */
-  revokeSession: (id: string) =>
-    request<{ ok: true }>(`/sessions/${id}`, { method: 'DELETE' }),
+  revokeSession: (id: string) => request<{ ok: true }>(`/sessions/${id}`, { method: 'DELETE' }),
 
   /** Logout: hapus sesi aktif & bersihkan cookie. */
   logout: () => request<{ ok: true }>('/auth/logout', { method: 'POST' }),
 
   // ── Catalog (publik) ──
   /** Daftar aset katalog dengan filter & search opsional. */
-  catalogAssets: (params?: {
-    type?: string;
-    tier?: string;
-    popular?: string;
-    q?: string;
-  }) => {
+  catalogAssets: (params?: { type?: string; tier?: string; popular?: string; q?: string }) => {
     const qs = new URLSearchParams(
       Object.entries(params ?? {}).filter(([, v]) => v) as [string, string][],
     ).toString();
@@ -110,6 +142,12 @@ export const api = {
       modelUrl: string | null;
     }>(`/catalog/editor-asset/${slug}`),
 
+  resolveEditorImage: (src: string) =>
+    request<{ url: string }>('/catalog/resolve-editor-image', {
+      method: 'POST',
+      body: JSON.stringify({ src }),
+    }),
+
   /** Daftar bundle preset. */
   catalogBundles: () => request<BundleDTO[]>('/catalog/bundles'),
 
@@ -127,17 +165,13 @@ export const api = {
 
   /** Buat order pending untuk item berbayar (settle di M8). */
   checkout: (assetIds: string[]) =>
-    request<{ note: string }>('/store/checkout', {
-      method: 'POST',
-      body: JSON.stringify({ assetIds }),
-    }),
+    checkoutRequest({ type: assetIds.length > 1 ? 'bundle' : 'asset', gateway: 'qris', assetIds }),
 
   /** Asset Library: aset yang dimiliki user. */
   library: () => request<LibraryItemDTO[]>('/store/library'),
 
   /** Signed URL untuk download aset berlisensi. */
-  downloadUrl: (id: string) =>
-    request<{ url: string }>(`/store/assets/${id}/download`),
+  downloadUrl: (id: string) => request<{ url: string }>(`/store/assets/${id}/download`),
 
   // ── Projects (butuh auth) ──
   projects: {
@@ -162,15 +196,13 @@ export const api = {
         body: JSON.stringify(payload),
       }),
     /** Hapus project. */
-    remove: (id: string) =>
-      request<{ ok: true }>(`/projects/${id}`, { method: 'DELETE' }),
+    remove: (id: string) => request<{ ok: true }>(`/projects/${id}`, { method: 'DELETE' }),
   },
 
   // ── AI System (butuh auth) ──
   ai: {
     /** Daftar model AI yang boleh diakses user (per tab). */
-    models: (tab?: AiTab) =>
-      request<AiModelDTO[]>(`/ai/models${tab ? `?tab=${tab}` : ''}`),
+    models: (tab?: AiTab) => request<AiModelDTO[]>(`/ai/models${tab ? `?tab=${tab}` : ''}`),
     /** Saldo credit user. */
     credit: () => request<{ balance: number }>('/ai/credit'),
     /** Buat job AI (Scene atau Motion). */
@@ -183,6 +215,9 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(payload),
       }),
+    /** Cancel only pending local jobs; server rejects processing/provider jobs. */
+    cancelJob: (id: string) =>
+      request('/ai/jobs/' + encodeURIComponent(id) + '/cancel', { method: 'POST' }),
     /** Status 1 job (untuk polling). */
     getJob: (id: string) => request<AiJobDTO>(`/ai/jobs/${id}`),
     /** Riwayat job user. */
@@ -196,11 +231,17 @@ export const api = {
     /** Daftar credit pack aktif (publik). */
     creditPacks: () => request<CreditPackDTO[]>('/billing/credit-packs'),
     /** Buat order + checkout URL. */
-    checkout: (payload: CheckoutInput) =>
-      request<CheckoutResult>('/billing/checkout', {
-        method: 'POST',
-        body: JSON.stringify(payload),
-      }),
+    invoice: (id: string) =>
+      request<{
+        orderId: string;
+        status: string;
+        baseIdr: number;
+        code: number;
+        payableIdr: number;
+        expiresAt: string;
+        quote: { subtotalIdr: number; discountIdr: number };
+      }>(`/billing/orders/${encodeURIComponent(id)}`),
+    checkout: checkoutRequest,
     /** Simulasi pembayaran (gateway stub, dev). */
     devPay: (orderId: string) =>
       request<{ ok: boolean }>(`/billing/dev/pay/${orderId}`, { method: 'POST' }),
@@ -209,8 +250,7 @@ export const api = {
     /** Langganan aktif user. */
     subscription: () => request<SubscriptionDTO | null>('/billing/subscription'),
     /** Batalkan langganan aktif. */
-    cancel: () =>
-      request<SubscriptionDTO>('/billing/subscription/cancel', { method: 'POST' }),
+    cancel: () => request<SubscriptionDTO>('/billing/subscription/cancel', { method: 'POST' }),
   },
 
   /** Hak akses fitur user (dari plan aktif). */

@@ -1,0 +1,29 @@
+{
+  "canvas": { "width": 960, "height": 600, "background": "#ffffff" },
+  "objects": [
+    {
+      "id": "synthetic-text-1",
+      "type": "text",
+      "x": 32,
+      "y": 48,
+      "width": 240,
+      "height": 48,
+      "rotation": 15,
+      "opacity": 0.8,
+      "fill": "#111111",
+      "text": "Synthetic legacy fixture",
+      "fontSize": 24
+    },
+    {
+      "id": "synthetic-image-1",
+      "type": "image",
+      "x": 300,
+      "y": 120,
+      "width": 64,
+      "height": 64,
+      "rotation": 0,
+      "opacity": 1,
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23f97316'/%3E%3C/svg%3E"
+    }
+  ]
+}

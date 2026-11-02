@@ -1,0 +1,107 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.04kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+#2 DONE 1.5s
+
+#3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+#3 resolve docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e 0.1s done
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a
+#4 DONE 0.0s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 230B done
+#5 DONE 0.0s
+
+#6 [manifests 1/9] FROM docker.io/oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a
+#6 resolve docker.io/oven/bun:1.4.4-alpine@sha256:4cf82f5686b196504fe119db3fcd9185b191f82ece82c40680e597228ec6070a 0.0s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 1.26MB 0.6s done
+#7 DONE 0.6s
+
+#8 [runtime 3/7] COPY --from=production-deps --chown=bun:bun /app/ ./
+#8 CACHED
+
+#9 [build 5/6] COPY tsconfig.base.json ./
+#9 CACHED
+
+#10 [manifests 3/9] COPY package.json bun.lock .bun-version ./
+#10 CACHED
+
+#11 [build 1/6] RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile
+#11 CACHED
+
+#12 [build 6/6] RUN bun run build
+#12 CACHED
+
+#13 [build 4/6] COPY admin ./admin
+#13 CACHED
+
+#14 [manifests 5/9] COPY client/package.json ./client/
+#14 CACHED
+
+#15 [runtime 5/7] COPY --chown=bun:bun api ./api
+#15 CACHED
+
+#16 [build 2/6] COPY packages/shared ./packages/shared
+#16 CACHED
+
+#17 [manifests 2/9] WORKDIR /app
+#17 CACHED
+
+#18 [production-deps 1/1] RUN --mount=type=cache,target=/root/.bun/install/cache bun install --frozen-lockfile --production --filter @nesomn/api --filter @nesomn/worker --filter @nesomn/shared
+#18 CACHED
+
+#19 [runtime 6/7] COPY --chown=bun:bun tsconfig.base.json ./
+#19 CACHED
+
+#20 [manifests 4/9] COPY scripts/check-runtime.mjs ./scripts/check-runtime.mjs
+#20 CACHED
+
+#21 [build 3/6] COPY client ./client
+#21 CACHED
+
+#22 [manifests 7/9] COPY api/package.json ./api/
+#22 CACHED
+
+#23 [app 1/2] COPY --from=build --chown=bun:bun /app/client/dist ./client/dist
+#23 CACHED
+
+#24 [manifests 6/9] COPY admin/package.json ./admin/
+#24 CACHED
+
+#25 [manifests 9/9] COPY packages/shared/package.json ./packages/shared/
+#25 CACHED
+
+#26 [runtime 7/7] RUN mkdir -p /data/storage && chown bun:bun /data/storage
+#26 CACHED
+
+#27 [manifests 8/9] COPY worker/package.json ./worker/
+#27 CACHED
+
+#28 [runtime 4/7] COPY --chown=bun:bun packages/shared ./packages/shared
+#28 CACHED
+
+#29 [app 2/2] COPY --from=build --chown=bun:bun /app/admin/dist ./admin/dist
+#29 CACHED
+
+#30 exporting to image
+#30 exporting layers done
+#30 exporting manifest sha256:aaafc98b2132502eee5a297b6cda27a16996f8424a73ec1595825e736dfaa5a2 0.0s done
+#30 exporting config sha256:7dcdadccbd10d73f5e26847d46080d9f436b6c505c95572095ce40f4805107f7 0.0s done
+#30 exporting attestation manifest sha256:21fc05af2589a04e9a370f48c6dbda75189eb528e2df0868bdb9936250ece042
+#30 exporting attestation manifest sha256:21fc05af2589a04e9a370f48c6dbda75189eb528e2df0868bdb9936250ece042 0.1s done
+#30 exporting manifest list sha256:40a25a8371dd85182a3470c24f8e34249cdc6dbf9b3d420b01014ecc00299dae 0.0s done
+#30 naming to docker.io/library/nesomn-litepod-test:app done
+#30 unpacking to docker.io/library/nesomn-litepod-test:app
+#30 unpacking to docker.io/library/nesomn-litepod-test:app 5.0s done
+#30 DONE 5.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ki2k6kwdkivzp7ymifuik0hgy

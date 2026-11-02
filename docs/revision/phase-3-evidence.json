@@ -1,0 +1,557 @@
+{
+  "date": "2026-10-31",
+  "recordedAtUtc": "2026-10-30T21:09:54.360Z",
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website.git",
+  "branch": "works/runtime-tooling-upgrade",
+  "commit": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "uncommitted": true,
+  "scope": "phase3 app/gateway and external service lifecycle; phases1-2 changes preserved",
+  "runtime": {
+    "bun": "1.4.4",
+    "bunExecutable": ".cache/runtime/bun-1.4.4/bun-windows-x64/bun.exe",
+    "globalBunUnchanged": "1.4.0",
+    "node": "v24.18.0",
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "bunTypes": "1.4.4",
+    "nginx": "1.30.6",
+    "nginxIndexDigest": "sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949"
+  },
+  "compose": {
+    "services": [
+      "app",
+      "gateway"
+    ],
+    "appPublishedPorts": [],
+    "gatewayDefault": "127.0.0.1:8080",
+    "appInternalPort": 3000,
+    "externalNetwork": "nesomn-data-network",
+    "externalStorageVolume": "nesomn-storage",
+    "testProject": "nesomn-revision-deployment",
+    "testNetwork": "nesomn-revision-data-test",
+    "testGateway": "http://127.0.0.1:18080"
+  },
+  "lockfile": {
+    "sha256": "95afff69a5504197a958829f630e8f55e8fbade43a34e43e0721b330f0aaf3e8",
+    "unchangedSincePhase2": true
+  },
+  "inputChanges": [
+    {
+      "path": "docker-compose.yml",
+      "deleted": false
+    },
+    {
+      "path": "nginx.conf",
+      "deleted": false
+    },
+    {
+      "path": ".env.example",
+      "deleted": false
+    },
+    {
+      "path": "worker/Dockerfile",
+      "deleted": true
+    },
+    {
+      "path": "api/Dockerfile",
+      "deleted": true
+    },
+    {
+      "path": ".dockerignore",
+      "deleted": false
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "deleted": false
+    },
+    {
+      "path": "api/src/db/client.ts",
+      "deleted": false
+    },
+    {
+      "path": "api/src/lib/storage/local-fs.ts",
+      "deleted": false
+    },
+    {
+      "path": "api/src/modules/ai/queue.ts",
+      "deleted": false
+    },
+    {
+      "path": "worker/src/index.ts",
+      "deleted": false
+    },
+    {
+      "path": "client/src/main.tsx",
+      "deleted": false
+    }
+  ],
+  "sourceExistingChanged": [
+    "api/src/db/client.ts",
+    "api/src/lib/storage/local-fs.ts",
+    "api/src/modules/ai/queue.ts",
+    "worker/src/index.ts",
+    "client/src/main.tsx"
+  ],
+  "migrations": [
+    {
+      "path": "api/drizzle/0000_worthless_hellcat.sql",
+      "sha256": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0001_familiar_joshua_kane.sql",
+      "sha256": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0002_milky_nightshade.sql",
+      "sha256": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0003_asset_editor_separation.sql",
+      "sha256": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4",
+      "unchanged": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "frozen-install",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/frozen-install.log",
+      "logSha256": "d9d906ed7d89b981401ac55996a846cde666a9e33220e8a8f8a46e78f8c14616"
+    },
+    {
+      "name": "typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/typecheck.log",
+      "logSha256": "854b5546f1869c351eeb663905a06f9275ea630441ed2ff59d0f0a00ce323cb2"
+    },
+    {
+      "name": "lint",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/lint.log",
+      "logSha256": "648510554df2623c1af0ea3637611dcfc1375b441ede72a84fa1db184f290b13"
+    },
+    {
+      "name": "build",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/build.log",
+      "logSha256": "163be1d407a544d708d6a6687851311fabd6925bc75e09ac38030dfe637121e5"
+    },
+    {
+      "name": "guards",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 11,
+      "log": ".cache/revision-phase-3/guards.log",
+      "logSha256": "dcef448b495b96127eec7519bc903bccb39e5702ca5a7de53887e1ab8e97f7a6"
+    },
+    {
+      "name": "deployment-unit",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 13,
+      "log": ".cache/revision-phase-3/deployment-unit.log",
+      "logSha256": "3076bc7b124b021a2c7a65b12b69a6849fb4c17df1098191606f182eeaf006bb"
+    },
+    {
+      "name": "unit",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 22,
+      "log": ".cache/revision-phase-3/unit.log",
+      "logSha256": "5574d1e6275e1f4f563f03450cbf2999692dc52f760191e9cf1f5893361d70cc"
+    },
+    {
+      "name": "integration",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 24,
+      "log": ".cache/revision-phase-3/integration.log",
+      "logSha256": "7d98c336ce0ccb8779b7ba8f521a03d6f4f000ef6cf8cb90355e8059fe543afc"
+    },
+    {
+      "name": "migration",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/migration.log",
+      "logSha256": "e6a0ab70bf03bc0ed17ede69e621e83d975a4d031bb0c1bc24c2738628ed75eb"
+    },
+    {
+      "name": "docker-app-build",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/docker-app-build.log",
+      "logSha256": "5000a2b71706463b9d82e41579fa33f27bf22137ce9791b74aef125a4837bdd5"
+    },
+    {
+      "name": "docker-worker-build",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/docker-worker-build.log",
+      "logSha256": "ef8d284e177ab66f34b7a0c600c6594c56587c771af1c56eb625a26d828dad8b"
+    },
+    {
+      "name": "gateway-final",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 5,
+      "log": ".cache/revision-phase-3/gateway-final.log",
+      "logSha256": "acca92009a48363fc031258bfabb837b0a8c82903e243c41375125f2388bff22"
+    },
+    {
+      "name": "storage-persistence",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 1,
+      "log": ".cache/revision-phase-3/storage-persistence.log",
+      "logSha256": "f2fd06f0c2a17ac598a3056a4772fde888cef7f18ffda723d776a992e41e519c"
+    },
+    {
+      "name": "worker-drain",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 1,
+      "log": ".cache/revision-phase-3/worker-drain.log",
+      "logSha256": "51971a6c0b1106db4ffc7a5d7d74f1271217123de478ce9d3179461dbb1905d7"
+    },
+    {
+      "name": "browser-bootstrap-green",
+      "status": "PASS",
+      "exitCode": 0,
+      "testsPassed": 1,
+      "log": ".cache/revision-phase-3/browser-bootstrap-green.log",
+      "logSha256": "db2ec77a6b2fe8b888a01a39bd90847a9f4ec9c93631d32f84df9271a6225128"
+    },
+    {
+      "name": "compose-check",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/compose-check.log",
+      "logSha256": "841fe1e91fada3908616b48d88e4c8ada2996ccf2b90da120de1cb29562cdd35"
+    },
+    {
+      "name": "ci-yaml",
+      "status": "PASS",
+      "exitCode": 0,
+      "log": ".cache/revision-phase-3/ci-yaml.log",
+      "logSha256": "8b87812c8836a1d851632b6d7df7ad0fe532d8312ff758b42f6b04c750c3f24f"
+    }
+  ],
+  "additionalChecks": {
+    "runtimeContainers": [
+      {
+        "name": "/nesomn-revision-deployment-app-1",
+        "id": "4772d988116d2cb26afd50f4b7a1c3677086112a103639ef0203c397798f1439",
+        "image": "sha256:a0a4b96e169d5189d010e9bbd2c50859bab4a736073f44e7e08e44bfa0dc0e98",
+        "user": "bun",
+        "readonly": true,
+        "ports": {},
+        "status": "running",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-deployment-gateway-1",
+        "id": "fec10a99f10eed8da3f9e50f4bcd7d08877be084e4b20d6c7fdd5a9cbf862a90",
+        "image": "sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+        "user": "nginx",
+        "readonly": true,
+        "ports": {
+          "8080/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "18080"
+            }
+          ]
+        },
+        "status": "running",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-ai-worker-verified",
+        "id": "adffce84f3d95f15246eb28bb8f493b5f5cb3dbf09acfb660e454cfafb14ad6d",
+        "image": "sha256:845116d378121aff214a6e7e2bf18320638e5493e9325db41979c98c0caeadab",
+        "user": "bun",
+        "readonly": true,
+        "ports": {},
+        "status": "running",
+        "exitCode": 0
+      }
+    ],
+    "invalidStartup": {
+      "expectedExitCode": 1,
+      "actualExitCode": 1,
+      "log": ".cache/revision-phase-3/invalid-startup.log"
+    },
+    "imageSmoke": {
+      "appUid": 1000,
+      "gatewayUid": 101,
+      "rootReadonly": true,
+      "secretsEnvCacheGitExcluded": true,
+      "viteAndEslintResolvable": false
+    },
+    "redisOutage": [
+      {
+        "path": "/health/live",
+        "status": 200,
+        "body": {
+          "status": "ok",
+          "uptime": 196.596317849
+        },
+        "durationMs": 36
+      },
+      {
+        "path": "/health/ready",
+        "status": 503,
+        "body": {
+          "status": "not_ready",
+          "checks": {
+            "database": true,
+            "redis": false
+          }
+        },
+        "durationMs": 5
+      }
+    ],
+    "redisRecovery": {
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "checks": {
+          "database": true,
+          "redis": true
+        }
+      },
+      "durationMs": 40
+    },
+    "workerHealthDuringRedisOutage": {
+      "exitCode": 1
+    },
+    "databaseOutage": [
+      {
+        "path": "/health/live",
+        "status": 200,
+        "body": {
+          "status": "ok",
+          "uptime": 14.351405366000002
+        },
+        "durationMs": 36
+      },
+      {
+        "path": "/health/ready",
+        "status": 503,
+        "body": {
+          "status": "not_ready",
+          "checks": {
+            "database": false,
+            "redis": true
+          }
+        },
+        "durationMs": 2005
+      }
+    ],
+    "workerDrain": {
+      "observedBeforeSignal": "processing",
+      "final": "done",
+      "exitCode": 0,
+      "logOrder": [
+        "draining",
+        "job done",
+        "stopped"
+      ]
+    },
+    "explicitImageMigration": "PASS: manually invoked existing migrator against disposable DB, journal retained; no seed",
+    "disposableServicesStopped": true,
+    "runtimeContainersCapturedDuringSmoke": true,
+    "stoppedContainers": [
+      {
+        "name": "/nesomn-revision-deployment-app-1",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-deployment-gateway-1",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-ai-worker",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-ai-worker-final",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-ai-worker-verified",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-redis-private",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-test-test-db-1",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      },
+      {
+        "name": "/nesomn-revision-test-test-redis-1",
+        "state": "exited",
+        "exitCode": 0,
+        "paused": false
+      }
+    ],
+    "externalTestNetworkAndStorageRetained": true,
+    "reviewFix": {
+      "scope": "startup storage validation only; supported Docker config was already explicit",
+      "regressionRedLog": ".cache/revision-phase-3/storage-default-red.log",
+      "green": "13 deployment tests/93 assertions +11 Node guards +typecheck/lint PASS",
+      "imagesRebuilt": true,
+      "configImageSmoke": {
+        "status": "PASS",
+        "log": ".cache/revision-phase-3/review-config-image.log",
+        "sha256": "2f1d55ce0f6f14248cae12ca8dff81d02f755f9065a1552fb2e5a2601f4b6826"
+      },
+      "missingDriverNegative": {
+        "expectedExitCode": 1,
+        "actualExitCode": 1,
+        "log": ".cache/revision-phase-3/review-invalid-storage.log",
+        "sha256": "6e0a9300ff42bf85196db7d6180b90d7858c8c2d52eb2746c6bf786dcbf3e163"
+      },
+      "notRepeated": [
+        "Full HTTP/queue/outage after config-only fix; lab stopped; source handlers and explicit lab config unchanged"
+      ]
+    }
+  },
+  "regressions": [
+    {
+      "name": "production client bootstrap",
+      "red": "Actual Linux client chunk imports React from main while main awaits client; browser stays on hidden prerender; Node probe exits13",
+      "redLog": ".cache/revision-phase-3/browser-bootstrap-red.log",
+      "green": "Async browser function without module await; actual image artifact probe passes; browser account/home/store/editor render"
+    },
+    {
+      "name": "runtime configuration",
+      "redLogs": [
+        "env-regression-red.log",
+        "url-validation-red.log"
+      ],
+      "green": "12 deployment tests,91 assertions; worker needs no app/R2 secrets; explicit DB/origin/storage and Redis auth/index/TLS"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/revision/artifacts/phase-3/admin-login-1440.jpg",
+      "sha256": "e488a76412b4d6d9ce33bb59562fbb9cbcc432fbee98a7e8692457b8bff8fac4"
+    },
+    {
+      "path": "docs/revision/artifacts/phase-3/home-1440.jpg",
+      "sha256": "1526a581fa5d9041afcdd22b819eecdf6da7afaa2a336a627b7b975cdb49fa1c"
+    },
+    {
+      "path": "docs/revision/artifacts/phase-3/home-390.jpg",
+      "sha256": "b70229169c1d66e83cf04d415b14bf373a435d764e7da4e79112cd81b82a0c21"
+    },
+    {
+      "path": "docs/revision/artifacts/phase-3/home-widths.json",
+      "sha256": "295d55031e38293cc4a58f1da72f455b6d75658c2dcb43c1442ed5915e5cebda"
+    },
+    {
+      "path": "docs/revision/artifacts/phase-3/scene-editor-1440.jpg",
+      "sha256": "a9fc40b60243084f18cd254436cd432b1e5ff18a5aeb0aa1ffd027daa8aa51ac"
+    },
+    {
+      "path": "docs/revision/artifacts/phase-3/store-1440.jpg",
+      "sha256": "a086d13a7b3a184eb480c5a7c291d9cb41c1d7dabcea3b95b43ecbe42bdf8d6f"
+    }
+  ],
+  "uiSmoke": {
+    "pages": [
+      "home",
+      "account",
+      "marketplace empty",
+      "SceneEditor2D initial canvas",
+      "admin login"
+    ],
+    "homeWidths": [
+      {
+        "overflow": false,
+        "scrollWidth": 360,
+        "width": 360
+      },
+      {
+        "overflow": false,
+        "scrollWidth": 390,
+        "width": 390
+      },
+      {
+        "overflow": false,
+        "scrollWidth": 768,
+        "width": 768
+      },
+      {
+        "overflow": false,
+        "scrollWidth": 1024,
+        "width": 1024
+      },
+      {
+        "overflow": false,
+        "scrollWidth": 1440,
+        "width": 1440
+      }
+    ],
+    "themes": [
+      "existing dark only"
+    ],
+    "console": "No warn/error entries at inspected snapshots; not exhaustive network audit"
+  },
+  "skipped": [
+    "Live TLS termination/certificates",
+    "Managed PostgreSQL/Redis TLS handshake",
+    "R2/Google OAuth/SMTP/AI provider/merchant live",
+    "QRIS receipt adapter (phase5)",
+    "Full responsive/accessibility/light theme/editor export/WebGL/four GLBs/admin CRUD browser",
+    "GitHub Actions remote run"
+  ],
+  "risks": [
+    "Phase1 security/billing/credit atomicity issues remain phase4-5/9",
+    "Redis lab lacks persistence; reconnect test is not queued-job durability proof",
+    "Health readiness does not prove worker/schema/provider/storage/entitlement",
+    "Existing client sidebar /login and /bundle have no routes",
+    "Large editor/admin chunks and two Fast Refresh warnings"
+  ],
+  "review": {
+    "status": "CLEAN",
+    "reviewer": "phase3_final_review",
+    "date": "2026-10-31",
+    "importantFindingResolved": "Production app storage defaults differed from runtime; explicit driver and absolute local path now required",
+    "independentlyVerified": [
+      "13 deployment tests/93 assertions PASS",
+      "11 Node guards PASS",
+      "17 log hashes and6 artifact hashes match",
+      "Source/docs/scope and declared verification limits"
+    ],
+    "notRerunAfterConfigOnlyFix": [
+      "Full HTTP/queue/outage"
+    ],
+    "noProductionAccess": true
+  },
+  "phaseStatus": "COMPLETE within phase3 scope; phase4 not started"
+}

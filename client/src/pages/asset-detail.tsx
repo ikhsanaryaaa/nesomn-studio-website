@@ -1,123 +1,135 @@
-import { useParams, useNavigate } from 'react-router';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { Topbar } from '@/components/shell/topbar';
+import { useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Seo } from '@/components/seo';
-import { useToast } from '@/components/ui/use-toast';
-import { useCart } from '@/stores/cart-store';
+import { PageState } from '@/components/page-state';
+import { AssetMedia } from '@/components/store/asset-media';
+import { AssetPreview3D } from '@/components/store/asset-preview-3d';
 import { useAuth } from '@/hooks/use-auth';
 import { api, ApiRequestError } from '@/lib/api';
-
-function formatIdr(value: string): string {
-  const n = Number(value);
-  if (!n) return 'Gratis';
-  return `Rp${n.toLocaleString('id-ID')}`;
-}
-
+import { useCart } from '@/stores/cart-store';
+import { rp, loginUrl } from '@/lib/public-flow';
 export default function AssetDetailPage() {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const { isAuthenticated } = useAuth();
-  const cart = useCart();
-
-  const { data: asset, isLoading } = useQuery({
+  const { slug } = useParams(),
+    navigate = useNavigate(),
+    cart = useCart(),
+    auth = useAuth(),
+    qc = useQueryClient();
+  const [index, setIndex] = useState(0);
+  const query = useQuery({
     queryKey: ['catalog', 'asset', slug],
     queryFn: () => api.catalogAsset(slug!),
     enabled: !!slug,
   });
-
   const claim = useMutation({
-    mutationFn: () => api.claimAsset(asset!.id),
+    mutationFn: () => api.claimAsset(query.data!.id),
     onSuccess: () => {
-      toast({ title: 'Aset ditambahkan ke Library', description: asset?.title });
+      void qc.invalidateQueries({ queryKey: ['library'] });
       navigate('/library');
     },
-    onError: (err) => {
-      const msg =
-        err instanceof ApiRequestError ? err.message : 'Gagal menambahkan aset.';
-      toast({ title: 'Gagal', description: msg, variant: 'danger' });
-    },
   });
-
-  if (isLoading) {
+  const asset = query.data;
+  if (query.isLoading) return <PageState title="Memuat aset…" loading />;
+  if (query.isError)
     return (
-      <>
-        <Topbar title="Marketplace" />
-        <div className="mx-auto max-w-5xl px-6 py-8">
-          <Skeleton className="aspect-video w-full" />
-        </div>
-      </>
+      <PageState
+        title={
+          query.error instanceof ApiRequestError && query.error.status === 404
+            ? 'Aset tidak ditemukan'
+            : 'Detail aset tidak dapat dimuat'
+        }
+        retry={() => void query.refetch()}
+      />
     );
-  }
-
-  if (!asset) {
-    return (
-      <>
-        <Topbar title="Marketplace" />
-        <div className="mx-auto max-w-5xl px-6 py-20 text-center">
-          <p className="text-sm font-medium">Aset tidak ditemukan.</p>
-        </div>
-      </>
-    );
-  }
-
-  const isFree = asset.tier === 'free' || Number(asset.priceIdr) === 0;
-  const inCart = cart.has(asset.id);
-
+  if (!asset) return <PageState title="Aset tidak ditemukan" />;
+  const previews = asset.previews.length
+    ? asset.previews
+    : asset.thumbnail
+      ? [asset.thumbnail]
+      : [];
+  const src = previews[Math.min(index, previews.length - 1)];
+  const free = Number(asset.priceIdr) === 0;
   return (
-    <>
+    <div className="page-wrap">
       <Seo title={asset.title} description={asset.description ?? undefined} />
-      <Topbar title={asset.title} />
-      <div className="mx-auto grid max-w-5xl gap-8 px-6 py-8 md:grid-cols-2">
-        <div className="overflow-hidden rounded-lg border border-border bg-surface-2">
-          {asset.previews[0] ? (
-            <img src={asset.previews[0]} alt={asset.title} className="w-full object-cover" />
-          ) : (
-            <div className="flex aspect-video items-center justify-center text-sm text-muted-foreground">
-              No preview
+      <Link className="text-muted-foreground underline" to="/marketplace">
+        Kembali ke katalog
+      </Link>
+      <div className="asset-detail-layout">
+        <section>
+          {(asset.type === 'mockup3d' || asset.type === 'asset3d') && (
+            <AssetPreview3D
+              key={asset.slug}
+              slug={asset.slug}
+              title={asset.title}
+              poster={asset.thumbnail ?? asset.previews[0]}
+            />
+          )}
+          <AssetMedia key={src} src={src} title={asset.title} className="detail-media" />
+          {previews.length > 1 && (
+            <div className="preview-strip" aria-label="Pilih preview">
+              {previews.map((p, i) => (
+                <button
+                  key={p + i}
+                  aria-label={'Preview ' + (i + 1)}
+                  aria-pressed={index === i}
+                  onClick={() => setIndex(i)}
+                >
+                  <AssetMedia src={p} title={'Preview ' + (i + 1)} />
+                </button>
+              ))}
             </div>
           )}
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <Badge variant={asset.tier === 'pro' ? 'popular' : 'neutral'}>
-              {asset.tier === 'pro' ? 'Pro' : 'Free'}
-            </Badge>
-            <Badge>{asset.type}</Badge>
-          </div>
-          <h1 className="text-2xl font-semibold tracking-tight">{asset.title}</h1>
+        </section>
+        <section className="asset-details">
           <p className="text-sm text-muted-foreground">
-            {asset.description ?? 'Tidak ada deskripsi.'}
+            {asset.category ?? asset.type} · {asset.tier}
           </p>
-          <div className="text-xl font-semibold">{formatIdr(asset.priceIdr)}</div>
-
-          <div className="flex flex-col gap-2">
-            {isFree ? (
-              <Button
-                disabled={!isAuthenticated || claim.isPending}
-                onClick={() => claim.mutate()}
-              >
-                {isAuthenticated ? 'Get (gratis)' : 'Login untuk klaim'}
+          <h1>{asset.title}</h1>
+          <p>{asset.description ?? 'Deskripsi belum tersedia.'}</p>
+          <div className="asset-price">{free ? 'Gratis' : rp(asset.priceIdr)}</div>
+          {free ? (
+            auth.isAuthenticated ? (
+              <Button disabled={claim.isPending} onClick={() => claim.mutate()}>
+                {claim.isPending ? 'Menambahkan…' : 'Tambahkan ke Library'}
               </Button>
             ) : (
-              <Button
-                variant={inCart ? 'secondary' : 'primary'}
-                onClick={() => (inCart ? cart.remove(asset.id) : cart.add(asset))}
-              >
-                {inCart ? 'Hapus dari bundle' : 'Tambah ke bundle'}
+              <Button asChild>
+                <Link to={loginUrl('/marketplace/' + asset.slug)}>Login untuk klaim</Link>
               </Button>
-            )}
-            <p className="text-xs text-muted-foreground">
-              Lisensi {asset.tier === 'pro' ? 'komersial' : 'standar'}. Item berbayar
-              di-checkout sebagai order pending (pembayaran menyusul).
+            )
+          ) : (
+            <Button onClick={() => (cart.has(asset.id) ? cart.remove(asset.id) : cart.add(asset))}>
+              {cart.has(asset.id) ? 'Hapus dari bundle' : 'Tambah ke bundle'}
+            </Button>
+          )}
+          {claim.isError && (
+            <p role="alert" className="text-danger">
+              {claim.error.message}
             </p>
-          </div>
-        </div>
+          )}
+          {!free && cart.has(asset.id) && (
+            <Button variant="secondary" asChild>
+              <Link to="/bundle-builder">Periksa bundle</Link>
+            </Button>
+          )}
+          <dl className="asset-metadata">
+            <div>
+              <dt>Format editor</dt>
+              <dd>{asset.editorType}</dd>
+            </div>
+            <div>
+              <dt>Versi</dt>
+              <dd>{asset.version}</dd>
+            </div>
+          </dl>
+          <p className="text-sm text-muted-foreground">
+            Preview menampilkan gambar aset. Item berbayar diproses melalui invoice QRIS; periksa
+            kode unik sebelum membayar.
+          </p>
+        </section>
       </div>
-    </>
+    </div>
   );
 }

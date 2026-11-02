@@ -1,0 +1,249 @@
+{
+  "date": "2026-10-31",
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website",
+  "branch": "works/runtime-tooling-upgrade",
+  "head": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "committed": false,
+  "bun": "1.4.4",
+  "globalBun": "1.4.0",
+  "elysia": "1.4.30",
+  "cors": "1.4.2",
+  "qrcode": "1.5.4",
+  "qrcodeTypes": "1.5.6",
+  "sdk": {
+    "commit": "e1b1b6968c570c0cb18ccf9ce4d95694e8df48de",
+    "version": "0.2.0",
+    "hashesVerified": 25
+  },
+  "lockfileSha256": "0c68463ac69b5c0b73aad3e7ee2674fe8a3184961b4d2b3f27dc28aaa539dae8",
+  "checks": [
+    {
+      "name": "format",
+      "exit": 0
+    },
+    {
+      "name": "frozen",
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "qris-unit",
+      "exit": 0
+    },
+    {
+      "name": "qris-integration",
+      "exit": 0
+    },
+    {
+      "name": "security-unit",
+      "exit": 0
+    },
+    {
+      "name": "security-integration",
+      "exit": 0
+    },
+    {
+      "name": "baseline-unit",
+      "exit": 0
+    },
+    {
+      "name": "baseline-integration",
+      "exit": 0
+    },
+    {
+      "name": "deployment",
+      "exit": 0
+    },
+    {
+      "name": "deployment-config",
+      "exit": 0
+    },
+    {
+      "name": "node-guards",
+      "exit": 0
+    },
+    {
+      "name": "build",
+      "exit": 0
+    }
+  ],
+  "migrations": [
+    {
+      "path": "api/drizzle/0004_business_integrity.sql",
+      "before": "4deef1a73640760d55838d7c0a83f8edacf41700e037ebe9b4af3496725a42bc",
+      "after": "4deef1a73640760d55838d7c0a83f8edacf41700e037ebe9b4af3496725a42bc",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0005_receipt_identity.sql",
+      "before": "d96e02ddb5b6319b53cb07447fb8683e84e1b5cfc30903e2b32e460beabb425e",
+      "after": "d96e02ddb5b6319b53cb07447fb8683e84e1b5cfc30903e2b32e460beabb425e",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0006_remote_execution.sql",
+      "before": "a790c0b43c56d53d99cbc238bad2f6831244cd7c80495b2d4f5fddfbbf977c49",
+      "after": "a790c0b43c56d53d99cbc238bad2f6831244cd7c80495b2d4f5fddfbbf977c49",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0000_worthless_hellcat.sql",
+      "before": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed",
+      "after": "26342541243418da073e07f6b2e183929b56a7e50a76489fc7f40098fcae82ed",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0001_familiar_joshua_kane.sql",
+      "before": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c",
+      "after": "1701101a05c861cd2d8e0e4b5de62493d900f1899eb754f983dce12247e0c29c",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0002_milky_nightshade.sql",
+      "before": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf",
+      "after": "9687dbd2cc473f97ef2bf1a72b1cd34d43118e9be88e6045e59f26a7e0d72adf",
+      "unchanged": true
+    },
+    {
+      "path": "api/drizzle/0003_asset_editor_separation.sql",
+      "before": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4",
+      "after": "0c93295c003501a9bf3f4b814e2b85f1fa68eb93a8eeef117ea4b82d596e2df4",
+      "unchanged": true
+    }
+  ],
+  "disposableDatabase": {
+    "migrations": 8,
+    "publicTables": 28
+  },
+  "dockerBuild": {
+    "app": "PASS",
+    "aiWorker": "PASS",
+    "qrisWorker": "PASS"
+  },
+  "pythonOffline": {
+    "tests": 8,
+    "status": "PASS"
+  },
+  "gateway": [
+    {
+      "path": "/health/live",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/health/ready",
+      "status": 200,
+      "contentType": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/pricing",
+      "status": 200,
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "path": "/admin/login",
+      "status": 200,
+      "contentType": "text/html;charset=utf-8"
+    },
+    {
+      "path": "/api/unknown-phase5",
+      "status": 404,
+      "contentType": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/assets/missing-phase5.js",
+      "status": 404,
+      "contentType": "text/plain; charset=utf-8"
+    },
+    {
+      "path": "/api/billing/orders/00000000-0000-4000-8000-000000000001",
+      "status": 401,
+      "contentType": "application/json;charset=utf-8"
+    }
+  ],
+  "httpBrowser": {
+    "fixture": "Demo / Sample only; no merchant calls",
+    "browser": "Chrome/156.0.8078.74",
+    "invoicePending": true,
+    "unsignedReceipt": 401,
+    "serverPrices": true,
+    "uniqueCode": 2,
+    "workerLostAck": "PASS: durable delivery 1",
+    "workerRecovered": "PASS: durable delivery 0",
+    "finalBalance": 10,
+    "finalPaid": true,
+    "screenshots": [
+      {
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "width": 1440,
+        "scroll": 1440
+      },
+      {
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "width": 768,
+        "scroll": 768
+      },
+      {
+        "width": 1024,
+        "scroll": 1024
+      }
+    ]
+  },
+  "skipped": [
+    "Live merchant and wallet scan",
+    "Production migration and deployment",
+    "Managed TLS/R2/Google consent/AI vendor",
+    "CI remote",
+    "Light theme and full keyboard audit (phase6+)",
+    "Editor/viewer redesign and GLB render (phase8+)"
+  ],
+  "cleanup": {
+    "containers": [
+      {
+        "name": "/nesomn-revision-phase5-app-1",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-phase5-gateway-1",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-redis-private",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-test-test-db-1",
+        "status": "exited",
+        "exitCode": 0
+      },
+      {
+        "name": "/nesomn-revision-test-test-redis-1",
+        "status": "exited",
+        "exitCode": 0
+      }
+    ],
+    "volumesDeleted": false,
+    "networksDeleted": false,
+    "unrelatedContainersTouched": false
+  }
+}

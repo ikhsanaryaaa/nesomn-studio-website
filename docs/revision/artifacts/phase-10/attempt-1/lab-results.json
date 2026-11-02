@@ -1,0 +1,26 @@
+[
+  {
+    "name": "compose-services",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 414
+  },
+  {
+    "name": "test-services",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 13705
+  },
+  {
+    "name": "migration",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 527
+  },
+  {
+    "name": "fixture",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 253
+  }
+]

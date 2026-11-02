@@ -1,0 +1,148 @@
+{
+  "repository": "https://github.com/ikhsanaryaaa/nesomn-studio-website.git",
+  "branch": "works/runtime-tooling-upgrade",
+  "commit": "041d225fca07ae405b440ca424a0c56f90fdac0f",
+  "runtime": {
+    "bun": "1.4.4",
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "lockUnchanged": true
+  },
+  "checks": [
+    {
+      "name": "format",
+      "exit": 0
+    },
+    {
+      "name": "scene",
+      "exit": 0
+    },
+    {
+      "name": "typecheck",
+      "exit": 0
+    },
+    {
+      "name": "lint",
+      "exit": 0
+    },
+    {
+      "name": "build",
+      "exit": 0
+    }
+  ],
+  "integration": {
+    "preview": {
+      "tests": 1,
+      "assertions": 17,
+      "status": "PASS"
+    },
+    "security": {
+      "tests": 29,
+      "assertions": 122,
+      "status": "PASS"
+    },
+    "baseline": {
+      "tests": 24,
+      "assertions": 55,
+      "status": "PASS"
+    },
+    "qrisPure": {
+      "tests": 4,
+      "assertions": 12,
+      "status": "PASS"
+    },
+    "deployment": {
+      "tests": 13,
+      "assertions": 99,
+      "status": "PASS"
+    }
+  },
+  "docker": [
+    {
+      "name": "docker-app",
+      "exit": 0
+    },
+    {
+      "name": "docker-worker",
+      "exit": 0
+    },
+    {
+      "name": "compose-services",
+      "exit": 0
+    }
+  ],
+  "browser": "artifacts/phase-9/browser.json",
+  "actualGatewayBrowser": "artifacts/phase-9/gateway-browser.json",
+  "cleanup": "artifacts/phase-9/docker-cleanup.json",
+  "changedFiles": [
+    "REVISION.md",
+    "admin/src/pages/billing-records.tsx",
+    "api/src/web-app.ts",
+    "client/src/components/ai/job-recovery.tsx",
+    "client/src/components/ai/pending-job-actions.tsx",
+    "client/src/components/editor/scene-inspector.tsx",
+    "client/src/lib/scene-viewport.ts",
+    "docs/editor-admin.md",
+    "docs/revision/artifacts/phase-9/admin-credit-ledger-1440.png",
+    "docs/revision/artifacts/phase-9/admin-credit-ledger-390.png",
+    "docs/revision/artifacts/phase-9/admin-credit-ledger-dark-1440.png",
+    "docs/revision/artifacts/phase-9/admin-credit-ledger-dark-390.png",
+    "docs/revision/artifacts/phase-9/admin-credit-ledger-light-1440.png",
+    "docs/revision/artifacts/phase-9/admin-credit-ledger-light-390.png",
+    "docs/revision/artifacts/phase-9/admin-subscriptions-1440.png",
+    "docs/revision/artifacts/phase-9/admin-subscriptions-390.png",
+    "docs/revision/artifacts/phase-9/admin-subscriptions-dark-1440.png",
+    "docs/revision/artifacts/phase-9/admin-subscriptions-dark-390.png",
+    "docs/revision/artifacts/phase-9/admin-subscriptions-light-1440.png",
+    "docs/revision/artifacts/phase-9/admin-subscriptions-light-390.png",
+    "docs/revision/artifacts/phase-9/browser.json",
+    "docs/revision/artifacts/phase-9/docker-cleanup.json",
+    "docs/revision/artifacts/phase-9/gateway-browser.json",
+    "docs/revision/artifacts/phase-9/gateway.json",
+    "docs/revision/artifacts/phase-9/images-tested.json",
+    "docs/revision/artifacts/phase-9/scene-dark-1024.png",
+    "docs/revision/artifacts/phase-9/scene-dark-1440.png",
+    "docs/revision/artifacts/phase-9/scene-dark-360.png",
+    "docs/revision/artifacts/phase-9/scene-dark-390.png",
+    "docs/revision/artifacts/phase-9/scene-dark-768.png",
+    "docs/revision/artifacts/phase-9/scene-light-1024.png",
+    "docs/revision/artifacts/phase-9/scene-light-1440.png",
+    "docs/revision/artifacts/phase-9/scene-light-360.png",
+    "docs/revision/artifacts/phase-9/scene-light-390.png",
+    "docs/revision/artifacts/phase-9/scene-light-768.png",
+    "docs/revision/phase-9-input.json",
+    "docs/revision/phase-9-ledger.md",
+    "docs/revision/phase-9-report.md",
+    "scripts/test-phase9.mjs",
+    "tests/editor-admin-browser.mjs",
+    "tests/editor-gateway-browser.mjs",
+    "tests/scene-export.test.ts",
+    "tests/security/previews.test.ts",
+    "README.md",
+    "admin/src/App.tsx",
+    "admin/src/pages/assets-3d.tsx",
+    "admin/src/pages/assets-scene.tsx",
+    "admin/src/resources.tsx",
+    "admin/src/routes.tsx",
+    "api/src/modules/admin/uploads.routes.ts",
+    "api/src/modules/catalog/routes.ts",
+    "client/src/components/ai/credit-badge.tsx",
+    "client/src/components/ai/motion-panel.tsx",
+    "client/src/components/ai/scene-panel.tsx",
+    "client/src/components/editor/canvas-object.tsx",
+    "client/src/components/editor/editor-toolbar.tsx",
+    "client/src/components/editor/scene-canvas.tsx",
+    "client/src/hooks/use-ai-job.ts",
+    "client/src/lib/api.ts",
+    "client/src/lib/export-image.ts",
+    "client/src/pages/scene-editor.tsx",
+    "client/src/stores/scene-editor-store.ts"
+  ],
+  "skipped": [
+    "live AI and merchant",
+    "physical mobile/Safari",
+    "all admin CRUD/browser flows",
+    "historical signed URL migration"
+  ],
+  "productionReady": false
+}

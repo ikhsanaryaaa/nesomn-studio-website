@@ -1,0 +1,37 @@
+[
+  {
+    "path": "/health/live",
+    "status": 200,
+    "contentType": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/health/ready",
+    "status": 200,
+    "contentType": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/pricing",
+    "status": 200,
+    "contentType": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/admin/login",
+    "status": 200,
+    "contentType": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/api/unknown-phase5",
+    "status": 404,
+    "contentType": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/assets/missing-phase5.js",
+    "status": 404,
+    "contentType": "text/plain; charset=utf-8"
+  },
+  {
+    "path": "/api/billing/orders/00000000-0000-4000-8000-000000000001",
+    "status": 401,
+    "contentType": "application/json;charset=utf-8"
+  }
+]

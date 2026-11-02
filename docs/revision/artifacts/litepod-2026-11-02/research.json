@@ -1,0 +1,24 @@
+{
+  "checked": "2026-11-02",
+  "litepodSource": "f6def8b106b8526a60d7da505033f370c54df0cd",
+  "pages": [
+    {
+      "url": "https://docs.litepod.sh/en/deployment-types",
+      "sha256": "1804bc662db44edb938372319600447b2d637596df138bed002ac8b868872627"
+    },
+    {
+      "url": "https://docs.litepod.sh/en/applications",
+      "sha256": "d79c88879b61effcd88869680189a2a155aa08298280faa6efdb8e72642d9493"
+    },
+    {
+      "url": "https://docs.litepod.sh/en/databases",
+      "sha256": "5846b7c61aa8954339aade23538591a8e4854a44570bce429c89b214b68ac73e"
+    },
+    {
+      "url": "https://docs.litepod.sh/en/servers",
+      "sha256": "78fb9ce45b3c7fd9050cef546358fffbcb43ba0e6b252872b45a463963bf67a6"
+    }
+  ],
+  "platformPanelAccessed": false,
+  "productionChanged": false
+}

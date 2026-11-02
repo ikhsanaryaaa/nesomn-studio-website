@@ -1,12 +1,14 @@
 import { Elysia } from 'elysia';
 import { z } from 'zod';
-import { and, eq, desc, inArray } from 'drizzle-orm';
+import { and, eq, desc } from 'drizzle-orm';
 import { db } from '../../db/client.ts';
-import { aiProviders, aiJobs, subscriptions, plans } from '../../db/schema/index.ts';
+import { aiProviders, aiJobs } from '../../db/schema/index.ts';
 import { AppError } from '../../middleware/error.ts';
 import { authPlugin, type AuthUser } from '../../middleware/auth.ts';
-import { getBalance, deductCredit } from './credit.ts';
-import { enqueueAiJob } from './queue.ts';
+import { getBalance } from './credit.ts';
+import { createAiJob, cancelAiJob } from './service.ts';
+import { effectiveSubscription, subscriptionTier } from '../../lib/entitlement.ts';
+
 import type { AiJobDTO, AiModelDTO } from '@nesomn/shared';
 
 /**
@@ -40,16 +42,13 @@ const motionInput = z.object({
 const createBody = z.object({
   providerId: z.string().uuid(),
   tab: tabSchema,
-  input: z.record(z.unknown()),
+  input: z.record(z.string(), z.unknown()),
 });
 
 /** Tier user: 'pro' bila punya subscription aktif, else 'free'. */
 async function getUserTier(userId: string): Promise<{ tier: 'free' | 'pro'; isPro: boolean }> {
-  const sub = await db.query.subscriptions.findFirst({
-    where: and(eq(subscriptions.userId, userId), eq(subscriptions.status, 'active')),
-    orderBy: [desc(subscriptions.currentPeriodEnd)],
-  });
-  const isPro = Boolean(sub);
+  const sub = await effectiveSubscription(userId);
+  const isPro = subscriptionTier(sub) === 'pro';
   return { tier: isPro ? 'pro' : 'free', isPro };
 }
 
@@ -57,6 +56,7 @@ async function getUserTier(userId: string): Promise<{ tier: 'free' | 'pro'; isPr
 function toJobDTO(row: typeof aiJobs.$inferSelect, tab: AiJobDTO['tab']): AiJobDTO {
   return {
     id: row.id,
+    needsReview: row.needsReview,
     kind: row.kind,
     tab,
     status: row.status,
@@ -77,12 +77,12 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
       const tab = query.tab ? tabSchema.parse(query.tab) : undefined;
       const { tier } = await getUserTier(u.id);
       const rows = await db.query.aiProviders.findMany({
-        where: tab ? and(eq(aiProviders.enabled, true), eq(aiProviders.tab, tab)) : eq(aiProviders.enabled, true),
+        where: tab
+          ? and(eq(aiProviders.enabled, true), eq(aiProviders.tab, tab))
+          : eq(aiProviders.enabled, true),
       });
       // tierAccess kosong = terbuka untuk semua tier.
-      const visible = rows.filter(
-        (r) => r.tierAccess.length === 0 || r.tierAccess.includes(tier),
-      );
+      const visible = rows.filter((r) => r.tierAccess.length === 0 || r.tierAccess.includes(tier));
       return visible.map(
         (r): AiModelDTO => ({
           id: r.id,
@@ -108,7 +108,7 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
   // Buat job AI: validasi -> potong credit -> enqueue.
   .post(
     '/jobs',
-    async ({ body, user }) => {
+    async ({ body, user, request, set }) => {
       const u = user as AuthUser;
       const parsed = createBody.parse(body);
 
@@ -116,75 +116,22 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
       const input =
         parsed.tab === 'scene' ? sceneInput.parse(parsed.input) : motionInput.parse(parsed.input);
 
-      // Provider harus ada, enabled, dan tab cocok.
-      const provider = await db.query.aiProviders.findFirst({
-        where: eq(aiProviders.id, parsed.providerId),
-      });
-      if (!provider || !provider.enabled) {
-        throw new AppError('NOT_FOUND', 'Model tidak tersedia.', 404);
-      }
-      if (provider.tab !== parsed.tab) {
-        throw new AppError('BAD_REQUEST', 'Model tidak cocok dengan tab.', 400);
-      }
-
-      // Tier access.
-      const { tier, isPro } = await getUserTier(u.id);
-      if (provider.tierAccess.length > 0 && !provider.tierAccess.includes(tier)) {
-        throw new AppError('FORBIDDEN', 'Model ini butuh langganan yang lebih tinggi.', 403);
-      }
-
-      // Video butuh akses aiVideo pada plan (gate fitur).
-      if (provider.kind === 'video') {
-        const sub = await db.query.subscriptions.findFirst({
-          where: and(eq(subscriptions.userId, u.id), eq(subscriptions.status, 'active')),
-        });
-        const plan = sub ? await db.query.plans.findFirst({ where: eq(plans.id, sub.planId) }) : null;
-        if (!plan?.editorAccess.aiVideo) {
-          throw new AppError('FORBIDDEN', 'Plan Anda belum termasuk AI video.', 403);
-        }
-      }
-
-      // 1 job aktif per user (pending/processing).
-      const active = await db.query.aiJobs.findFirst({
-        where: and(
-          eq(aiJobs.userId, u.id),
-          inArray(aiJobs.status, ['pending', 'processing']),
-        ),
-      });
-      if (active) {
-        throw new AppError('JOB_IN_PROGRESS', 'Masih ada job berjalan. Tunggu sampai selesai.', 409);
-      }
-
-      // Saldo cukup, lalu potong (transaksi). deductCredit melempar bila kurang.
-      const cost = provider.creditCost;
-      const refId = crypto.randomUUID();
-      if (cost > 0) {
-        try {
-          await deductCredit(u.id, cost, refId);
-        } catch {
-          throw new AppError('INSUFFICIENT_CREDIT', 'Saldo credit tidak cukup.', 402);
-        }
-      }
-
-      // Insert job (pakai refId sebagai id agar refund konsisten).
-      const priority = isPro ? 1 : 2;
-      const [job] = await db
-        .insert(aiJobs)
-        .values({
-          id: refId,
-          userId: u.id,
-          providerId: provider.id,
-          kind: provider.kind,
-          status: 'pending',
-          priority,
-          input,
-          creditCost: cost,
-        })
-        .returning();
-
-      await enqueueAiJob(job.id, priority);
-      return toJobDTO(job, provider.tab);
+      const job = await createAiJob(
+        u.id,
+        parsed.providerId,
+        parsed.tab,
+        input,
+        request.headers.get('idempotency-key') ?? undefined,
+      );
+      set.status = 202;
+      return toJobDTO(job, parsed.tab);
     },
+    { requireAuth: true },
+  )
+  .post(
+    '/jobs/:id/cancel',
+    async ({ params, user }) =>
+      cancelAiJob((user as AuthUser).id, z.string().uuid().parse(params.id)),
     { requireAuth: true },
   )
   // Status 1 job (ownership) untuk polling.

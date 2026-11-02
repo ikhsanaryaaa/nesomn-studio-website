@@ -1,0 +1,149 @@
+bun audit v1.4.4 (38afee6c8)
+
+axios@1.18.0
+  workspace:@nesomn/admin > axios
+  workspace:@nesomn/admin > @refinedev/simple-rest > axios
+  high: Axios: Node HTTP adapter prototype-pollution gadget allows request socket hijack via inherited createConnection (>=1.15.2 <1.20.0) - https://github.com/advisories/GHSA-m8m8-qj5v-23w3
+  moderate: Axios: CIDR-form NO_PROXY entries are ignored, causing proxy exclusion bypass for internal IP ranges (>=1.15.0 <1.20.0) - https://github.com/advisories/GHSA-44g4-m2mj-wpvx
+  moderate: Axios: Prototype pollution gadget in fetch adapter can alter outbound requests (>=1.7.0 <1.20.0) - https://github.com/advisories/GHSA-vh66-26gq-q6x8
+  moderate: Axios: Prototype-Pollution Gadget in the Default Instance Allows Inherited Object.prototype.method to Override HTTP Method (>=1.0.0 <1.20.0) - https://github.com/advisories/GHSA-9fr6-4gfg-395g
+  high: Axios: ReDoS in fromDataURI data: URL parser freezes the Node event loop (DoS) (>=1.16.1 <1.20.0) - https://github.com/advisories/GHSA-c29m-xwm3-cm6r
+  high: Axios: ReDoS (O(N²)) in shouldBypassProxy host normalization, reachable via untrusted redirect Location (>=1.15.0 <1.20.0) - https://github.com/advisories/GHSA-mghh-pgcx-3jjj
+  high: Axios: Prototype Pollution Gadget in axios toFormData Options (>=1.15.1 <1.20.0) - https://github.com/advisories/GHSA-x97p-jq2g-jp4f
+  high: Axios: HTTP/2 adapter bypasses configured DNS lookup and proxy controls (>=1.13.0 <1.20.0) - https://github.com/advisories/GHSA-3pq3-5fj3-cg6v
+  high: Axios: Denial of Service via Unhandled 'error' Event in HTTP/2 ClientHttp2Session Initialization (>=1.13.0 <1.20.0) - https://github.com/advisories/GHSA-542g-h47m-68v8
+  moderate: Axios: Header Injection via Inherited headers After Minimal Interceptor (>=1.0.0 <1.20.0) - https://github.com/advisories/GHSA-j8rh-479h-cp32
+  moderate: Axios: Fetch Adapter Header Injection via Inherited FormData getHeaders (>=1.12.0 <1.20.0) - https://github.com/advisories/GHSA-4hqw-qxg8-jxx2
+  high: Axios: maxRedirects: 0 is not enforced by the fetch adapter, allowing redirect-based SSRF (>=1.17.0 <1.20.0) - https://github.com/advisories/GHSA-r4gj-5m52-g5wh
+
+baseline-browser-mapping@2.10.35
+  workspace:@nesomn/admin > @vitejs/plugin-react > @babel/plugin-transform-react-jsx-source > @babel/core > @babel/helper-compilation-targets > browserslist > baseline-browser-mapping
+  moderate: baseline-browser-mapping process termination on invalid input causes denial of service (>=2.0.0 <2.11.0) - https://github.com/advisories/GHSA-w5vr-8v7q-w6rv
+
+brace-expansion@1.1.15, 5.0.6
+  eslint > @eslint/eslintrc > minimatch > brace-expansion
+  typescript-eslint > @typescript-eslint/utils > @typescript-eslint/typescript-estree > minimatch > brace-expansion
+  high: brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash (<1.1.17) - https://github.com/advisories/GHSA-mh99-v99m-4gvg
+  high: brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash (>=4.0.0 <5.0.8) - https://github.com/advisories/GHSA-mh99-v99m-4gvg
+  high: brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (>=4.0.0 <5.0.9) - https://github.com/advisories/GHSA-rgw5-rvv9-x895
+  high: brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation (<1.1.18) - https://github.com/advisories/GHSA-rgw5-rvv9-x895
+  high: brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups (<1.1.16) - https://github.com/advisories/GHSA-3jxr-9vmj-r5cp
+  high: brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups (>=3.0.0 <5.0.7) - https://github.com/advisories/GHSA-3jxr-9vmj-r5cp
+  high: brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion (>=4.0.0 <5.0.11) - https://github.com/advisories/GHSA-qhr7-859c-m2p7
+  high: brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion (<1.1.19) - https://github.com/advisories/GHSA-6j4f-fj2g-mc7p
+  high: brace-expansion: DoS via uncontrolled recursion in parseCommaParts causing stack exhaustion (>=4.0.0 <5.0.10) - https://github.com/advisories/GHSA-6j4f-fj2g-mc7p
+  moderate: brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service (<1.1.21) - https://github.com/advisories/GHSA-q2hr-2g5m-vwhr
+  moderate: brace-expansion: Quadratic-time expansion of the `{a},b}` rewrite causes CPU denial of service (>=4.0.0 <5.0.12) - https://github.com/advisories/GHSA-q2hr-2g5m-vwhr
+  high: brace-expansion: DoS via uncontrolled recursion on nested brace groups causing stack exhaustion (<1.1.20) - https://github.com/advisories/GHSA-qhr7-859c-m2p7
+
+browserslist@4.28.2
+  workspace:@nesomn/admin > @vitejs/plugin-react > @babel/plugin-transform-react-jsx-source > @babel/core > @babel/helper-compilation-targets > browserslist > update-browserslist-db
+  high: Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM (<=4.28.6) - https://github.com/advisories/GHSA-c83g-rgw3-j3cx
+  high: Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats) (<=4.28.6) - https://github.com/advisories/GHSA-73wf-gq98-2v4g
+
+decode-uri-component@0.2.2
+  workspace:@nesomn/admin > @refinedev/simple-rest > query-string > decode-uri-component
+  high: decode-uri-component vulnerable to denial of service via quadratic replacement of percent-encoded runs (<=0.5.0) - https://github.com/advisories/GHSA-qr28-fpjm-wq7f
+  moderate: decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input (<=0.4.2) - https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+
+drizzle-orm@0.38.4
+  workspace:@nesomn/api > drizzle-orm
+  workspace:@nesomn/worker > drizzle-orm
+  high: Drizzle ORM has SQL injection via improperly escaped SQL identifiers (<0.45.2) - https://github.com/advisories/GHSA-gpj5-g38j-94v9
+
+esbuild@0.27.7, 0.18.20, 0.19.12
+  workspace:@nesomn/api > drizzle-kit > esbuild
+  workspace:@nesomn/admin > vite > esbuild
+  moderate: esbuild enables any website to send any requests to the development server and read the response (<=0.24.2) - https://github.com/advisories/GHSA-67mh-4wv8-2f99
+  low: esbuild allows arbitrary file read when running the development server on Windows (>=0.27.3 <0.28.1) - https://github.com/advisories/GHSA-g7r4-m6w7-qqqr
+
+fflate@0.8.3, 0.6.10
+  workspace:@nesomn/client > @types/three > fflate
+  workspace:@nesomn/client > @react-three/drei > three-stdlib > fflate
+  moderate: fflate unzipSync can enter an infinite loop when parsing malformed ZIP64 archives (>=0.6.0 <0.6.11) - https://github.com/advisories/GHSA-px8p-9vwx-vf98
+
+follow-redirects@1.16.0
+  workspace:@nesomn/admin > axios > follow-redirects
+  high: follow-redirects: Cross-realm sensitiveHeaders arrays are discarded and custom credentials can follow redirects (>=1.16.0 <=1.16.1) - https://github.com/advisories/GHSA-mrwp-f3q8-3g9p
+  high: follow-redirects array-form headers bypass cross-origin credential stripping (>=1.16.0 <1.16.1) - https://github.com/advisories/GHSA-q3jh-wrc6-jgq8
+  high: follow-redirects sensitiveHeaders regex escaping can expose credential headers (>=1.16.0 <1.16.1) - https://github.com/advisories/GHSA-8r9p-f939-6h3c
+
+js-yaml@4.2.0
+  eslint > @eslint/eslintrc > js-yaml
+  high: js-yaml: YAML merge-key chains can force quadratic CPU consumption (>=4.0.0 <4.3.0) - https://github.com/advisories/GHSA-52cp-r559-cp3m
+  high: JS-YAML: Quadratic CPU consumption in !!omap resolution (3.x and 4.x) — CVE-2026-59870 fix not backported (>=4.0.0 <4.3.1) - https://github.com/advisories/GHSA-5p4m-2wfm-xmqj
+  high: js-yaml: maxTotalMergeKeys does not limit CPU use for empty merge sources (>=4.0.0 <4.3.2) - https://github.com/advisories/GHSA-2883-xcg3-v3hh
+
+minimatch@3.1.5, 10.2.5
+  eslint > @eslint/eslintrc > minimatch
+  typescript-eslint > @typescript-eslint/utils > @typescript-eslint/typescript-estree > minimatch
+  moderate: minimatch has potential denial of service via globparts amplification (<11.0.1) - https://github.com/advisories/GHSA-g3hv-75wg-m249
+
+nanoid@3.3.12
+  workspace:@nesomn/admin > vite > postcss > nanoid
+  high: nanoid: non-secure generators can loop indefinitely with negative size (<3.3.16) - https://github.com/advisories/GHSA-28wg-ghj8-5hjv
+  high: nanoid: custom generators can loop indefinitely when size is zero (<3.3.18) - https://github.com/advisories/GHSA-2v37-7h3g-55p8
+
+path-to-regexp@8.2.0
+  workspace:@nesomn/admin > @refinedev/antd > @ant-design/pro-layout > path-to-regexp
+  high: path-to-regexp vulnerable to Denial of Service via sequential optional groups (>=8.0.0 <8.4.0) - https://github.com/advisories/GHSA-j3q9-mxjg-w52f
+  moderate: path-to-regexp vulnerable to Regular Expression Denial of Service via multiple wildcards (>=8.0.0 <8.4.0) - https://github.com/advisories/GHSA-27v5-c462-wpq7
+
+postcss@8.5.15
+  workspace:@nesomn/admin > vite > postcss
+  moderate: PostCSS: incomplete fix of GHSA-6g55-p6wh-862q — attacker-controlled sourceMappingURL reads arbitrary .map files when `from` is unset (<=8.5.22) - https://github.com/advisories/GHSA-fxqj-rqcc-2cmp
+  high: PostCSS: Path Traversal in Previous Source Map Auto-Loading (sourceMappingURL) leads to Arbitrary .map File Disclosure (<=8.5.17) - https://github.com/advisories/GHSA-r28c-9q8g-f849
+
+qs@6.15.2
+  workspace:@nesomn/admin > @refinedev/core > qs
+  workspace:@nesomn/admin > @refinedev/react-router > qs
+  moderate: qs array-limit bypass via bracket-key comma parsing (>=6.14.2 <=6.15.3) - https://github.com/advisories/GHSA-x5fp-wj9c-mxmx
+  moderate: qs: Denial of Service via Attacker Controlled isBuffer (>=2.2.5 <6.16.0) - https://github.com/advisories/GHSA-4mjr-xmp4-gh2g
+  moderate: qs : qs.stringify with arrayFormat 'comma' throws an uncaught TypeError on array elements carrying a non-callable own toString (DoS) (>=6.7.0 <=6.16.0) - https://github.com/advisories/GHSA-6pq8-jhm2-2vcw
+
+react-router@7.17.0
+  workspace:@nesomn/admin > react-router
+  workspace:@nesomn/client > react-router
+  workspace:@nesomn/admin > @refinedev/react-router > react-router
+  moderate: React Router: Open redirect via backslash in <Link> and useNavigate (CVE-2025-68470 bypass) (>=6.0.0 <7.18.0) - https://github.com/advisories/GHSA-wrjc-x8rr-h8h6
+  moderate: React Router: RSCErrorHandler Missing Protocol Validation (XSS) (>=7.11.0 <7.18.0) - https://github.com/advisories/GHSA-h8fp-f39c-q6mh
+  moderate: React Router: Arbitrary Constructor Injection via deserializeErrors() in React Router SSR Hydration (>=6.4.0 <7.18.0) - https://github.com/advisories/GHSA-337j-9hxr-rhxg
+  high: React Router: Unauthenticated Denial of Service via Inefficient Route Matching (>=7.0.0 <7.18.0) - https://github.com/advisories/GHSA-chx6-hx7r-mcp5
+  high: React Router: RSC Mode CSRF Bypass Allows Action Execution Before 400 Response (>=7.12.0 <7.18.2) - https://github.com/advisories/GHSA-qwww-vcr4-c8h2
+
+sharp@0.33.5
+  workspace:@nesomn/api > sharp
+  high: sharp inherited vulnerabilities in libvips: CVE-2026-33327, CVE-2026-33328, CVE-2026-35590, CVE-2026-35591 (<0.35.0) - https://github.com/advisories/GHSA-f88m-g3jw-g9cj
+  high: sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545 (<0.35.4) - https://github.com/advisories/GHSA-rgj7-g3m4-5g8c
+  high: sharp : Vulnerability in librsvg dependency CVE-2026-96889 (<0.35.5) - https://github.com/advisories/GHSA-wq5f-xc86-pv6w
+
+shell-quote@1.8.4
+  workspace:@nesomn/api > drizzle-kit > gel > shell-quote
+  high: shell-quote: Quadratic-complexity Denial of Service in `parse()` (CWE-407) (<=1.8.4) - https://github.com/advisories/GHSA-395f-4hp3-45gv
+  critical: shell-quote: `quote()` command injection via a line terminator in a token after a `{ comment }` token (>=1.8.4 <1.11.0) - https://github.com/advisories/GHSA-pqg4-j6r4-53mv
+
+source-map-js@1.2.1
+  workspace:@nesomn/client > @tailwindcss/vite > @tailwindcss/node > source-map-js
+  workspace:@nesomn/admin > vite > postcss > source-map-js
+  high: source-map-js allows event-loop denial of service through indexed source-map section offsets (>=1.0.0 <1.2.2) - https://github.com/advisories/GHSA-68fv-2mgg-jv7q
+
+vite@7.3.5
+  workspace:@nesomn/admin > vite
+  workspace:@nesomn/client > vite
+  workspace:@nesomn/client > @tailwindcss/vite > vite
+  workspace:@nesomn/admin > @vitejs/plugin-react > vite
+  workspace:@nesomn/client > vite-prerender-plugin > vite
+  low: Vite: Cross origin script execution through Vite custom middleware (>=7.0.0 <=7.3.6) - https://github.com/advisories/GHSA-9jrq-w75r-8gcw
+  moderate: Vite: Files outside `server.fs.allow` could be served when project paths match system paths on non-Windows machine (>=7.0.0 <=7.3.6) - https://github.com/advisories/GHSA-rq7h-c2jc-7f22
+  high: launch-editor: `fs.existsSync()` existence check can be bypassed on Windows (>=7.0.0 <=7.3.6) - https://github.com/advisories/GHSA-587h-7wmj-h5pm
+  moderate: launch-editor: escapeCmdArgs() omits % escaping on Windows (>=7.0.0 <=7.3.6) - https://github.com/advisories/GHSA-698v-4r3x-3vcv
+  moderate: launch-editor: Editor CLI flag misinterpretation causing arbitrary command execution for some editors (>=7.0.0 <=7.3.6) - https://github.com/advisories/GHSA-r825-w8mm-5pxw
+
+zod@3.25.76
+  workspace:@nesomn/api > zod
+  high: Zod can exhaust memory while validating oversized constrained collections (<4.6.6) - https://github.com/advisories/GHSA-mrhx-c7xc-m3w5
+
+66 vulnerabilities (1 critical, 40 high, 23 moderate, 2 low)
+
+  bun audit fix           upgrade the vulnerable packages within their ranges
+  bun audit fix --latest  also cross major versions

@@ -1,0 +1,12 @@
+{
+  "checked": [
+    "README.md",
+    "REVISION.md",
+    "docs/as-built.md",
+    "docs/migrations.md",
+    "docs/dependency-security.md",
+    "docs/release-readiness.md",
+    "docs/revision/phase-10-report.md"
+  ],
+  "broken": []
+}

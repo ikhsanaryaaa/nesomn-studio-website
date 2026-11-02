@@ -1,0 +1,25 @@
+bun test v1.4.4 (38afee6c8)
+
+tests\deployment\runtime-env.test.ts:
+(pass) production startup config > accepts external private DNS and explicit local storage [10.63ms]
+(pass) production startup config > rejects missing secrets, malformed services and unsafe origins without logging values [16.15ms]
+(pass) production startup config > R2 credentials required only when configured; worker needs no JWT or public origin [6.07ms]
+(pass) production startup config > production app requires explicit driver and local path instead of divergent runtime defaults [1.05ms]
+(pass) Redis URL compatibility > preserves auth, database index and verified TLS on API and worker [0.73ms]
+(pass) Redis URL compatibility > rejects bad scheme/index/query without reflecting credentials [0.19ms]
+
+tests\deployment\web-app.test.ts:
+(pass) single app production routing > preserves API prefix, query, body, cookie and legacy signed-file namespace [28.66ms]
+(pass) single app production routing > unknown API returns JSON404 for navigation, POST and exact /api [1.24ms]
+(pass) single app production routing > known client/admin deep links and prerendered route serve correct HTML [28.08ms]
+(pass) single app production routing > static files have types/cache/HEAD; root admin logo remains available [4.67ms]
+(pass) single app production routing > missing assets, unknown pages, private paths and traversal never return SPA [2.76ms]
+(pass) single app production routing > liveness stays up while readiness reports dependency outage without secrets [2.08ms]
+
+tests\deployment\readiness.test.ts:
+(pass) readiness bounds slow dependencies, catches failures and can recover [32.16ms]
+
+ 13 pass
+ 0 fail
+ 99 expect() calls
+Ran 13 tests across 3 files. [9.92s]

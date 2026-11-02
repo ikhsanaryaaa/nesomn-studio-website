@@ -2,7 +2,8 @@ import { describe, expect, it, afterAll, beforeAll } from 'bun:test';
 import { eq } from 'drizzle-orm';
 import { db } from '@nesomn/api/src/db/client.ts';
 import { users, aiProviders, aiJobs, creditLedger } from '@nesomn/api/src/db/schema/index.ts';
-import { getBalance } from '@nesomn/api/src/modules/ai/credit.ts';
+import { createAiJob } from '@nesomn/api/src/modules/ai/service.ts';
+import { adjustCredit, getBalance } from '@nesomn/api/src/modules/ai/credit.ts';
 import { processJob } from './process-job.ts';
 
 /**
@@ -33,20 +34,7 @@ describe('worker process-job (stub)', () => {
       })
       .returning();
     providerId = p.id;
-    // Saldo 100, lalu potong 10 (meniru saat job dibuat) -> 90.
-    await db.insert(creditLedger).values({
-      userId,
-      delta: 100,
-      reason: 'subscription_grant',
-      balanceAfter: 100,
-    });
-    await db.insert(creditLedger).values({
-      userId,
-      delta: -10,
-      reason: 'usage',
-      refType: 'ai_job',
-      balanceAfter: 90,
-    });
+    await adjustCredit(userId, 100, 'fixture');
   });
 
   afterAll(async () => {
@@ -57,17 +45,10 @@ describe('worker process-job (stub)', () => {
   });
 
   it('memproses job sukses -> done dengan resultUrl', async () => {
-    const [job] = await db
-      .insert(aiJobs)
-      .values({
-        userId,
-        providerId,
-        kind: 'image',
-        status: 'pending',
-        input: { prompt: 'kucing astronot', aspect: '1:1' },
-        creditCost: 10,
-      })
-      .returning();
+    const job = await createAiJob(userId, providerId, 'scene', {
+      prompt: 'Demo / Sample',
+      aspect: '1:1',
+    });
 
     const result = await processJob(job.id);
     expect(result.status).toBe('done');
@@ -78,19 +59,11 @@ describe('worker process-job (stub)', () => {
   });
 
   it('job gagal -> failed + refund credit', async () => {
+    const job = await createAiJob(userId, providerId, 'scene', {
+      prompt: 'Demo / Sample __fail__',
+      aspect: '1:1',
+    });
     const balanceBefore = await getBalance(userId);
-    const [job] = await db
-      .insert(aiJobs)
-      .values({
-        userId,
-        providerId,
-        kind: 'image',
-        status: 'pending',
-        // Prompt mengandung __fail__ memaksa StubProvider gagal.
-        input: { prompt: 'gagal __fail__', aspect: '1:1' },
-        creditCost: 10,
-      })
-      .returning();
 
     const result = await processJob(job.id);
     expect(result.status).toBe('failed');

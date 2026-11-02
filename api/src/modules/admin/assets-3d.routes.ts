@@ -1,3 +1,5 @@
+import { parsePatch } from '../../lib/validation.ts';
+import { moneyString, publicMediaUrl, storageKeySchema } from '../../lib/validation.ts';
 import { Elysia } from 'elysia';
 import { z } from 'zod';
 import { eq, and, sql } from 'drizzle-orm';
@@ -22,7 +24,7 @@ const ASSET_COLUMNS = {
 };
 
 const asset3dBody = z.object({
-  slug: z.string().min(1),
+  slug: z.string().regex(/^[a-z0-9][a-z0-9_-]{0,199}$/),
   title: z.string().min(1),
   description: z.string().nullish(),
   type: z.enum(['mockup3d', 'asset3d']),
@@ -33,12 +35,12 @@ const asset3dBody = z.object({
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
   isMarketplace: z.boolean().default(false),
   isSubscriptionAsset: z.boolean().default(true),
-  thumbnail: z.string().nullish(),
-  priceIdr: z.union([z.string(), z.number()]).transform(String).default('0'),
-  priceUsd: z.union([z.string(), z.number()]).transform(String).default('0'),
-  previews: z.array(z.string()).default([]),
-  fileKey: z.string().nullish(),
-  glbFile: z.string().nullish(),
+  thumbnail: publicMediaUrl.nullish(),
+  priceIdr: moneyString.default('0'),
+  priceUsd: moneyString.default('0'),
+  previews: z.array(publicMediaUrl).max(20).default([]),
+  fileKey: storageKeySchema.nullish(),
+  glbFile: storageKeySchema.nullish(),
   popular: z.boolean().default(false),
 });
 
@@ -78,7 +80,7 @@ export const assets3dAdminRoutes = new Elysia({ prefix: '/assets-3d' })
     return row;
   })
   .patch('/:id', async ({ params, body }) => {
-    const input = asset3dBody.partial().parse(body);
+    const input = parsePatch(asset3dBody, body);
     const [row] = await db
       .update(assets)
       .set({ ...input, editorType: 'product_3d_editor', updatedAt: new Date() })

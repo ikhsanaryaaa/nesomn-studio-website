@@ -1,0 +1,103 @@
+{
+  "http": [
+    {
+      "path": "/health/live",
+      "status": 200,
+      "type": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/health/ready",
+      "status": 200,
+      "type": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/api/catalog/assets",
+      "status": 200,
+      "type": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/api/no-such-route",
+      "status": 404,
+      "type": "application/json;charset=utf-8"
+    },
+    {
+      "path": "/admin/credit-ledger",
+      "status": 200,
+      "type": "text/html;charset=utf-8"
+    },
+    {
+      "path": "/admin/subscriptions",
+      "status": 200,
+      "type": "text/html;charset=utf-8"
+    },
+    {
+      "path": "/editor/3d",
+      "status": 200,
+      "type": "text/html;charset=utf-8"
+    },
+    {
+      "path": "/editor/scene",
+      "status": 200,
+      "type": "text/html;charset=utf-8"
+    },
+    {
+      "path": "/assets/missing.js",
+      "status": 404,
+      "type": "text/plain; charset=utf-8"
+    },
+    {
+      "path": "/admin/assets/missing.js",
+      "status": 404,
+      "type": "text/plain; charset=utf-8"
+    }
+  ],
+  "hygiene": {
+    "bun": "1.4.4",
+    "uid": 1000,
+    "elysia": "1.4.30",
+    "cors": "1.4.2",
+    "drizzle": "0.45.4",
+    "sharp": "0.35.5",
+    "zod": "4.6.7",
+    "envFiles": [],
+    "developmentTooling": []
+  },
+  "images": [
+    {
+      "name": "/nesomn-release-test-ai-worker",
+      "image": "sha256:f3442e3f68319589786b6a08c998a14ca4662f858dfebcd5dc1d81b386e8cd1f",
+      "reference": "nesomn-ai-worker:release-check"
+    },
+    {
+      "name": "/nesomn-release-test-gateway-1",
+      "image": "sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+      "reference": "nginx:1.30.6-alpine@sha256:0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949"
+    },
+    {
+      "name": "/nesomn-release-test-app-1",
+      "image": "sha256:ed2894bb59da27a9a822a63bbf9bc3bf70d81ca823193a7d12d006b3fc551a22",
+      "reference": "nesomn-app:release-check"
+    },
+    {
+      "name": "/nesomn-release-test-redis",
+      "image": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f",
+      "reference": "redis:7-alpine"
+    },
+    {
+      "name": "/nesomn-release-test-qris-offline",
+      "image": "sha256:de1ca93f95eb6d662dfa56e829ab0d0bf8a56d6bafdeb43839d77e1cfdf2cedb",
+      "reference": "nesomn-qris-worker:release-check"
+    },
+    {
+      "name": "/nesomn-revision-test-test-db-1",
+      "image": "sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193",
+      "reference": "postgres:17-alpine"
+    },
+    {
+      "name": "/nesomn-revision-test-test-redis-1",
+      "image": "sha256:8da19c7399dca900c6822a1cf30f9d2285585e2c4b457ff4095b0f4500054d3f",
+      "reference": "redis:7-alpine"
+    }
+  ],
+  "liveMerchant": false
+}

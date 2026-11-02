@@ -1,3 +1,5 @@
+import { parsePatch } from '../../lib/validation.ts';
+import { moneyString } from '../../lib/validation.ts';
 import { Elysia } from 'elysia';
 import { z } from 'zod';
 import { eq, sql } from 'drizzle-orm';
@@ -17,8 +19,8 @@ const packBody = z.object({
   code: z.string().min(1),
   name: z.string().min(1),
   credits: z.coerce.number().int().positive(),
-  priceIdr: z.union([z.string(), z.number()]).transform(String),
-  priceUsd: z.union([z.string(), z.number()]).transform(String),
+  priceIdr: moneyString,
+  priceUsd: moneyString,
   enabled: z.boolean().default(true),
 });
 
@@ -47,7 +49,7 @@ export const creditPackAdminRoutes = new Elysia({ prefix: '/credit-packs' })
     return row;
   })
   .patch('/:id', async ({ params, body }) => {
-    const input = packBody.partial().parse(body);
+    const input = parsePatch(packBody, body);
     const [row] = await db
       .update(creditPacks)
       .set({ ...input, updatedAt: new Date() })

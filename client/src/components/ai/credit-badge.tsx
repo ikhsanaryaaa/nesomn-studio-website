@@ -7,19 +7,27 @@ import { api } from '@/lib/api';
  * server (sumber kebenaran). cost ditampilkan bila model dipilih.
  */
 export function CreditBadge({ cost }: { cost?: number }) {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['ai-credit'],
     queryFn: () => api.ai.credit(),
   });
 
-  const balance = data?.balance ?? 0;
-  const insufficient = typeof cost === 'number' && cost > balance;
+  const balance = data?.balance;
+  const insufficient = typeof cost === 'number' && balance !== undefined && cost > balance;
 
   return (
     <div className="flex items-center gap-2 rounded-lg border border-border bg-surface-2 px-3 py-1.5 text-sm">
       <Sparkles className="size-4 text-accent" />
       <span className="font-medium">
-        {isLoading ? '...' : balance.toLocaleString('id-ID')}
+        {isError ? (
+          <button type="button" className="min-h-11 underline" onClick={() => void refetch()}>
+            Saldo gagal dimuat · Coba lagi
+          </button>
+        ) : isLoading ? (
+          '...'
+        ) : (
+          balance?.toLocaleString('id-ID')
+        )}
       </span>
       <span className="text-muted-foreground">credit</span>
       {typeof cost === 'number' && cost > 0 && (

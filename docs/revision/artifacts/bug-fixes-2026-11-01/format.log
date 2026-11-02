@@ -1,0 +1,4 @@
+client/src/lib/scene-pointer-events.ts 45ms (unchanged)
+client/src/components/editor3d/scene-3d-viewport.tsx 32ms (unchanged)
+client/src/components/viewer/model-viewer.tsx 24ms (unchanged)
+tests/editor-bugs-browser.mjs 57ms

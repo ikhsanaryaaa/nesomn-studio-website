@@ -19,6 +19,16 @@ import {
  */
 export const resources: ResourceProps[] = [
   {
+    name: 'subscriptions',
+    list: '/subscriptions',
+    meta: { label: 'Subscriptions', icon: <CreditCardOutlined /> },
+  },
+  {
+    name: 'credit-ledger',
+    list: '/credit-ledger',
+    meta: { label: 'Credit Ledger', icon: <GiftOutlined /> },
+  },
+  {
     name: 'assets-3d',
     list: '/assets-3d',
     create: '/assets-3d/create',

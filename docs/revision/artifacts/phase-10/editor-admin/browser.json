@@ -1,0 +1,106 @@
+{
+  "browser": "Chrome/156.0.8078.74",
+  "fixture": "Compiled production client/admin with explicit isolated HTTP fixtures, no real database/provider",
+  "viewports": [
+    {
+      "theme": "light",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "legacyRoundtrip": true,
+  "duplicateUndo": true,
+  "exports": [
+    "Sample legacy scene.jpg",
+    "Sample legacy scene.png"
+  ],
+  "exportDimensions": [
+    960,
+    600
+  ],
+  "aiCreates": 1,
+  "jobReads": 3,
+  "cancellations": 1,
+  "tabRecovery": true,
+  "shortViewport": {
+    "overflow": "auto",
+    "top": 660,
+    "bottom": 704,
+    "height": 44,
+    "hit": true
+  },
+  "serverHistoryRecovery": true,
+  "creditOutage": true,
+  "wrongKind": true,
+  "adminDefaultRedirect": true,
+  "adminReadOnlyLists": true,
+  "diagnostics": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": [],
+    "httpErrors": [
+      {
+        "path": "http://127.0.0.1:18090/api/ai/credit",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18090/api/ai/credit",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18090/api/ai/credit",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18090/api/ai/credit",
+        "status": 503
+      }
+    ]
+  },
+  "exceptions": []
+}

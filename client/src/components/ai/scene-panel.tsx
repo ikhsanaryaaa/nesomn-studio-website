@@ -4,6 +4,8 @@ import { Sparkles, Loader2, Download, ImagePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { PendingJobActions } from './pending-job-actions';
+import { JobRecovery } from './job-recovery';
 import { CreditBadge } from './credit-badge';
 import { api, ApiRequestError } from '@/lib/api';
 import { useAiJob } from '@/hooks/use-ai-job';
@@ -37,10 +39,11 @@ export function ScenePanel({ onApplyResult }: Props) {
   });
 
   const selectedModel = models.data?.find((m) => m.id === modelId) ?? models.data?.[0];
-  const { job, isPending, isDone, isFailed } = useAiJob(jobId);
+  const { job, isPending, isDone, isFailed, error, retry } = useAiJob(jobId);
 
   async function handleGenerate() {
-    if (!selectedModel) {
+    if (submitting || isPending) return;
+    if (!selectedModel || models.isError) {
       toast({ title: 'Pilih model dulu', variant: 'danger' });
       return;
     }
@@ -74,12 +77,14 @@ export function ScenePanel({ onApplyResult }: Props) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Model</label>
+        <label htmlFor="ai-scene-model" className="text-xs font-medium text-muted-foreground">
+          Model
+        </label>
         <select
           id="ai-scene-model"
           value={selectedModel?.id ?? ''}
           onChange={(e) => setModelId(e.target.value)}
-          className="rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
+          className="min-h-11 rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
         >
           {models.isLoading && <option>Memuat...</option>}
           {models.data?.length === 0 && <option value="">Belum ada model</option>}
@@ -92,7 +97,9 @@ export function ScenePanel({ onApplyResult }: Props) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Prompt</label>
+        <label htmlFor="ai-scene-prompt" className="text-xs font-medium text-muted-foreground">
+          Prompt
+        </label>
         <Input
           id="ai-scene-prompt"
           value={prompt}
@@ -120,16 +127,35 @@ export function ScenePanel({ onApplyResult }: Props) {
       <Button
         id="ai-scene-generate"
         onClick={handleGenerate}
-        disabled={submitting || isPending || !selectedModel}
+        disabled={submitting || isPending || !selectedModel || models.isError}
       >
         {isPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
         {isPending ? 'Generating...' : 'Generate'}
       </Button>
 
       {/* Hasil */}
+      {models.isError && (
+        <p role="alert" className="text-sm text-danger">
+          Model gagal dimuat.{' '}
+          <Button variant="ghost" onClick={() => void models.refetch()}>
+            Coba lagi
+          </Button>
+        </p>
+      )}
+      {error && (
+        <p role="alert" className="text-sm text-danger">
+          Status job belum dapat diverifikasi.{' '}
+          <Button variant="ghost" onClick={() => void retry()}>
+            Coba lagi
+          </Button>
+        </p>
+      )}
+      <PendingJobActions job={job} />
+      <JobRecovery tab="scene" onSelect={setJobId} />
       {isFailed && (
         <p className="text-sm text-danger">
-          Generate gagal: {job?.error ?? 'tidak diketahui'}. Credit dikembalikan.
+          Generate gagal: {job?.error ?? 'tidak diketahui'}. Periksa saldo terbaru atau hubungi
+          admin jika perlu rekonsiliasi.
         </p>
       )}
       {isDone && job?.resultUrl && (

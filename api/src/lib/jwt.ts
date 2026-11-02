@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose';
+import { z } from 'zod';
 
 /**
  * Helper JWT untuk sesi auth. Payload minimal: sub (userId),
@@ -31,13 +32,19 @@ export async function signToken(payload: TokenPayload): Promise<string> {
 
 export async function verifyToken(token: string): Promise<TokenPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, getSecret());
+    const { payload } = await jwtVerify(token, getSecret(), { algorithms: ['HS256'] });
     if (
-      typeof payload.sub === 'string' &&
-      typeof payload.sessionId === 'string' &&
+      Number.isSafeInteger(payload.exp) &&
+      Number.isSafeInteger(payload.iat) &&
+      z.string().uuid().safeParse(payload.sub).success &&
+      z.string().uuid().safeParse(payload.sessionId).success &&
       (payload.role === 'admin' || payload.role === 'user')
     ) {
-      return { sub: payload.sub, sessionId: payload.sessionId, role: payload.role };
+      return {
+        sub: payload.sub as string,
+        sessionId: payload.sessionId as string,
+        role: payload.role,
+      };
     }
     return null;
   } catch {

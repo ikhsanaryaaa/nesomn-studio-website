@@ -1,4 +1,6 @@
 import type { Gateway } from '@nesomn/shared';
+import { AppError } from '../../middleware/error.ts';
+import { assertStubAllowed } from '../../lib/demo-policy.ts';
 
 /**
  * Kontrak adapter gateway pembayaran. Setiap gateway (stub/pakasir/stripe)
@@ -25,9 +27,12 @@ export type CreateCheckoutResult = {
 
 /** Hasil verifikasi webhook: order mana yang dibayar dan statusnya. */
 export type WebhookResult = {
+  eventId: string;
   orderId: string;
   status: 'paid' | 'failed';
   gatewayRef: string;
+  amountMinor: number;
+  currency: 'IDR' | 'USD';
 };
 
 export interface PaymentProvider {
@@ -37,23 +42,28 @@ export interface PaymentProvider {
    * Verifikasi keaslian webhook (signature/secret) dan ekstrak hasil.
    * Melempar bila signature tidak valid. rawBody = body mentah string.
    */
-  verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult>;
+  verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult | null>;
 }
 
-/**
- * Pilih adapter gateway. Bila env gateway terisi, pakai gateway nyata;
- * selain itu fallback ke StubGateway (dev). Import dinamis agar adapter
- * berat tidak dimuat bila tak dipakai.
- */
-export async function resolveGateway(name: Gateway): Promise<PaymentProvider> {
-  if (name === 'pakasir' && process.env.PAKASIR_API_KEY) {
-    const { PakasirGateway } = await import('./gateways/pakasir.ts');
-    return new PakasirGateway();
-  }
-  if (name === 'stripe' && process.env.STRIPE_SECRET_KEY) {
+/** Verified legacy ingestion only; new legacy checkout is disabled. No implicit simulator fallback. */
+export async function resolveGateway(
+  name: Gateway,
+  purpose: 'checkout' | 'webhook' = 'checkout',
+): Promise<PaymentProvider> {
+  if (name === 'stripe' && purpose === 'webhook' && process.env.STRIPE_WEBHOOK_SECRET) {
     const { StripeGateway } = await import('./gateways/stripe.ts');
     return new StripeGateway();
   }
-  const { StubGateway } = await import('./gateways/stub.ts');
-  return new StubGateway();
+  if (name === 'stub') {
+    assertStubAllowed('payment');
+    const { StubGateway } = await import('./gateways/stub.ts');
+    return new StubGateway();
+  }
+  if (name !== 'stripe' && name !== 'pakasir')
+    throw new AppError('UNKNOWN_GATEWAY', 'Gateway tidak dikenal.', 400);
+  throw new AppError(
+    'LEGACY_PAYMENT_DISABLED',
+    'Gateway legacy belum diaktifkan untuk transaksi baru/rekonsiliasi otomatis. Tidak ada fallback simulasi.',
+    503,
+  );
 }

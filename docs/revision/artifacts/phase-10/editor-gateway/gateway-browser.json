@@ -1,0 +1,18 @@
+{
+  "browser": "Chrome/156.0.8078.74",
+  "productionDockerGateway": "http://127.0.0.1:18092",
+  "realAuth": true,
+  "legacyRoundtrip": true,
+  "newProject": true,
+  "duplicateSave": false,
+  "addUndo": true,
+  "ownership404": true,
+  "regularAdmin403": true,
+  "diagnostics": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": [],
+    "httpErrors": []
+  },
+  "exceptions": []
+}
