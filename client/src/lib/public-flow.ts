@@ -14,7 +14,7 @@ export function safeReturnTo(value: string | null | undefined): string {
 export const loginUrl = (path: string) =>
   '/login?returnTo=' + encodeURIComponent(safeReturnTo(path));
 export const rp = (value: string | number) =>
-  new Intl.NumberFormat('id-ID', {
+  new Intl.NumberFormat('en-ID', {
     style: 'currency',
     currency: 'IDR',
     maximumFractionDigits: 0,

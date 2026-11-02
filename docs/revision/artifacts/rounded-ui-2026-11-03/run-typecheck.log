@@ -1,0 +1,9 @@
+Bun 1.4.4
+@nesomn/shared typecheck: Exited with code 0
+@nesomn/admin typecheck: Exited with code 0
+@nesomn/api typecheck: Exited with code 0
+@nesomn/client typecheck: Exited with code 0
+@nesomn/worker typecheck: Exited with code 0
+
+$ bun run check:runtime && bun --filter '*' typecheck
+$ bun run scripts/check-runtime.mjs

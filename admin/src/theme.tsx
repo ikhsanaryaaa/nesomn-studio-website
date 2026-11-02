@@ -19,7 +19,7 @@ export function AdminThemeControl() {
   return (
     <select
       className="theme-select"
-      aria-label="Tema tampilan admin"
+      aria-label="Admin appearance"
       value={mode}
       onChange={(e) => {
         const value = e.target.value as ThemePreference;
@@ -27,9 +27,9 @@ export function AdminThemeControl() {
         setThemePreference(value);
       }}
     >
-      <option value="system">Tema sistem</option>
-      <option value="light">Terang</option>
-      <option value="dark">Gelap</option>
+      <option value="system">System theme</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
     </select>
   );
 }

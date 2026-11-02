@@ -1,35 +1,17 @@
-@import 'tailwindcss';
+@layer reset, components;
 @import '@fontsource-variable/manrope';
 @import '@fontsource-variable/bricolage-grotesque';
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
 @import '@nesomn/shared/theme.css';
-@theme inline {
-  --color-background: var(--color-background);
-  --color-surface: var(--color-surface);
-  --color-surface-2: var(--color-surface-2);
-  --color-surface-3: var(--color-surface-3);
-  --color-border: var(--color-border);
-  --color-border-strong: var(--color-border-strong);
-  --color-foreground: var(--color-foreground);
-  --color-muted-foreground: var(--color-muted-foreground);
-  --color-faint-foreground: var(--color-faint-foreground);
-  --color-accent: var(--color-accent);
-  --color-accent-hover: var(--color-accent-hover);
-  --color-accent-foreground: var(--color-accent-foreground);
-  --color-accent-subtle: var(--color-accent-subtle);
-  --color-success: var(--color-success);
-  --color-warning: var(--color-warning);
-  --color-danger: var(--color-danger);
-  --color-info: var(--color-info);
-  --font-sans: 'Manrope Variable', system-ui, sans-serif;
-  --font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 28px;
-}
+@import './styles/reset.css' layer(reset);
+@import '@radix-ui/themes/styles.css';
+@import './styles/radix-theme.css';
+@import './styles/radix-menus.css';
+@import './styles/ui.css' layer(components);
+@import './styles/workspace.css';
+@import './styles/editors.css';
+@import './styles/content.css';
 * {
   border-color: var(--color-border);
 }
@@ -162,7 +144,7 @@ body {
 }
 .payment-status {
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-pill);
   padding: 6px 12px;
   font-size: 12px;
 }

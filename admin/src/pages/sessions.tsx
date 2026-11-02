@@ -11,12 +11,16 @@ export const SessionList = () => {
     <List title="Active Sessions">
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="userId" title="User ID" />
-        <Table.Column dataIndex="userAgent" title="Device / Agent" render={(v: string) => v ?? '-'} />
+        <Table.Column
+          dataIndex="userAgent"
+          title="Device / Agent"
+          render={(v: string) => v ?? '-'}
+        />
         <Table.Column dataIndex="ipAddress" title="IP" render={(v: string) => v ?? '-'} />
         <Table.Column
           dataIndex="lastSeenAt"
           title="Last Seen"
-          render={(v: string) => (v ? new Date(v).toLocaleString() : '-')}
+          render={(v: string) => (v ? new Date(v).toLocaleString('en-GB') : '-')}
         />
         <Table.Column
           title="Actions"
@@ -26,7 +30,7 @@ export const SessionList = () => {
                 hideText
                 size="small"
                 recordItemId={record.id}
-                confirmTitle="Revoke sesi ini?"
+                confirmTitle="Revoke this session?"
                 confirmOkText="Revoke"
               />
             </Space>

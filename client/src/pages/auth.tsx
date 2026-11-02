@@ -7,6 +7,8 @@ import { safeReturnTo } from '@/lib/public-flow';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Seo } from '@/components/seo';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import './auth.css';
 
 export default function AuthPage({ register = false }: { register?: boolean }) {
   const [params] = useSearchParams(),
@@ -33,7 +35,7 @@ export default function AuthPage({ register = false }: { register?: boolean }) {
       qc.setQueryData(['me'], user);
       navigate(returnTo, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login belum berhasil. Silakan coba lagi.');
+      setError(err instanceof Error ? err.message : 'Unable to log in. Please try again.');
     } finally {
       setPending(false);
     }
@@ -50,77 +52,106 @@ export default function AuthPage({ register = false }: { register?: boolean }) {
         return;
       }
       const body = await response.json();
-      throw Error(
-        body?.error?.message ?? 'Google login belum tersedia. Gunakan email atau coba lagi.',
-      );
+      throw Error(body?.error?.message ?? 'Google login is unavailable. Use email or try again.');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Google login belum tersedia.');
+      setError(err instanceof Error ? err.message : 'Google login is unavailable.');
       setPending(false);
     }
   }
   return (
-    <div className="auth-layout page-wrap">
-      <Seo title={register ? 'Register' : 'Login'} />
-      <section className="auth-intro">
-        <h1>{register ? 'Buat ruang untuk ide Anda.' : 'Kembali ke ruang kreatif Anda.'}</h1>
-        <p>Scene, aset, dan project Anda. Dalam satu workspace.</p>
-        <Link className="text-accent underline" to="/marketplace">
-          Jelajahi aset terlebih dahulu
-        </Link>
-      </section>
-      <section className="auth-form">
-        <h2>{register ? 'Daftar akun' : 'Login ke Nesomn'}</h2>
-        <form onSubmit={(e) => void submit(e)} className="flex flex-col gap-5">
-          {register && (
-            <Input label="Nama" name="name" autoComplete="name" required maxLength={120} />
-          )}
-          <Input
-            label="Email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-            maxLength={254}
-          />
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete={register ? 'new-password' : 'current-password'}
-            required
-            minLength={register ? 8 : 1}
-            maxLength={1024}
-          />
-          {register && (
-            <p className="text-sm text-muted-foreground">Password minimal 8 karakter.</p>
-          )}
-          {error && (
-            <p role="alert" className="text-danger">
-              {error}
-            </p>
-          )}
-          <Button disabled={pending} type="submit">
-            {pending ? 'Memproses…' : register ? 'Buat akun' : 'Login'}
-          </Button>
-          <Button
-            type="button"
-            variant="secondary"
-            disabled={pending}
-            onClick={() => void google()}
-          >
-            Lanjutkan dengan Google
-          </Button>
-        </form>
-        <p className="mt-6 text-sm">
-          {register ? 'Sudah punya akun?' : 'Belum punya akun?'}{' '}
-          <Link
-            className="text-accent underline"
-            to={(register ? '/login' : '/register') + '?returnTo=' + encodeURIComponent(returnTo)}
-          >
-            {register ? 'Login' : 'Daftar'}
+    <div className="auth-screen">
+      <Seo title={register ? 'Sign up' : 'Log in'} />
+      <div className="auth-studio-frame">
+        <section className="auth-studio-intro">
+          <Link to="/" className="auth-brand" aria-label="Nesomn Studio home">
+            <img src="/nesomn-logo-black.svg" alt="" className="brand-logo brand-logo-light" />
+            <img src="/nesomn-logo-white.svg" alt="" className="brand-logo brand-logo-dark" />
+            <span>Nesomn Studio</span>
           </Link>
-        </p>
-      </section>
+          <div className="auth-intro-copy">
+            <h1>
+              {register ? 'Make room for your ideas.' : 'Welcome back to your creative workspace.'}
+            </h1>
+            <p>Your scenes, assets, and projects. One workspace.</p>
+            <Link className="auth-explore" to="/marketplace">
+              Explore assets first
+              <ArrowUpRight size={18} aria-hidden="true" />
+            </Link>
+          </div>
+          <div className="auth-brand-art" aria-hidden="true">
+            <img src="/nesomn-logo-black.svg" alt="" className="brand-logo-light" />
+            <img src="/nesomn-logo-white.svg" alt="" className="brand-logo-dark" />
+          </div>
+        </section>
+        <section className="auth-studio-form" aria-label={register ? 'Sign up' : 'Log in'}>
+          <div className="auth-form-content">
+            <h2>{register ? 'Create an account' : 'Log in to Nesomn'}</h2>
+            <p className="auth-form-description">
+              {register
+                ? 'Create an account to start creating in your workspace.'
+                : 'Log in to continue your work.'}
+            </p>
+            <form onSubmit={(e) => void submit(e)} className="auth-fields">
+              {register && (
+                <Input label="Name" name="name" autoComplete="name" required maxLength={120} />
+              )}
+              <Input
+                label="Email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                maxLength={254}
+              />
+              <Input
+                label="Password"
+                name="password"
+                type="password"
+                autoComplete={register ? 'new-password' : 'current-password'}
+                required
+                minLength={register ? 8 : 1}
+                maxLength={1024}
+              />
+              {register && (
+                <p className="workspace-description">
+                  Your password must contain at least 8 characters.
+                </p>
+              )}
+              {error && (
+                <p role="alert" className="workspace-error">
+                  {error}
+                </p>
+              )}
+              <Button disabled={pending} type="submit">
+                {pending ? 'Processing…' : register ? 'Create account' : 'Log in'}
+                <ArrowRight aria-hidden="true" />
+              </Button>
+              <div className="auth-divider">
+                <span>or</span>
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={pending}
+                onClick={() => void google()}
+              >
+                Continue with Google
+              </Button>
+            </form>
+            <p className="auth-switch">
+              {register ? 'Already have an account?' : "Don't have an account?"}{' '}
+              <Link
+                className="workspace-link"
+                to={
+                  (register ? '/login' : '/register') + '?returnTo=' + encodeURIComponent(returnTo)
+                }
+              >
+                {register ? 'Log in' : 'Sign up'}
+              </Link>
+            </p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

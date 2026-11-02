@@ -59,12 +59,14 @@ export function readRuntimeEnv(env: Record<string, string | undefined>, role: 'a
   const parsed = schema.safeParse(env);
   if (!parsed.success) {
     throw new Error(
-      `Environment tidak valid: ${[...new Set(parsed.error.issues.map((issue) => issue.path.join('.')))].join(', ')}`,
+      `Invalid environment: ${[...new Set(parsed.error.issues.map((issue) => issue.path.join('.')))].join(', ')}`,
     );
   }
   redisConnection(parsed.data.REDIS_URL, role === 'app' ? 'producer' : 'worker');
   if (role === 'app' && parsed.data.STORAGE_DRIVER === 'local' && !env.STORAGE_PATH) {
-    throw new Error('Environment tidak valid: STORAGE_PATH wajib untuk local storage production.');
+    throw new Error(
+      'Invalid environment: STORAGE_PATH is required for local storage in production.',
+    );
   }
   if (role === 'app' && parsed.data.STORAGE_DRIVER === 'r2') {
     const r2 = z
@@ -80,16 +82,14 @@ export function readRuntimeEnv(env: Record<string, string | undefined>, role: 'a
       .safeParse(env);
     if (!r2.success)
       throw new Error(
-        'Environment R2 tidak lengkap/valid (R2_ENDPOINT, R2_BUCKET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY).',
+        'Incomplete or invalid R2 environment (R2_ENDPOINT, R2_BUCKET, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY).',
       );
   }
   if (role === 'app' && env.QRIS_ENABLED === 'true') {
     try {
       qrisConfig(env);
     } catch {
-      throw new Error(
-        'Environment QRIS tidak valid: periksa merchant/store/payload/hash/name/secret.',
-      );
+      throw new Error('Invalid QRIS environment: check merchant/store/payload/hash/name/secret.');
     }
   }
   return {

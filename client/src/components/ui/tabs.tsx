@@ -1,51 +1,26 @@
 import { forwardRef } from 'react';
-import * as TabsPrimitive from '@radix-ui/react-tabs';
+import { Tabs as ThemesTabs } from '@radix-ui/themes';
 import { cn } from '@/lib/utils';
-
-const Tabs = TabsPrimitive.Root;
-
+const Tabs = ThemesTabs.Root;
 const TabsList = forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
+  React.ElementRef<typeof ThemesTabs.List>,
+  React.ComponentPropsWithoutRef<typeof ThemesTabs.List>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn('inline-flex items-center gap-1 rounded-lg bg-surface-2 p-1', className)}
-    {...props}
-  />
+  <ThemesTabs.List ref={ref} className={cn('ui-tabs-list', className)} {...props} />
 ));
-TabsList.displayName = TabsPrimitive.List.displayName;
-
+TabsList.displayName = 'TabsList';
 const TabsTrigger = forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
+  React.ElementRef<typeof ThemesTabs.Trigger>,
+  React.ComponentPropsWithoutRef<typeof ThemesTabs.Trigger>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      'inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-      'data-[state=active]:bg-accent data-[state=active]:text-accent-foreground hover:text-foreground data-[state=active]:hover:text-accent-foreground',
-      className,
-    )}
-    {...props}
-  />
+  <ThemesTabs.Trigger ref={ref} className={cn('ui-tabs-trigger', className)} {...props} />
 ));
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
-
+TabsTrigger.displayName = 'TabsTrigger';
 const TabsContent = forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
+  React.ElementRef<typeof ThemesTabs.Content>,
+  React.ComponentPropsWithoutRef<typeof ThemesTabs.Content>
 >(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      'mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-      className,
-    )}
-    {...props}
-  />
+  <ThemesTabs.Content ref={ref} className={cn('ui-tabs-content', className)} {...props} />
 ));
-TabsContent.displayName = TabsPrimitive.Content.displayName;
-
+TabsContent.displayName = 'TabsContent';
 export { Tabs, TabsList, TabsTrigger, TabsContent };

@@ -56,7 +56,7 @@ export default function Editor3DPage() {
         if (projectParam) {
           const project = await api.projects.get(projectParam);
           if (!active) return;
-          if (project.kind !== 'scene3d') throw Error('Project bukan scene3D.');
+          if (project.kind !== 'scene3d') throw Error('This project is not a 3D scene.');
           const scene = project.state as Scene3DState;
           useScene3DEditor.getState().loadState(scene, project.id, project.title);
           key = scene.modelKey ?? 'mug';
@@ -66,13 +66,13 @@ export default function Editor3DPage() {
         }
         if (key.startsWith('sample:')) {
           const model = models.find((m) => 'sample:' + m.id === key);
-          if (!model) throw Error('Sample model tidak tersedia.');
+          if (!model) throw Error('The sample model is unavailable.');
           if (active) useScene3DEditor.getState().setModelUrl(model.url);
         } else if (key !== 'mug' || useScene3DEditor.getState().modelSource === 'catalog') {
           const asset = await api.editorAsset(key);
           if (!active) return;
           if (!['mockup3d', 'asset3d'].includes(asset.type) || !asset.modelUrl)
-            throw Error('Model3D tidak tersedia atau akses ditolak.');
+            throw Error('The 3D model is unavailable or access was denied.');
           useScene3DEditor.getState().setModelUrl(asset.modelUrl);
           if (!projectParam) useScene3DEditor.getState().setTitle(asset.title);
         }
@@ -80,7 +80,7 @@ export default function Editor3DPage() {
       } catch (err) {
         if (active) {
           setLoading(false);
-          setError(err instanceof Error ? err.message : 'Model tidak dapat dimuat.');
+          setError(err instanceof Error ? err.message : 'Unable to load the model.');
         }
       }
     })();
@@ -101,11 +101,11 @@ export default function Editor3DPage() {
     if (!gl.current) return;
     try {
       exportRendererImage(gl.current, format, state.title || 'nesomn-3d');
-      toast({ title: 'Export dimulai' });
+      toast({ title: 'Export started' });
     } catch {
       toast({
-        title: 'Export gagal',
-        description: 'Periksa akses CORS/texture dan renderer.',
+        title: 'Export failed',
+        description: 'Check CORS access, textures, and renderer support.',
         variant: 'danger',
       });
     }
@@ -123,10 +123,10 @@ export default function Editor3DPage() {
         fileName: state.title || 'nesomn-3d',
         signal: controller.signal,
       });
-      toast({ title: 'Video tersimpan' });
+      toast({ title: 'Video saved' });
     } catch (err) {
       if (!(err instanceof DOMException && err.name === 'AbortError'))
-        toast({ title: 'Rekaman gagal', variant: 'danger' });
+        toast({ title: 'Recording failed', variant: 'danger' });
     } finally {
       setRecording(false);
       setRotate(false);
@@ -157,16 +157,16 @@ export default function Editor3DPage() {
         setParams({ project: result.id }, { replace: true });
       }
       toast({
-        title: 'Snapshot project tersimpan',
+        title: 'Project snapshot saved',
         description: useScene3DEditor.getState().dirty
-          ? 'Perubahan terbaru belum tersimpan. Klik Save kembali.'
+          ? 'Your latest changes have not been saved. Click Save again.'
           : undefined,
       });
     } catch (err) {
       if (epoch !== editorEpoch() || document !== activeDocument.current) return;
       toast({
-        title: 'Gagal menyimpan',
-        description: err instanceof Error ? err.message : 'Coba lagi.',
+        title: 'Unable to save',
+        description: err instanceof Error ? err.message : 'Try again.',
         variant: 'danger',
       });
     } finally {
@@ -179,7 +179,7 @@ export default function Editor3DPage() {
       <Seo title="3D Editor" />
       <header className="editor3d-toolbar">
         <h1>3D Editor</h1>
-        <div className="flex flex-wrap gap-2">
+        <div className="editor3d-primary-actions">
           <Button
             aria-pressed={tab === 'design'}
             variant={tab === 'design' ? 'primary' : 'ghost'}
@@ -195,7 +195,7 @@ export default function Editor3DPage() {
             Colour
           </Button>
         </div>
-        <div className="ml-auto flex flex-wrap gap-2">
+        <div className="editor3d-file-actions">
           <Button variant="secondary" disabled={disabled} onClick={() => image('png')}>
             PNG
           </Button>
@@ -203,31 +203,31 @@ export default function Editor3DPage() {
             JPEG
           </Button>
           <Button variant="secondary" disabled={disabled} onClick={() => void video()}>
-            {recording ? 'Merekam…' : 'Render Video'}
+            {recording ? 'Recording…' : 'Render Video'}
           </Button>
           <Button disabled={disabled || saving} onClick={() => void save()}>
-            {saving ? 'Menyimpan…' : 'Save'}
+            {saving ? 'Saving…' : 'Save'}
           </Button>
         </div>
       </header>
       <div className="editor3d-workspace">
         <div className="editor3d-canvas">
           {loading ? (
-            <p role="status" className="p-6">
-              Memuat scene3D…
+            <p role="status" className="editor3d-feedback">
+              Loading 3D scene…
             </p>
           ) : error ? (
-            <div role="alert" className="p-6">
+            <div role="alert" className="editor3d-feedback">
               <p>{error}</p>
-              <Button onClick={() => setAttempt((v) => v + 1)}>Coba lagi</Button>
+              <Button onClick={() => setAttempt((v) => v + 1)}>Try again</Button>
             </div>
           ) : (
             <RenderBoundary
               key={attempt}
               fallback={
-                <div role="alert" className="p-6">
-                  <p>Renderer3D tidak tersedia. Periksa dukungan WebGL/model.</p>
-                  <Button onClick={() => setAttempt((v) => v + 1)}>Coba lagi</Button>
+                <div role="alert" className="editor3d-feedback">
+                  <p>The 3D renderer is unavailable. Check WebGL support and the model.</p>
+                  <Button onClick={() => setAttempt((v) => v + 1)}>Try again</Button>
                 </div>
               }
             >
@@ -236,17 +236,17 @@ export default function Editor3DPage() {
           )}{' '}
           {!slug && !projectParam && (
             <p className="sample-scene-label">
-              Demo / Sample — built-in cylinder, bukan produk katalog.
+              Demo / Sample — built-in cylinder, not a catalogue product.
             </p>
           )}
         </div>
         <aside className="editor3d-inspector">
-          <div className="border-b border-border p-4">
-            <p role="status" className="mb-2 text-xs text-muted-foreground">
-              {state.dirty ? 'Ada perubahan belum tersimpan' : 'Tidak ada perubahan tertunda'}
+          <div className="editor3d-project-settings">
+            <p role="status" className="editor3d-save-status">
+              {state.dirty ? 'You have unsaved changes' : 'No unsaved changes'}
             </p>
             <Input
-              label="Nama project"
+              label="Project name"
               id="project-title-3d"
               value={state.title}
               onChange={(e) => state.setTitle(e.target.value)}

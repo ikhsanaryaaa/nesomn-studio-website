@@ -14,11 +14,11 @@ function DataState<T>({
   query: { isLoading: boolean; isError: boolean; data: T | undefined; refetch: () => unknown };
   children: (data: T) => ReactNode;
 }) {
-  if (query.isLoading) return <PageState loading title="Memuat…" />;
+  if (query.isLoading) return <PageState loading title="Loading…" />;
   if (query.isError)
-    return <PageState title="Data tidak dapat dimuat" retry={() => void query.refetch()} />;
+    return <PageState title="Unable to load data" retry={() => void query.refetch()} />;
   return query.data === undefined ? (
-    <PageState title="Data belum tersedia" />
+    <PageState title="Data is not available yet" />
   ) : (
     children(query.data)
   );
@@ -70,7 +70,7 @@ function AccountWorkspace() {
       });
       navigate(result.checkoutUrl);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Invoice belum dapat dibuat.');
+      setError(err instanceof Error ? err.message : 'Unable to create an invoice.');
     } finally {
       setPackPending(false);
     }
@@ -80,10 +80,10 @@ function AccountWorkspace() {
       <Seo title="Account" />
       <header className="page-heading">
         <div>
-          <h1>Ruang kerja Anda.</h1>
+          <h1>Your workspace.</h1>
           <p>{auth.user?.name}</p>
         </div>
-        <div className="flex flex-wrap gap-3">
+        <div className="workspace-actions">
           <Button asChild variant="secondary">
             <Link to="/editor/projects">My Projects</Link>
           </Button>
@@ -98,27 +98,27 @@ function AccountWorkspace() {
           <DataState query={credit}>
             {(data) => (
               <p className="account-value">
-                {data.balance.toLocaleString('id-ID')} <span>credits</span>
+                {data.balance.toLocaleString('en-ID')} <span>credits</span>
               </p>
             )}
           </DataState>
         </section>
         <section>
-          <h2>Langganan</h2>
+          <h2>Subscription</h2>
           <DataState query={subscription}>
             {(data) =>
               data ? (
                 <>
                   <p className="account-value">
-                    {plans.data?.find((p) => p.id === data.planId)?.name ?? 'Langganan Anda'}
+                    {plans.data?.find((p) => p.id === data.planId)?.name ?? 'Your subscription'}
                   </p>
-                  {plans.isError && <p>Nama plan belum dapat dimuat.</p>}
+                  {plans.isError && <p>Unable to load the plan name.</p>}
                   <p>Status: {data.status}</p>
                   <p>
-                    Periode sampai{' '}
+                    Current period ends{' '}
                     {data.currentPeriodEnd
-                      ? new Date(data.currentPeriodEnd).toLocaleDateString('id-ID')
-                      : 'Belum tersedia'}
+                      ? new Date(data.currentPeriodEnd).toLocaleDateString('en-ID')
+                      : 'Not available yet'}
                   </p>
                   {data.status === 'active' && (
                     <Button
@@ -127,22 +127,22 @@ function AccountWorkspace() {
                       onClick={() => {
                         if (
                           window.confirm(
-                            'Batalkan perpanjangan langganan? Akses mengikuti akhir periode di server.',
+                            'Cancel subscription renewal? Your access remains valid until the end of the period recorded by the server.',
                           )
                         )
                           cancel.mutate();
                       }}
                     >
-                      Batalkan perpanjangan
+                      Cancel renewal
                     </Button>
                   )}
                   {cancel.isError && <p role="alert">{cancel.error.message}</p>}
                 </>
               ) : (
                 <>
-                  <p>Tidak ada langganan aktif.</p>
-                  <Link className="text-accent underline" to="/pricing">
-                    Lihat paket
+                  <p>No active subscription.</p>
+                  <Link className="workspace-link" to="/pricing">
+                    View plans
                   </Link>
                 </>
               )
@@ -167,28 +167,29 @@ function AccountWorkspace() {
                       </p>
                     </div>
                     <Button disabled={packPending} onClick={() => void topup(p.id)}>
-                      {packPending ? 'Memproses…' : 'Pilih paket'}
+                      {packPending ? 'Processing…' : 'Choose a plan'}
                     </Button>
                   </div>
                 ))}
               </div>
             ) : (
-              <PageState title="Belum ada paket top-up tersedia" />
+              <PageState title="No credit packs are available yet" />
             )
           }
         </DataState>
         {error && (
-          <p role="alert" className="text-danger">
+          <p role="alert" className="workspace-error">
             {error}
           </p>
         )}
-        <p className="mt-4 text-sm text-muted-foreground">
-          Kode unik ditampilkan sebelum QRIS. Credits aktif setelah konfirmasi server.
+        <p className="workspace-followup-note">
+          The unique payment code is shown before the QRIS code. Credits are added after server
+          confirmation.
         </p>
       </section>
       <section className="account-section">
         <div className="section-heading">
-          <h2>Riwayat pembayaran</h2>
+          <h2>Payment history</h2>
         </div>
         <DataState query={history}>
           {(data) =>
@@ -199,18 +200,18 @@ function AccountWorkspace() {
                     <div>
                       <strong>{order.type}</strong>
                       <p>
-                        {new Date(order.createdAt).toLocaleDateString('id-ID')} · {order.gateway}
+                        {new Date(order.createdAt).toLocaleDateString('en-ID')} · {order.gateway}
                       </p>
                     </div>
                     <div>
                       <p>
                         {rp(order.amountIdr)}{' '}
-                        <span className="text-xs text-muted-foreground">sebelum kode unik</span>
+                        <span className="workspace-caption">before the unique payment code</span>
                       </p>
                       <span className="payment-status">{order.status}</span>
                       {order.gateway === 'qris' && (
-                        <Link className="text-accent underline" to={'/checkout?order=' + order.id}>
-                          Lihat invoice
+                        <Link className="workspace-link" to={'/checkout?order=' + order.id}>
+                          View invoice
                         </Link>
                       )}
                     </div>
@@ -218,14 +219,14 @@ function AccountWorkspace() {
                 ))}
               </ul>
             ) : (
-              <PageState title="Belum ada riwayat pembayaran" />
+              <PageState title="No payment history yet" />
             )
           }
         </DataState>
       </section>
       <section className="account-section">
         <div className="section-heading">
-          <h2>Sesi perangkat</h2>
+          <h2>Device sessions</h2>
         </div>
         <DataState query={sessions}>
           {(data) =>
@@ -234,10 +235,10 @@ function AccountWorkspace() {
                 {data.map((s) => (
                   <li key={s.id}>
                     <div>
-                      <p>{s.userAgent ?? 'Perangkat tidak dikenal'}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {s.current ? 'Sesi ini · ' : ''}
-                        {new Date(s.lastSeenAt).toLocaleString('id-ID')}
+                      <p>{s.userAgent ?? 'Unknown device'}</p>
+                      <p className="workspace-description">
+                        {s.current ? 'This session · ' : ''}
+                        {new Date(s.lastSeenAt).toLocaleString('en-ID')}
                       </p>
                     </div>
                     <Button
@@ -245,13 +246,13 @@ function AccountWorkspace() {
                       disabled={revoke.isPending}
                       onClick={() => revoke.mutate(s.id)}
                     >
-                      {s.current ? 'Keluar sesi ini' : 'Cabut sesi'}
+                      {s.current ? 'Log out of this session' : 'Revoke session'}
                     </Button>
                   </li>
                 ))}
               </ul>
             ) : (
-              <PageState title="Tidak ada sesi untuk ditampilkan" />
+              <PageState title="No sessions to display" />
             )
           }
         </DataState>

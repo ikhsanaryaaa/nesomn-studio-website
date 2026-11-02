@@ -30,7 +30,7 @@ const worker = new Worker(
   QUEUE_NAME,
   async (job) => {
     const { jobId } = job.data as { jobId: string };
-    console.log(`📥 memproses job ${jobId}`);
+    console.log(`📥 Processing job ${jobId}`);
     const task = processJob(jobId);
     activeJobs.add(task);
     let result;
@@ -39,7 +39,7 @@ const worker = new Worker(
     } finally {
       activeJobs.delete(task);
     }
-    console.log(`✔ job ${jobId} selesai: ${result.status}`);
+    console.log(`✔ job ${jobId} completed: ${result.status}`);
     return result;
   },
   // Concurrency 2: beberapa user dapat diproses paralel; 1 job/user

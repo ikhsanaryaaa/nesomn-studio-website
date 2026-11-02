@@ -22,30 +22,31 @@ export function validateModelUrl(value: string, origin: string) {
     url.password ||
     (url.protocol !== 'https:' && !(url.protocol === 'http:' && url.origin === origin))
   )
-    throw Error('URL model tidak didukung. Gunakan storage HTTPS atau sumber lokal aplikasi.');
+    throw Error('Unsupported model URL. Use HTTPS storage or a local application source.');
   return url.href;
 }
 export function inspectModelBytes(bytes: ArrayBuffer) {
   if (bytes.byteLength > MAX_MODEL_BYTES || bytes.byteLength < 12)
-    throw Error('Model tidak valid atau melebihi 25MB.');
+    throw Error('The model is invalid or exceeds 25 MB.');
   const v = new DataView(bytes);
   let json: Record<string, unknown>;
   if (v.getUint32(0, true) === 0x46546c67) {
-    if (bytes.byteLength < 20) throw Error('Chunk GLB terpotong.');
+    if (bytes.byteLength < 20) throw Error('The GLB chunk is truncated.');
     if (v.getUint32(4, true) !== 2 || v.getUint32(8, true) !== bytes.byteLength)
-      throw Error('Header GLB tidak valid.');
+      throw Error('Invalid GLB header.');
     const length = v.getUint32(12, true);
     if (v.getUint32(16, true) !== 0x4e4f534a || 20 + length > bytes.byteLength)
-      throw Error('Chunk GLB tidak valid.');
+      throw Error('Invalid GLB chunk.');
     json = JSON.parse(new TextDecoder().decode(bytes.slice(20, 20 + length)));
   } else {
     try {
       json = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
     } catch {
-      throw Error('File harus GLB atau GLTF 2.0.');
+      throw Error('The file must be GLB or glTF 2.0.');
     }
   }
-  if ((json.asset as { version?: string })?.version !== '2.0') throw Error('Versi glTF harus 2.0.');
+  if ((json.asset as { version?: string })?.version !== '2.0')
+    throw Error('The glTF version must be 2.0.');
   const buffers = (json.buffers ?? []) as { byteLength: number; uri?: string }[],
     views = (json.bufferViews ?? []) as {
       buffer: number;
@@ -56,7 +57,7 @@ export function inspectModelBytes(bytes: ArrayBuffer) {
   const integer = (v: number) => Number.isSafeInteger(v) && v >= 0;
   for (const buffer of buffers)
     if (!integer(buffer.byteLength) || buffer.byteLength > MAX_MODEL_BYTES)
-      throw Error('Buffer model tidak valid.');
+      throw Error('Invalid model buffer.');
   for (const view of views) {
     const buffer = buffers[view.buffer];
     if (
@@ -65,7 +66,7 @@ export function inspectModelBytes(bytes: ArrayBuffer) {
       !integer(view.byteLength) ||
       (view.byteOffset ?? 0) + view.byteLength > buffer.byteLength
     )
-      throw Error('Buffer view keluar batas.');
+      throw Error('The buffer view is out of bounds.');
   }
   const components: Record<number, number> = {
       5120: 1,
@@ -101,7 +102,7 @@ export function inspectModelBytes(bytes: ArrayBuffer) {
       !integer(accessor.byteOffset ?? 0) ||
       values > 10000000
     )
-      throw Error('Accessor melebihi batas model.');
+      throw Error('The accessor exceeds the model limits.');
     if (accessor.bufferView !== undefined) {
       const view = views[accessor.bufferView],
         stride = view?.byteStride ?? bytes;
@@ -112,7 +113,7 @@ export function inspectModelBytes(bytes: ArrayBuffer) {
         (accessor.byteOffset ?? 0) + Math.max(0, accessor.count - 1) * stride + bytes >
           view.byteLength
       )
-        throw Error('Accessor keluar batas buffer.');
+        throw Error('The accessor is out of buffer bounds.');
     }
   }
   // Embedded resources avoid additional unbounded requests, CORS leaks and orphaned loads.
@@ -127,7 +128,7 @@ export function inspectModelBytes(bytes: ArrayBuffer) {
       )
     )
       throw Error(
-        'GLTF membutuhkan resource tertanam; ekspor sebagai GLB atau embed buffer/texture.',
+        'The glTF file requires embedded resources. Export as GLB or embed its buffers and textures.',
       );
   if (
     json.extensionsRequired &&
@@ -136,7 +137,7 @@ export function inspectModelBytes(bytes: ArrayBuffer) {
     )
   )
     throw Error(
-      'Model compressed membutuhkan decoder yang belum didukung. Ekspor GLB tanpa compression.',
+      'The compressed model requires an unsupported decoder. Export an uncompressed GLB.',
     );
   return json;
 }

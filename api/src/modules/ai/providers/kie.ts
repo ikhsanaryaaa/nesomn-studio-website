@@ -31,8 +31,8 @@ export class KieProvider implements AIProvider {
   private readonly apiKey: string;
 
   constructor(row: ProviderRow) {
-    if (!row.baseUrl) throw new Error('KieProvider butuh baseUrl.');
-    if (!row.apiKeyEncrypted) throw new Error('KieProvider butuh apiKey.');
+    if (!row.baseUrl) throw new Error('KieProvider requires baseUrl.');
+    if (!row.apiKeyEncrypted) throw new Error('KieProvider requires apiKey.');
     this.kind = row.kind;
     this.tab = row.tab;
     this.baseUrl = row.baseUrl.replace(/\/$/, '');
@@ -62,12 +62,12 @@ export class KieProvider implements AIProvider {
         body: JSON.stringify(this.buildPayload(input)),
       });
       if (!submitRes.ok) {
-        throw new Error(`Submit gagal: HTTP ${submitRes.status}`);
+        throw new Error(`Submission failed: HTTP ${submitRes.status}`);
       }
       const submit = (await submitRes.json()) as { id?: string };
       const remoteId = submit.id;
       if (typeof remoteId !== 'string' || !/^[a-zA-Z0-9_-]{1,200}$/.test(remoteId))
-        throw new Error('Respons submit tidak memuat id job.');
+        throw new Error('The submission response does not contain a job ID.');
 
       acceptedRef = remoteId;
       await context?.onAccepted(remoteId);
@@ -96,10 +96,10 @@ export class KieProvider implements AIProvider {
           return { resultUrl: poll.resultUrl };
         }
         if (poll.status === 'failed') {
-          throw new Error('Provider melaporkan job gagal.');
+          throw new Error('The provider reported that the job failed.');
         }
       }
-      throw new Error('Timeout menunggu hasil provider.');
+      throw new Error('Timed out waiting for the provider result.');
     } catch {
       throw new ProviderFailure(false, acceptedRef);
     }

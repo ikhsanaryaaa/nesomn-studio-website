@@ -30,7 +30,7 @@ export const errorHandler = new Elysia({ name: 'error-handler' }).onError(
       return {
         error: {
           code: 'VALIDATION_ERROR',
-          message: 'Input tidak valid.',
+          message: 'Invalid input.',
           fields: error.issues.map((i) => ({ path: i.path.join('.'), message: i.message })),
         },
       };
@@ -38,17 +38,17 @@ export const errorHandler = new Elysia({ name: 'error-handler' }).onError(
 
     if (code === 'NOT_FOUND') {
       set.status = 404;
-      return { error: { code: 'NOT_FOUND', message: 'Resource tidak ditemukan.' } };
+      return { error: { code: 'NOT_FOUND', message: 'Resource not found.' } };
     }
 
     if (code === 'VALIDATION') {
       set.status = 422;
-      return { error: { code: 'VALIDATION_ERROR', message: 'Input tidak valid.' } };
+      return { error: { code: 'VALIDATION_ERROR', message: 'Invalid input.' } };
     }
 
     // Fallback: jangan bocorkan detail internal.
     set.status = 500;
     console.error('[error] Request failed; internal details withheld.');
-    return { error: { code: 'INTERNAL_ERROR', message: 'Terjadi kesalahan internal.' } };
+    return { error: { code: 'INTERNAL_ERROR', message: 'An internal error occurred.' } };
   },
 );

@@ -26,10 +26,10 @@ function LibraryContent() {
       const result = await api.downloadUrl(id);
       const url = new URL(result.url, window.location.origin);
       if (url.protocol !== 'https:' && url.origin !== window.location.origin)
-        throw Error('Tautan download tidak valid.');
+        throw Error('The download link is invalid.');
       setDownload({ id, url: url.href });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Download belum tersedia.');
+      setError(err instanceof Error ? err.message : 'The download is not available yet.');
     } finally {
       setPending(null);
     }
@@ -40,51 +40,51 @@ function LibraryContent() {
       <header className="page-heading">
         <div>
           <h1>Asset Library</h1>
-          <p>Aset milik Anda, siap untuk project berikutnya.</p>
+          <p>Your assets, ready for your next project.</p>
         </div>
         <Button asChild variant="secondary">
-          <Link to="/marketplace">Jelajahi katalog</Link>
+          <Link to="/marketplace">Explore the catalogue</Link>
         </Button>
       </header>
       {query.isLoading ? (
-        <PageState title="Memuat Library…" loading />
+        <PageState title="Loading Library…" loading />
       ) : query.isError ? (
-        <PageState title="Library tidak dapat dimuat" retry={() => void query.refetch()} />
+        <PageState title="Unable to load your Library" retry={() => void query.refetch()} />
       ) : query.data?.length ? (
         <div className="asset-grid">
           {query.data.map((item) => (
             <article key={item.id}>
               <Link to={'/marketplace/' + item.slug}>
                 <AssetMedia src={item.previews[0]} title={item.title} />
-                <h2 className="my-4 font-semibold">{item.title}</h2>
+                <h2 className="library-asset-title">{item.title}</h2>
               </Link>
               <Button
                 variant="secondary"
                 disabled={pending !== null}
                 onClick={() => void prepare(item.id)}
               >
-                {pending === item.id ? 'Menyiapkan…' : 'Siapkan download'}
+                {pending === item.id ? 'Preparing…' : 'Prepare download'}
               </Button>
               {download?.id === item.id && (
                 <a
-                  className="ml-3 text-accent underline"
+                  className="library-editor-link"
                   target="_blank"
                   rel="noopener noreferrer"
                   href={download.url}
                 >
-                  Buka download
+                  Open download
                 </a>
               )}
             </article>
           ))}
         </div>
       ) : (
-        <PageState title="Belum ada aset dimiliki">
-          Klaim aset gratis atau beli melalui katalog.
+        <PageState title="You don't own any assets yet">
+          Claim free assets or purchase them from the catalogue.
         </PageState>
       )}
       {error && (
-        <p role="alert" className="mt-4 text-danger">
+        <p role="alert" className="library-error">
           {error}
         </p>
       )}

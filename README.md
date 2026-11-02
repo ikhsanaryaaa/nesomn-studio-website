@@ -35,7 +35,7 @@ UI memakai monokrom + orange, Bricolage Grotesque/Manrope, logo asli, tema light
 | Bagian         | Teknologi                                                              |
 | -------------- | ---------------------------------------------------------------------- |
 | Runtime/API    | Bun **1.4.4**, Elysia **1.4.30**, @elysiajs/cors **1.4.2**, TypeScript |
-| Client         | React 19, Vite, React Router, Tailwind CSS v4, Radix UI                |
+| Client         | React 19, Vite, React Router, Radix Themes 3.3.0, CSS semantik         |
 | State          | Zustand dan TanStack Query                                             |
 | Editor         | Konva, Three.js, React Three Fiber/Drei                                |
 | Admin          | Refine, Ant Design                                                     |
@@ -249,3 +249,8 @@ Lihat [laporan Litepod](docs/revision/litepod-2026-11-02.md), [perbaikan bug](do
 ## Lisensi
 
 Proprietary — © 2026 Nesomn Studio. All rights reserved. Komponen pihak ketiga tetap mengikuti lisensi masing-masing, termasuk SDK vendored pada `integrations/qris/`.
+
+
+## Interface language
+
+The client and admin interface use English. Existing user-authored names, asset descriptions and stored records are preserved. Prices remain in IDR. See [English UI revision](docs/revision/english-ui-2026-11-03.md) for verification and limits.

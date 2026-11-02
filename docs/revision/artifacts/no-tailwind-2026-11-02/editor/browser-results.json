@@ -1,0 +1,42 @@
+{
+  "fixture": "Fresh production client build (Windows), isolated API double, no production data or Docker",
+  "slugSwitch": {
+    "firstLayers": 1,
+    "secondLayers": 1,
+    "bug": false,
+    "reason": "Path transition remounts editor and resets state"
+  },
+  "accountSwitch": {
+    "currentUser": "user-B",
+    "visibleTitle": "Untitled Scene",
+    "projectGetsBeforeProbe": 6,
+    "serverOwnershipStatus": 404
+  },
+  "expired2dImage": {
+    "pixelsBefore": 2704,
+    "pixelsAfter": 2704,
+    "layerStillSaved": 1,
+    "reSignedLookups": 1,
+    "simulatedExpiry": true
+  },
+  "save3d": {
+    "sentTitle": "Untitled 3D Scene",
+    "typedWhilePending": "EDITED WHILE SAVING",
+    "afterResponse": "EDITED WHILE SAVING"
+  },
+  "update3d": {
+    "preserved": true
+  },
+  "staleSave": {
+    "ignoredAfterNavigation": true
+  },
+  "legacyImage": {
+    "recovered": true
+  },
+  "imageError": {
+    "visible": true,
+    "exportBlocked": true,
+    "retryRecovered": true
+  },
+  "consoleExceptions": []
+}

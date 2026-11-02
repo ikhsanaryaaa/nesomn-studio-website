@@ -67,7 +67,7 @@ export const assets3dAdminRoutes = new Elysia({ prefix: '/assets-3d' })
     const row = await db.query.assets.findFirst({
       where: and(eq(assets.id, params.id), ONLY_3D),
     });
-    if (!row) throw new AppError('NOT_FOUND', 'Aset 3D tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', '3D asset not found.', 404);
     return row;
   })
   .post('/', async ({ body, set }) => {
@@ -86,7 +86,7 @@ export const assets3dAdminRoutes = new Elysia({ prefix: '/assets-3d' })
       .set({ ...input, editorType: 'product_3d_editor', updatedAt: new Date() })
       .where(and(eq(assets.id, params.id), ONLY_3D))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Aset 3D tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', '3D asset not found.', 404);
     return row;
   })
   .delete('/:id', async ({ params }) => {
@@ -94,6 +94,6 @@ export const assets3dAdminRoutes = new Elysia({ prefix: '/assets-3d' })
       .delete(assets)
       .where(and(eq(assets.id, params.id), ONLY_3D))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Aset 3D tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', '3D asset not found.', 404);
     return { ok: true };
   });

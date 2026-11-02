@@ -20,14 +20,15 @@ export const checkoutBody = z.object({
 /** Susun order + item berdasarkan tipe; harga dari DB (server-side). */
 export async function buildOrder(input: z.infer<typeof checkoutBody>) {
   if (input.type === 'subscription') {
-    if (!input.planId) throw new AppError('BAD_REQUEST', 'planId wajib untuk subscription.', 400);
+    if (!input.planId)
+      throw new AppError('BAD_REQUEST', 'planId is required for a subscription.', 400);
     const plan = await db.query.plans.findFirst({ where: eq(plans.id, input.planId) });
-    if (!plan) throw new AppError('NOT_FOUND', 'Plan tidak ditemukan.', 404);
+    if (!plan) throw new AppError('NOT_FOUND', 'Plan not found.', 404);
     if (plan.isEnterprise) throw new AppError('BAD_REQUEST', 'Enterprise via Contact Sales.', 400);
     return {
       amountIdr: Number(plan.priceIdr),
       amountUsd: Number(plan.priceUsd),
-      description: `Langganan ${plan.name}`,
+      description: `Subscription ${plan.name}`,
       items: [
         {
           refType: 'plan',
@@ -47,11 +48,11 @@ export async function buildOrder(input: z.infer<typeof checkoutBody>) {
     };
   }
   if (input.type === 'topup') {
-    if (!input.creditPackId) throw new AppError('BAD_REQUEST', 'creditPackId wajib.', 400);
+    if (!input.creditPackId) throw new AppError('BAD_REQUEST', 'creditPackId is required.', 400);
     const pack = await db.query.creditPacks.findFirst({
       where: eq(creditPacks.id, input.creditPackId),
     });
-    if (!pack || !pack.enabled) throw new AppError('NOT_FOUND', 'Credit pack tidak tersedia.', 404);
+    if (!pack || !pack.enabled) throw new AppError('NOT_FOUND', 'Credit pack unavailable.', 404);
     return {
       amountIdr: Number(pack.priceIdr),
       amountUsd: Number(pack.priceUsd),
@@ -68,13 +69,13 @@ export async function buildOrder(input: z.infer<typeof checkoutBody>) {
     };
   }
   // asset / bundle
-  if (!input.assetIds?.length) throw new AppError('BAD_REQUEST', 'assetIds wajib.', 400);
+  if (!input.assetIds?.length) throw new AppError('BAD_REQUEST', 'assetIds is required.', 400);
   const rows = await db.query.assets.findMany({ where: inArray(assets.id, input.assetIds) });
   if (
     rows.length !== input.assetIds.length ||
     rows.some((a) => a.status !== 'published' || !a.isMarketplace)
   )
-    throw new AppError('NOT_FOUND', 'Sebagian aset tidak ada.', 404);
+    throw new AppError('NOT_FOUND', 'Some assets were not found.', 404);
   const price = computeBundlePrice(
     rows.map((a) => ({ id: a.id, priceIdr: Number(a.priceIdr), priceUsd: Number(a.priceUsd) })),
   );
@@ -83,7 +84,7 @@ export async function buildOrder(input: z.infer<typeof checkoutBody>) {
     subtotalIdr: price.subtotalIdr,
     discountIdr: price.discountIdr,
     amountUsd: price.totalUsd,
-    description: input.type === 'bundle' ? `Bundle ${rows.length} aset` : rows[0].title,
+    description: input.type === 'bundle' ? `Bundle ${rows.length} assets` : rows[0].title,
     items: rows.map((a) => ({
       refType: 'asset',
       refId: a.id,

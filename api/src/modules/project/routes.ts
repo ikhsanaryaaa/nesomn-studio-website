@@ -35,7 +35,7 @@ async function getOwned(userId: string, id: string) {
   const project = await db.query.projects.findFirst({
     where: and(eq(projects.id, id), eq(projects.userId, userId)),
   });
-  if (!project) throw new AppError('NOT_FOUND', 'Project tidak ditemukan.', 404);
+  if (!project) throw new AppError('NOT_FOUND', 'Project not found.', 404);
   return project;
 }
 
@@ -55,15 +55,15 @@ async function validateMutation(
       model.editorType !== 'product_3d_editor' ||
       !(await canUseAsset(user.id, model.id))
     )
-      throw new AppError('FORBIDDEN', 'Editor 3D memerlukan plan atau lisensi model.', 403);
+      throw new AppError('FORBIDDEN', 'The 3D Editor requires a plan or model licence.', 403);
   }
   if (state && JSON.stringify(state).length > 8 * 1024 * 1024)
-    throw new AppError('TOO_LARGE', 'Dokumen project terlalu besar.', 413);
+    throw new AppError('TOO_LARGE', 'The project document is too large.', 413);
   if (thumbnailKey) {
     validateStorageKey(thumbnailKey);
     const row = await db.query.media.findFirst({ where: eq(media.key, thumbnailKey) });
     if (!row || (row.ownerId !== user.id && user.role !== 'admin'))
-      throw new AppError('FORBIDDEN', 'Thumbnail bukan media milik Anda.', 403);
+      throw new AppError('FORBIDDEN', 'The thumbnail does not belong to you.', 403);
   }
 }
 

@@ -26,14 +26,14 @@ export async function createInvoice(
 ) {
   const config = qrisConfig();
   if (!/^[A-Za-z0-9_.-]{1,128}$/.test(key))
-    throw new AppError('BAD_REQUEST', 'Idempotency-Key wajib.', 400);
+    throw new AppError('BAD_REQUEST', 'Idempotency-Key is required.', 400);
   const requestHash = digest(JSON.stringify(input));
   const prior = await db.query.qrisInvoices.findFirst({
     where: and(eq(qrisInvoices.userId, userId), eq(qrisInvoices.requestKey, key)),
   });
   if (prior) {
     if (prior.requestHash !== requestHash)
-      throw new AppError('CONFLICT', 'Idempotency-Key berbeda payload.', 409);
+      throw new AppError('CONFLICT', 'Idempotency-Key was used with a different payload.', 409);
     const order = await db.query.orders.findFirst({ where: eq(orders.id, prior.orderId) });
     return { order: order!, checkoutUrl: '/checkout?order=' + prior.orderId };
   }
@@ -48,7 +48,7 @@ export async function createInvoice(
     });
     if (existing) {
       if (existing.requestHash !== requestHash)
-        throw new AppError('CONFLICT', 'Idempotency-Key berbeda payload.', 409);
+        throw new AppError('CONFLICT', 'Idempotency-Key was used with a different payload.', 409);
       const order = await tx.query.orders.findFirst({ where: eq(orders.id, existing.orderId) });
       return { order: order!, checkoutUrl: '/checkout?order=' + existing.orderId };
     }
@@ -65,7 +65,7 @@ export async function createInvoice(
         if (error instanceof FulfillmentReviewError)
           throw new AppError(
             'SUBSCRIPTION_CONFLICT',
-            'Plan/periode aktif memerlukan rekonsiliasi sebelum checkout.',
+            'The active plan or period requires reconciliation before checkout.',
             409,
           );
         throw error;
@@ -87,7 +87,7 @@ export async function createInvoice(
     } catch {
       throw new AppError(
         'QRIS_AMOUNT_UNAVAILABLE',
-        'Nominal QRIS tidak tersedia; jangan membayar. Hubungi dukungan.',
+        'The QRIS payment amount is unavailable. Do not pay. Contact support.',
         503,
       );
     }
@@ -160,7 +160,11 @@ export async function ingestReceipt(value: unknown, now = new Date()) {
     receipt.storeId !== config.store ||
     paidAt.getTime() > now.getTime() + 60000
   )
-    throw new AppError('INVALID_RECEIPT', 'Receipt di luar scope/waktu.', 400);
+    throw new AppError(
+      'INVALID_RECEIPT',
+      'The receipt is outside the allowed scope or time window.',
+      400,
+    );
   const fingerprint = digest(JSON.stringify(receipt));
   await db
     .insert(qrisReceipts)
@@ -186,7 +190,7 @@ export async function ingestReceipt(value: unknown, now = new Date()) {
     if (!saved || saved.fingerprint !== fingerprint)
       throw new AppError(
         'RECEIPT_REPLAY_MISMATCH',
-        'Receipt berubah; rekonsiliasi diperlukan.',
+        'The receipt has changed. Reconciliation is required.',
         409,
       );
     if (saved.outcome !== 'received') return { ok: true, outcome: saved.outcome, idempotent: true };
@@ -261,7 +265,7 @@ export async function invoiceStatus(userId: string, orderId: string) {
   const invoice = await db.query.qrisInvoices.findFirst({
     where: and(eq(qrisInvoices.orderId, orderId), eq(qrisInvoices.userId, userId)),
   });
-  if (!invoice) throw new AppError('NOT_FOUND', 'Invoice tidak ditemukan.', 404);
+  if (!invoice) throw new AppError('NOT_FOUND', 'Invoice not found.', 404);
   const order = await db.query.orders.findFirst({
     where: and(eq(orders.id, orderId), eq(orders.userId, userId)),
   });

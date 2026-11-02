@@ -37,7 +37,7 @@ function DecalItem({ decal }: { decal: Decal3D }) {
   if (error)
     return (
       <Html>
-        <span role="alert">Desain tidak dapat dimuat.</span>
+        <span role="alert">Unable to load the design.</span>
       </Html>
     );
   if (!texture) return null;

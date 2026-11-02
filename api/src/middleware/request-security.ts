@@ -30,7 +30,7 @@ export function assertRequestOrigin(request: Request) {
       (process.env.NODE_ENV === 'production' ||
         request.headers.get('sec-fetch-site') === 'cross-site'))
   ) {
-    throw new AppError('INVALID_ORIGIN', 'Origin request tidak diizinkan.', 403);
+    throw new AppError('INVALID_ORIGIN', 'Request origin is not allowed.', 403);
   }
 }
 

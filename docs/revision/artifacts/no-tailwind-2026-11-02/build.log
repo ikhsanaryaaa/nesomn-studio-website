@@ -1,0 +1,66 @@
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 2880 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/assets/jetbrains-mono-greek-400-normal-C190GLew.woff2                 4.23 kB
+dist/assets/jetbrains-mono-greek-500-normal-JpySY46c.woff2                 4.28 kB
+dist/assets/jetbrains-mono-cyrillic-400-normal-BEIGL1Tu.woff2              5.33 kB
+dist/assets/jetbrains-mono-cyrillic-500-normal-DmUKJPL_.woff2              5.36 kB
+dist/assets/jetbrains-mono-vietnamese-400-normal-CqNFfHCs.woff             5.37 kB
+dist/assets/jetbrains-mono-vietnamese-500-normal-DNRqzVM1.woff             5.48 kB
+dist/assets/jetbrains-mono-greek-400-normal-B9oWc5Lo.woff                  5.66 kB
+dist/assets/jetbrains-mono-greek-500-normal-D7SFKleX.woff                  5.72 kB
+dist/assets/jetbrains-mono-cyrillic-400-normal-ugxPyKxw.woff               6.98 kB
+dist/assets/jetbrains-mono-cyrillic-500-normal-DJqRU3vO.woff               7.02 kB
+dist/assets/jetbrains-mono-latin-ext-400-normal-Bc8Ftmh3.woff2             7.34 kB
+dist/assets/jetbrains-mono-latin-ext-500-normal-Cut-4mMH.woff2             7.53 kB
+dist/assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2                  8.52 kB
+dist/assets/bricolage-grotesque-vietnamese-wght-normal-BUzh504Q.woff2      8.61 kB
+dist/assets/manrope-greek-wght-normal-DL7QRZyv.woff2                       9.44 kB
+dist/assets/jetbrains-mono-latin-ext-400-normal-fXTG6kC5.woff             10.13 kB
+dist/assets/jetbrains-mono-latin-ext-500-normal-ckzbgY84.woff             10.34 kB
+dist/assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2                   14.50 kB
+dist/assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2                  15.12 kB
+dist/pricing\index.html                                                   16.91 kB │ gzip:   3.33 kB
+dist/assets/bricolage-grotesque-latin-ext-wght-normal-CcLUaPy7.woff2      18.67 kB
+dist/index.html                                                           19.13 kB │ gzip:   3.62 kB
+dist/marketplace\index.html                                               19.37 kB │ gzip:   3.42 kB
+dist/assets/jetbrains-mono-latin-400-normal-V6pRDFza.woff2                21.17 kB
+dist/assets/jetbrains-mono-latin-500-normal-BWZEU5yA.woff2                21.83 kB
+dist/assets/manrope-latin-wght-normal-DHIcAJRg.woff2                      24.84 kB
+dist/assets/jetbrains-mono-latin-400-normal-6-qcROiO.woff                 27.50 kB
+dist/assets/jetbrains-mono-latin-500-normal-CJOVTJB7.woff                 28.21 kB
+dist/assets/bricolage-grotesque-latin-wght-normal-DLoelf7F.woff2          41.34 kB
+dist/assets/main-y8OOVMo4.css                                             80.15 kB │ gzip:  27.81 kB
+dist/assets/trash-2-CwO-bCZT.js                                            0.35 kB │ gzip:   0.25 kB
+dist/assets/index-CPPIKvJG.js                                              0.74 kB │ gzip:   0.41 kB
+dist/assets/manifest-DfpQOgAE.js                                           1.04 kB │ gzip:   0.31 kB
+dist/assets/index-CDK6YTp_.js                                              1.40 kB │ gzip:   0.77 kB
+dist/assets/demo-3d-41lgn37X.js                                            3.10 kB │ gzip:   0.99 kB
+dist/assets/tabs-DYljjVUh.js                                               3.16 kB │ gzip:   1.31 kB
+dist/assets/index-vTjRLKaw.js                                              4.00 kB │ gzip:   1.67 kB
+dist/assets/model-viewer-C4Bw3hOF.js                                       6.97 kB │ gzip:   1.67 kB
+dist/assets/projects-DJAChfA-.js                                           7.24 kB │ gzip:   1.46 kB
+dist/assets/slider-8mRihO-i.js                                            12.17 kB │ gzip:   4.24 kB
+dist/assets/editor-3d-DA-7UkfQ.js                                         99.72 kB │ gzip:  26.20 kB
+dist/assets/server.edge-CjuKIn3g.js                                      314.59 kB │ gzip:  96.20 kB
+dist/assets/client-CKv24fyB.js                                           349.79 kB │ gzip: 105.05 kB
+dist/assets/main-DepeiNJS.js                                             479.36 kB │ gzip: 134.88 kB
+dist/assets/scene-editor--2cVCoby.js                                     500.06 kB │ gzip: 140.60 kB
+dist/assets/render-boundary-BmTGVtle.js                                1,029.23 kB │ gzip: 279.82 kB
+✓ built in 18.91s
+Prerendered 3 pages:
+  /
+  /pricing
+  /marketplace
+
+$ vite build
+[plugin vite:reporter]
+(!) C:/Users/ikhsan/Desktop/nesomn-studio-website/node_modules/.bun/react-router@7.18.2+7492c01c6988791b/node_modules/react-router/dist/development/index.mjs is dynamically imported by C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/main.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/main.tsx but also statically imported by C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/App.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/page-state.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/app-layout.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/page-transition.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/sidebar-item.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/sidebar.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/store/asset-card.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/account.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/asset-detail.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/auth.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/bundle-builder.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/checkout.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/editor-3d.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/home.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/library.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/marketplace.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/not-found.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/pricing.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/projects.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/scene-editor.tsx, dynamic import will not move module into another chunk.
+
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.

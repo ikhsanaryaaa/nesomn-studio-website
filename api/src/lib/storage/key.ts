@@ -9,7 +9,7 @@ export function validateStorageKey(key: string): string {
     [...key].some((char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127) ||
     key.split('/').some((part) => !part || part === '.' || part === '..')
   ) {
-    throw new AppError('INVALID_STORAGE_KEY', 'Storage key tidak valid.', 400);
+    throw new AppError('INVALID_STORAGE_KEY', 'Invalid storage key.', 400);
   }
   return key;
 }

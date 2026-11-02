@@ -17,7 +17,7 @@ const TOKEN_TTL = '7d';
 function getSecret(): Uint8Array {
   const secret = process.env.JWT_SECRET;
   if (!secret) {
-    throw new Error('JWT_SECRET belum diset di environment.');
+    throw new Error('JWT_SECRET is not set in the environment.');
   }
   return new TextEncoder().encode(secret);
 }

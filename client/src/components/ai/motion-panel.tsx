@@ -52,14 +52,18 @@ export function MotionPanel() {
   function readFile(file: File, setter: (v: string) => void) {
     if (!ACCEPTED.includes(file.type)) {
       toast({
-        title: 'Format tidak didukung',
-        description: 'PNG, JPG, atau WEBP.',
+        title: 'Unsupported format',
+        description: 'Use PNG, JPG, or WEBP.',
         variant: 'danger',
       });
       return;
     }
     if (file.size > MAX_BYTES) {
-      toast({ title: 'File terlalu besar', description: 'Maksimal 10MB.', variant: 'danger' });
+      toast({
+        title: 'File too large',
+        description: 'Maximum file size: 10 MB.',
+        variant: 'danger',
+      });
       return;
     }
     const reader = new FileReader();
@@ -70,19 +74,19 @@ export function MotionPanel() {
   async function handleGenerate() {
     if (submitting || isPending) return;
     if (!selectedModel || models.isError) {
-      toast({ title: 'Pilih model dulu', variant: 'danger' });
+      toast({ title: 'Choose a model first', variant: 'danger' });
       return;
     }
     if (!startFrame) {
       toast({
-        title: 'Start frame wajib',
-        description: 'Unggah gambar frame awal.',
+        title: 'Start frame required',
+        description: 'Upload a start frame image.',
         variant: 'danger',
       });
       return;
     }
     if (!prompt.trim()) {
-      toast({ title: 'Prompt masih kosong', variant: 'danger' });
+      toast({ title: 'Enter a prompt', variant: 'danger' });
       return;
     }
     setSubmitting(true);
@@ -101,34 +105,34 @@ export function MotionPanel() {
       });
       setJobId(created.id);
       qc.invalidateQueries({ queryKey: ['ai-credit'] });
-      toast({ title: 'Job video dibuat', description: 'Menunggu hasil generate...' });
+      toast({ title: 'Video job created', description: 'Waiting for generation results…' });
     } catch (err) {
-      const msg = err instanceof ApiRequestError ? err.message : 'Gagal membuat job.';
-      toast({ title: 'Tidak dapat generate', description: msg, variant: 'danger' });
+      const msg = err instanceof ApiRequestError ? err.message : 'Unable to create the job.';
+      toast({ title: 'Unable to generate', description: msg, variant: 'danger' });
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold">AI Motion</h3>
+    <div className="editor-tool-panel">
+      <div className="editor-panel-heading">
+        <h3 className="editor-panel-title">AI Motion</h3>
         <CreditBadge cost={selectedModel?.creditCost} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="ai-motion-model" className="text-xs font-medium text-muted-foreground">
+      <div className="editor-field">
+        <label htmlFor="ai-motion-model" className="editor-field-label">
           Model
         </label>
         <select
           id="ai-motion-model"
           value={selectedModel?.id ?? ''}
           onChange={(e) => setModelId(e.target.value)}
-          className="min-h-11 rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
+          className="editor-model-select"
         >
-          {models.isLoading && <option>Memuat...</option>}
-          {models.data?.length === 0 && <option value="">Belum ada model video</option>}
+          {models.isLoading && <option>Loading…</option>}
+          {models.data?.length === 0 && <option value="">No video models available</option>}
           {models.data?.map((m) => (
             <option key={m.id} value={m.id}>
               {m.modelName} ({m.creditCost} credit)
@@ -138,14 +142,14 @@ export function MotionPanel() {
       </div>
 
       {/* Start & End frame */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="editor-paired-controls">
         <FramePicker
           label="Start frame"
           value={startFrame}
           onClick={() => startRef.current?.click()}
         />
         <FramePicker
-          label="End frame (opsional)"
+          label="End frame (optional)"
           value={endFrame}
           onClick={() => endRef.current?.click()}
         />
@@ -153,7 +157,7 @@ export function MotionPanel() {
           ref={startRef}
           type="file"
           accept={ACCEPTED.join(',')}
-          className="hidden"
+          className="editor-file-input"
           onChange={(e) => {
             const f = e.target.files?.[0];
             if (f) readFile(f, setStartFrame);
@@ -164,7 +168,7 @@ export function MotionPanel() {
           ref={endRef}
           type="file"
           accept={ACCEPTED.join(',')}
-          className="hidden"
+          className="editor-file-input"
           onChange={(e) => {
             const f = e.target.files?.[0];
             if (f) readFile(f, setEndFrame);
@@ -174,17 +178,17 @@ export function MotionPanel() {
       </div>
 
       {/* Trajectory kamera */}
-      <div className="flex flex-col gap-3">
-        <span className="text-xs font-medium text-muted-foreground">Camera trajectory</span>
+      <div className="editor-control-stack">
+        <span className="editor-field-label">Camera trajectory</span>
         <TrajectorySlider label="Horizontal" value={h} onChange={setH} />
         <TrajectorySlider label="Vertical" value={v} onChange={setV} />
         <TrajectorySlider label="Zoom" value={zoom} onChange={setZoom} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <div className="flex items-center justify-between">
-          <label className="text-xs font-medium text-muted-foreground">Durasi</label>
-          <span className="font-mono text-xs">{durationSec}s</span>
+      <div className="editor-field">
+        <div className="editor-panel-heading">
+          <label className="editor-field-label">Duration</label>
+          <span className="editor-readout">{durationSec}s</span>
         </div>
         <Slider
           value={[durationSec]}
@@ -195,9 +199,9 @@ export function MotionPanel() {
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Aspect ratio</label>
-        <div className="flex flex-wrap gap-2">
+      <div className="editor-field">
+        <label className="editor-field-label">Aspect ratio</label>
+        <div className="editor-option-row">
           {ASPECTS.map((a) => (
             <Button
               key={a}
@@ -211,15 +215,15 @@ export function MotionPanel() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="ai-motion-prompt" className="text-xs font-medium text-muted-foreground">
+      <div className="editor-field">
+        <label htmlFor="ai-motion-prompt" className="editor-field-label">
           Prompt
         </label>
         <Input
           id="ai-motion-prompt"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Deskripsikan gerakan / suasana video"
+          placeholder="Describe the video motion or atmosphere"
         />
       </div>
 
@@ -228,36 +232,40 @@ export function MotionPanel() {
         onClick={handleGenerate}
         disabled={submitting || isPending || !selectedModel || models.isError}
       >
-        {isPending ? <Loader2 className="size-4 animate-spin" /> : <Video className="size-4" />}
+        {isPending ? (
+          <Loader2 className="editor-loading-icon" />
+        ) : (
+          <Video className="editor-action-icon" />
+        )}
         {isPending ? 'Generating...' : 'Generate Video'}
       </Button>
 
       {models.isError && (
-        <p role="alert" className="text-sm text-danger">
-          Model gagal dimuat.{' '}
+        <p role="alert" className="editor-error">
+          Unable to load models.{' '}
           <Button variant="ghost" onClick={() => void models.refetch()}>
-            Coba lagi
+            Try again
           </Button>
         </p>
       )}
       {error && (
-        <p role="alert" className="text-sm text-danger">
-          Status job belum dapat diverifikasi.{' '}
+        <p role="alert" className="editor-error">
+          The job status could not be verified.{' '}
           <Button variant="ghost" onClick={() => void retry()}>
-            Coba lagi
+            Try again
           </Button>
         </p>
       )}
       <PendingJobActions job={job} />
       <JobRecovery tab="motion" onSelect={setJobId} />
       {isFailed && (
-        <p className="text-sm text-danger">
-          Generate gagal: {job?.error ?? 'tidak diketahui'}. Periksa saldo terbaru atau hubungi
-          admin jika perlu rekonsiliasi.
+        <p className="editor-error">
+          Generation failed: {job?.error ?? 'unknown'}. Check your latest balance or contact an
+          administrator if reconciliation is needed.
         </p>
       )}
       {isDone && job?.resultUrl && (
-        <video src={job.resultUrl} controls className="w-full rounded-lg border border-border" />
+        <video src={job.resultUrl} controls className="editor-result-media" />
       )}
     </div>
   );
@@ -274,17 +282,13 @@ function FramePicker({
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex aspect-square flex-col items-center justify-center gap-1 overflow-hidden rounded-lg border border-dashed border-border bg-surface-2 text-xs text-muted-foreground transition-colors hover:border-accent"
-    >
+    <button type="button" onClick={onClick} className="ai-frame-picker">
       {value ? (
-        <img src={value} alt={label} className="size-full object-cover" />
+        <img src={value} alt={label} className="ai-frame-preview" />
       ) : (
         <>
-          <UploadCloud className="size-5" />
-          <span className="px-1 text-center">{label}</span>
+          <UploadCloud className="ai-upload-icon" />
+          <span className="ai-frame-label">{label}</span>
         </>
       )}
     </button>
@@ -302,10 +306,10 @@ function TrajectorySlider({
   onChange: (v: number) => void;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="font-mono">{value.toFixed(1)}</span>
+    <div className="ai-trajectory">
+      <div className="ai-trajectory-heading">
+        <span className="editor-muted">{label}</span>
+        <span className="editor-numeric">{value.toFixed(1)}</span>
       </div>
       <Slider
         value={[value]}

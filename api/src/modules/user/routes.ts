@@ -35,7 +35,7 @@ export const userRoutes = new Elysia()
       const target = await db.query.sessions.findFirst({
         where: and(eq(sessions.id, params.id), eq(sessions.userId, user!.id)),
       });
-      if (!target) throw new AppError('NOT_FOUND', 'Sesi tidak ditemukan.', 404);
+      if (!target) throw new AppError('NOT_FOUND', 'Session not found.', 404);
 
       await db.delete(sessions).where(eq(sessions.id, params.id));
       return { ok: true };

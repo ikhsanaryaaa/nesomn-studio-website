@@ -11,7 +11,7 @@ export function assertStubAllowed(kind: 'payment' | 'ai') {
   if (!stubAllowed(kind))
     throw new AppError(
       'DEMO_DISABLED',
-      'Simulasi hanya tersedia pada environment demo/test yang diaktifkan secara eksplisit.',
+      'Simulation is only available in explicitly enabled demo or test environments.',
       503,
     );
 }

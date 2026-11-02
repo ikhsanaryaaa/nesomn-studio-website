@@ -28,7 +28,7 @@ function configuration() {
     secret = process.env.GOOGLE_CLIENT_SECRET,
     redirectUri = process.env.GOOGLE_REDIRECT_URI;
   if (!clientId || !secret || !redirectUri)
-    throw new AppError('OAUTH_NOT_CONFIGURED', 'Google login belum dikonfigurasi.', 503);
+    throw new AppError('OAUTH_NOT_CONFIGURED', 'Google login is not configured.', 503);
   const url = new URL(redirectUri);
   if (
     (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') ||
@@ -147,7 +147,7 @@ export async function completeGoogle(code: string, state: string, cookie: string
     if (collision)
       throw new AppError(
         'ACCOUNT_LINK_REQUIRED',
-        'Email sudah terdaftar. Masuk memakai metode akun existing; linking belum tersedia.',
+        'This email is already registered. Log in using the existing account method. Account linking is not available.',
         409,
       );
     const [created] = await tx

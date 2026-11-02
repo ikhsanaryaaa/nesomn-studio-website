@@ -20,26 +20,24 @@ export function JobRecovery({ tab, onSelect }: { tab: AiTab; onSelect: (id: stri
     }
   }
   return (
-    <details className="text-sm">
-      <summary className="min-h-11 cursor-pointer py-3">Pulihkan job dari server</summary>
-      <p className="text-xs text-muted-foreground">
-        Job tetap berjalan saat panel ditutup. Pembatalan hanya untuk job pending; job yang diproses
-        provider tidak dapat dibatalkan melalui panel ini. Memuat ulang status tidak membuat job
-        baru.
+    <details className="editor-text">
+      <summary className="ai-job-summary">Recover jobs from the server</summary>
+      <p className="editor-hint">
+        Jobs continue running when this panel is closed. Only pending jobs can be canceled; jobs
+        being processed by a provider cannot be canceled here. Refreshing their status does not
+        create a new job.
       </p>
       <Button variant="ghost" disabled={busy} onClick={() => void recover()}>
-        {busy ? 'Memuat...' : 'Muat riwayat job'}
+        {busy ? 'Loading…' : 'Load job history'}
       </Button>
-      {error && <p role="alert">Riwayat gagal dimuat. Coba lagi.</p>}
-      {!busy && !error && jobs.length === 0 && <p className="text-xs">Belum ada riwayat dimuat.</p>}
+      {error && <p role="alert">Unable to load job history. Try again.</p>}
+      {!busy && !error && jobs.length === 0 && (
+        <p className="editor-caption">No job history loaded yet.</p>
+      )}
       <ul>
         {jobs.map((job) => (
           <li key={job.id}>
-            <Button
-              variant="ghost"
-              className="w-full justify-start"
-              onClick={() => onSelect(job.id)}
-            >
+            <Button variant="ghost" className="ai-job-action" onClick={() => onSelect(job.id)}>
               {job.id.slice(0, 8)} · {job.status}
             </Button>
           </li>

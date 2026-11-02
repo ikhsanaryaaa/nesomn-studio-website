@@ -44,11 +44,11 @@ export function ScenePanel({ onApplyResult }: Props) {
   async function handleGenerate() {
     if (submitting || isPending) return;
     if (!selectedModel || models.isError) {
-      toast({ title: 'Pilih model dulu', variant: 'danger' });
+      toast({ title: 'Choose a model first', variant: 'danger' });
       return;
     }
     if (!prompt.trim()) {
-      toast({ title: 'Prompt masih kosong', variant: 'danger' });
+      toast({ title: 'Enter a prompt', variant: 'danger' });
       return;
     }
     setSubmitting(true);
@@ -60,34 +60,34 @@ export function ScenePanel({ onApplyResult }: Props) {
       });
       setJobId(created.id);
       qc.invalidateQueries({ queryKey: ['ai-credit'] });
-      toast({ title: 'Job dibuat', description: 'Menunggu hasil generate...' });
+      toast({ title: 'Job created', description: 'Waiting for generation results…' });
     } catch (err) {
-      const msg = err instanceof ApiRequestError ? err.message : 'Gagal membuat job.';
-      toast({ title: 'Tidak dapat generate', description: msg, variant: 'danger' });
+      const msg = err instanceof ApiRequestError ? err.message : 'Unable to create the job.';
+      toast({ title: 'Unable to generate', description: msg, variant: 'danger' });
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold">AI Scene</h3>
+    <div className="editor-tool-panel">
+      <div className="editor-panel-heading">
+        <h3 className="editor-panel-title">AI Scene</h3>
         <CreditBadge cost={selectedModel?.creditCost} />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="ai-scene-model" className="text-xs font-medium text-muted-foreground">
+      <div className="editor-field">
+        <label htmlFor="ai-scene-model" className="editor-field-label">
           Model
         </label>
         <select
           id="ai-scene-model"
           value={selectedModel?.id ?? ''}
           onChange={(e) => setModelId(e.target.value)}
-          className="min-h-11 rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
+          className="editor-model-select"
         >
-          {models.isLoading && <option>Memuat...</option>}
-          {models.data?.length === 0 && <option value="">Belum ada model</option>}
+          {models.isLoading && <option>Loading…</option>}
+          {models.data?.length === 0 && <option value="">No models available</option>}
           {models.data?.map((m) => (
             <option key={m.id} value={m.id}>
               {m.modelName} ({m.creditCost} credit)
@@ -96,21 +96,21 @@ export function ScenePanel({ onApplyResult }: Props) {
         </select>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="ai-scene-prompt" className="text-xs font-medium text-muted-foreground">
+      <div className="editor-field">
+        <label htmlFor="ai-scene-prompt" className="editor-field-label">
           Prompt
         </label>
         <Input
           id="ai-scene-prompt"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Deskripsikan hasil yang diinginkan"
+          placeholder="Describe the result you want"
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-medium text-muted-foreground">Aspect ratio</label>
-        <div className="flex flex-wrap gap-2">
+      <div className="editor-field">
+        <label className="editor-field-label">Aspect ratio</label>
+        <div className="editor-option-row">
           {ASPECTS.map((a) => (
             <Button
               key={a}
@@ -129,53 +129,53 @@ export function ScenePanel({ onApplyResult }: Props) {
         onClick={handleGenerate}
         disabled={submitting || isPending || !selectedModel || models.isError}
       >
-        {isPending ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
+        {isPending ? (
+          <Loader2 className="editor-loading-icon" />
+        ) : (
+          <Sparkles className="editor-action-icon" />
+        )}
         {isPending ? 'Generating...' : 'Generate'}
       </Button>
 
       {/* Hasil */}
       {models.isError && (
-        <p role="alert" className="text-sm text-danger">
-          Model gagal dimuat.{' '}
+        <p role="alert" className="editor-error">
+          Unable to load models.{' '}
           <Button variant="ghost" onClick={() => void models.refetch()}>
-            Coba lagi
+            Try again
           </Button>
         </p>
       )}
       {error && (
-        <p role="alert" className="text-sm text-danger">
-          Status job belum dapat diverifikasi.{' '}
+        <p role="alert" className="editor-error">
+          The job status could not be verified.{' '}
           <Button variant="ghost" onClick={() => void retry()}>
-            Coba lagi
+            Try again
           </Button>
         </p>
       )}
       <PendingJobActions job={job} />
       <JobRecovery tab="scene" onSelect={setJobId} />
       {isFailed && (
-        <p className="text-sm text-danger">
-          Generate gagal: {job?.error ?? 'tidak diketahui'}. Periksa saldo terbaru atau hubungi
-          admin jika perlu rekonsiliasi.
+        <p className="editor-error">
+          Generation failed: {job?.error ?? 'unknown'}. Check your latest balance or contact an
+          administrator if reconciliation is needed.
         </p>
       )}
       {isDone && job?.resultUrl && (
-        <div className="flex flex-col gap-2">
-          <img
-            src={job.resultUrl}
-            alt="Hasil AI Scene"
-            className="w-full rounded-lg border border-border"
-          />
-          <div className="flex gap-2">
+        <div className="editor-result-stack">
+          <img src={job.resultUrl} alt="AI Scene result" className="editor-result-media" />
+          <div className="editor-result-actions">
             {onApplyResult && (
               <Button size="sm" variant="secondary" onClick={() => onApplyResult(job.resultUrl!)}>
-                <ImagePlus className="size-4" />
-                Tarik ke canvas
+                <ImagePlus className="editor-action-icon" />
+                Add to canvas
               </Button>
             )}
             <Button size="sm" variant="ghost" asChild>
               <a href={job.resultUrl} download target="_blank" rel="noreferrer">
-                <Download className="size-4" />
-                Unduh
+                <Download className="editor-action-icon" />
+                Download
               </a>
             </Button>
           </div>

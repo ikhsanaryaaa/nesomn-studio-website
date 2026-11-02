@@ -15,14 +15,14 @@ export function Topbar({ title, left, right, transparent }: TopbarProps) {
   return (
     <header
       className={cn(
-        'flex h-14 shrink-0 items-center gap-3 border-b border-border px-4',
-        transparent ? 'bg-transparent' : 'bg-surface/50',
+        'workspace-topbar',
+        transparent ? 'workspace-topbar-transparent' : 'workspace-topbar-surface',
       )}
     >
-      {title && <h2 className="text-sm font-semibold tracking-tight">{title}</h2>}
+      {title && <h2 className="workspace-topbar-title">{title}</h2>}
       {left}
 
-      <div className="ml-auto flex items-center gap-2">{right}</div>
+      <div className="workspace-topbar-actions">{right}</div>
     </header>
   );
 }

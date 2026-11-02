@@ -42,7 +42,7 @@ export class ApiRequestError extends Error {
   fields?: ApiError['error']['fields'];
 
   constructor(status: number, body: ApiError) {
-    super(body?.error?.message ?? 'Terjadi kesalahan. Silakan coba lagi.');
+    super(body?.error?.message ?? 'Something went wrong. Please try again.');
     this.name = 'ApiRequestError';
     this.status = status;
     this.code = body?.error?.code ?? 'unknown';
@@ -70,7 +70,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new ApiRequestError(res.status, {
       error: {
         code: 'INVALID_RESPONSE',
-        message: 'Respons server tidak valid. Silakan coba lagi.',
+        message: 'The server returned an invalid response. Please try again.',
       },
     });
   }

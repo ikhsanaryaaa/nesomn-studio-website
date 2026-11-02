@@ -34,7 +34,7 @@ const providerBody = z.object({
       } catch {
         return false;
       }
-    }, 'Hostname HTTPS provider belum diizinkan.')
+    }, 'The provider HTTPS hostname is not allowed.')
     .nullish(),
   enabled: z.boolean().default(true),
   creditCost: z.coerce.number().int().min(0).default(0),
@@ -68,7 +68,7 @@ export const aiProviderAdminRoutes = new Elysia({ prefix: '/ai-providers' })
   })
   .get('/:id', async ({ params }) => {
     const row = await db.query.aiProviders.findFirst({ where: eq(aiProviders.id, params.id) });
-    if (!row) throw new AppError('NOT_FOUND', 'Provider tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Provider not found.', 404);
     return maskProvider(row);
   })
   .post('/', async ({ body, set, user }) => {
@@ -93,7 +93,7 @@ export const aiProviderAdminRoutes = new Elysia({ prefix: '/ai-providers' })
       .set(patch)
       .where(eq(aiProviders.id, params.id))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Provider tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Provider not found.', 404);
     await writeAudit((user as AuthUser).id, 'update', 'ai_provider', row.id, {
       changed: Object.keys(rest),
       apiKeyRotated: Boolean(apiKey),
@@ -102,15 +102,15 @@ export const aiProviderAdminRoutes = new Elysia({ prefix: '/ai-providers' })
   })
   .delete('/:id', async ({ params, user }) => {
     const [row] = await db.delete(aiProviders).where(eq(aiProviders.id, params.id)).returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Provider tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Provider not found.', 404);
     await writeAudit((user as AuthUser).id, 'delete', 'ai_provider', row.id, { key: row.key });
     return { ok: true };
   })
   // Test koneksi: dekripsi server-side, ping baseUrl. apiKey tidak ke browser.
   .post('/:id/test', async ({ params, user }) => {
     const row = await db.query.aiProviders.findFirst({ where: eq(aiProviders.id, params.id) });
-    if (!row) throw new AppError('NOT_FOUND', 'Provider tidak ditemukan.', 404);
-    if (!row.baseUrl) throw new AppError('NO_BASE_URL', 'baseUrl belum diisi.', 400);
+    if (!row) throw new AppError('NOT_FOUND', 'Provider not found.', 404);
+    if (!row.baseUrl) throw new AppError('NO_BASE_URL', 'baseUrl is required.', 400);
 
     let ok = false;
     let detail: string;
@@ -123,7 +123,7 @@ export const aiProviderAdminRoutes = new Elysia({ prefix: '/ai-providers' })
       ok = res.ok; // Authentication errors are not a successful provider test.
       detail = `HTTP ${res.status}`;
     } catch {
-      detail = 'Koneksi provider ditolak/tidak tersedia.';
+      detail = 'Provider connection refused or unavailable.';
     }
     await writeAudit((user as AuthUser).id, 'test', 'ai_provider', row.id, { ok, detail });
     return { ok, detail };

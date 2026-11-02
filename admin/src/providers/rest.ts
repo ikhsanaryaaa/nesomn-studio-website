@@ -3,7 +3,7 @@ import type { AxiosInstance, Method, AxiosRequestConfig } from 'axios';
 
 const API = '/api/admin';
 function resourcePath(resource: string, id?: string | number) {
-  if (!/^[a-z][a-z0-9-]*$/.test(resource)) throw Error('Resource admin tidak valid.');
+  if (!/^[a-z][a-z0-9-]*$/.test(resource)) throw Error('Invalid admin resource.');
   return API + '/' + resource + (id === undefined ? '' : '/' + encodeURIComponent(id));
 }
 export function listQuery({ pagination, sorters, filters }: GetListParams): string {
@@ -22,7 +22,7 @@ export function listQuery({ pagination, sorters, filters }: GetListParams): stri
     if (filter.operator === 'eq') query.set(filter.field, String(filter.value));
     else if (filter.operator === 'contains')
       query.set(filter.field + '_like', String(filter.value));
-    else throw Error('Filter admin belum didukung: ' + filter.operator);
+    else throw Error('Unsupported admin filter: ' + filter.operator);
   }
   return query.toString();
 }
@@ -42,7 +42,7 @@ export function createRestProvider(http: AxiosInstance): DataProvider {
         .split('/')
         .some((part) => part === '..' || part === '.')
     )
-      throw Error('URL admin tidak valid.');
+      throw Error('Invalid admin URL.');
     try {
       return await http.request({ url, method, data, headers });
     } catch (error) {
@@ -51,7 +51,7 @@ export function createRestProvider(http: AxiosInstance): DataProvider {
         message?: string;
       };
       throw Object.assign(
-        new Error(e.response?.data?.error?.message ?? e.message ?? 'Request admin gagal.'),
+        new Error(e.response?.data?.error?.message ?? e.message ?? 'Admin request failed.'),
         { status: e.response?.status, statusCode: e.response?.status },
       );
     }
@@ -60,9 +60,9 @@ export function createRestProvider(http: AxiosInstance): DataProvider {
     getApiUrl: () => API,
     getList: async (params) => {
       const r = await request(resourcePath(params.resource) + '?' + listQuery(params));
-      if (!Array.isArray(r.data)) throw Error('Respons daftar admin tidak valid.');
+      if (!Array.isArray(r.data)) throw Error('Invalid admin list response.');
       const total = Number(r.headers['x-total-count']);
-      if (!Number.isFinite(total) || total < 0) throw Error('Total daftar admin tidak valid.');
+      if (!Number.isFinite(total) || total < 0) throw Error('Invalid admin list total.');
       return { data: r.data, total };
     },
     getOne: async ({ resource, id }) => ({

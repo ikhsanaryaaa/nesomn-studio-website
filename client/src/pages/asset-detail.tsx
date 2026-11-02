@@ -30,19 +30,19 @@ export default function AssetDetailPage() {
     },
   });
   const asset = query.data;
-  if (query.isLoading) return <PageState title="Memuat aset…" loading />;
+  if (query.isLoading) return <PageState title="Loading asset…" loading />;
   if (query.isError)
     return (
       <PageState
         title={
           query.error instanceof ApiRequestError && query.error.status === 404
-            ? 'Aset tidak ditemukan'
-            : 'Detail aset tidak dapat dimuat'
+            ? 'Asset not found'
+            : 'Unable to load asset details'
         }
         retry={() => void query.refetch()}
       />
     );
-  if (!asset) return <PageState title="Aset tidak ditemukan" />;
+  if (!asset) return <PageState title="Asset not found" />;
   const previews = asset.previews.length
     ? asset.previews
     : asset.thumbnail
@@ -53,8 +53,8 @@ export default function AssetDetailPage() {
   return (
     <div className="page-wrap">
       <Seo title={asset.title} description={asset.description ?? undefined} />
-      <Link className="text-muted-foreground underline" to="/marketplace">
-        Kembali ke katalog
+      <Link className="workspace-back-link" to="/marketplace">
+        Back to catalogue
       </Link>
       <div className="asset-detail-layout">
         <section>
@@ -68,7 +68,7 @@ export default function AssetDetailPage() {
           )}
           <AssetMedia key={src} src={src} title={asset.title} className="detail-media" />
           {previews.length > 1 && (
-            <div className="preview-strip" aria-label="Pilih preview">
+            <div className="preview-strip" aria-label="Choose a preview">
               {previews.map((p, i) => (
                 <button
                   key={p + i}
@@ -83,50 +83,50 @@ export default function AssetDetailPage() {
           )}
         </section>
         <section className="asset-details">
-          <p className="text-sm text-muted-foreground">
+          <p className="workspace-description">
             {asset.category ?? asset.type} · {asset.tier}
           </p>
           <h1>{asset.title}</h1>
-          <p>{asset.description ?? 'Deskripsi belum tersedia.'}</p>
-          <div className="asset-price">{free ? 'Gratis' : rp(asset.priceIdr)}</div>
+          <p>{asset.description ?? 'No description is available yet.'}</p>
+          <div className="asset-price">{free ? 'Free' : rp(asset.priceIdr)}</div>
           {free ? (
             auth.isAuthenticated ? (
               <Button disabled={claim.isPending} onClick={() => claim.mutate()}>
-                {claim.isPending ? 'Menambahkan…' : 'Tambahkan ke Library'}
+                {claim.isPending ? 'Adding…' : 'Add to Library'}
               </Button>
             ) : (
               <Button asChild>
-                <Link to={loginUrl('/marketplace/' + asset.slug)}>Login untuk klaim</Link>
+                <Link to={loginUrl('/marketplace/' + asset.slug)}>Log in to claim</Link>
               </Button>
             )
           ) : (
             <Button onClick={() => (cart.has(asset.id) ? cart.remove(asset.id) : cart.add(asset))}>
-              {cart.has(asset.id) ? 'Hapus dari bundle' : 'Tambah ke bundle'}
+              {cart.has(asset.id) ? 'Remove from bundle' : 'Add to bundle'}
             </Button>
           )}
           {claim.isError && (
-            <p role="alert" className="text-danger">
+            <p role="alert" className="workspace-error">
               {claim.error.message}
             </p>
           )}
           {!free && cart.has(asset.id) && (
             <Button variant="secondary" asChild>
-              <Link to="/bundle-builder">Periksa bundle</Link>
+              <Link to="/bundle-builder">Review bundle</Link>
             </Button>
           )}
           <dl className="asset-metadata">
             <div>
-              <dt>Format editor</dt>
+              <dt>Editor format</dt>
               <dd>{asset.editorType}</dd>
             </div>
             <div>
-              <dt>Versi</dt>
+              <dt>Version</dt>
               <dd>{asset.version}</dd>
             </div>
           </dl>
-          <p className="text-sm text-muted-foreground">
-            Preview menampilkan gambar aset. Item berbayar diproses melalui invoice QRIS; periksa
-            kode unik sebelum membayar.
+          <p className="workspace-description">
+            This preview shows asset images. Paid items are processed through a QRIS invoice; check
+            the unique payment code before paying.
           </p>
         </section>
       </div>

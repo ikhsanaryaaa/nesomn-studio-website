@@ -46,7 +46,7 @@ export async function resolveProvider(row: ProviderRow): Promise<AIProvider> {
     if (process.env.NODE_ENV === 'production' && process.env.AI_LEGACY_ADAPTER_ENABLED !== 'true') {
       throw new AppError(
         'PROVIDER_UNVERIFIED',
-        'Adapter provider legacy belum diverifikasi/diaktifkan.',
+        'The legacy provider adapter has not been verified or enabled.',
         503,
       );
     }
@@ -58,7 +58,7 @@ export async function resolveProvider(row: ProviderRow): Promise<AIProvider> {
   if (!/^(?:stub|sample|demo)-/.test(row.key))
     throw new AppError(
       'PROVIDER_NOT_CONFIGURED',
-      'Provider belum dikonfigurasi; tidak ada fallback simulasi.',
+      'The provider is not configured. No simulated fallback is available.',
       503,
     );
   const { StubProvider } = await import('./providers/stub.ts');

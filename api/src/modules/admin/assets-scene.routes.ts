@@ -66,7 +66,7 @@ export const assetsSceneAdminRoutes = new Elysia({ prefix: '/assets-scene' })
     const row = await db.query.assets.findFirst({
       where: and(eq(assets.id, params.id), ONLY_SCENE),
     });
-    if (!row) throw new AppError('NOT_FOUND', 'Aset scene tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Scene asset not found.', 404);
     return row;
   })
   .post('/', async ({ body, set }) => {
@@ -85,7 +85,7 @@ export const assetsSceneAdminRoutes = new Elysia({ prefix: '/assets-scene' })
       .set({ ...input, editorType: 'scene_editor', updatedAt: new Date() })
       .where(and(eq(assets.id, params.id), ONLY_SCENE))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Aset scene tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Scene asset not found.', 404);
     return row;
   })
   .delete('/:id', async ({ params }) => {
@@ -93,6 +93,6 @@ export const assetsSceneAdminRoutes = new Elysia({ prefix: '/assets-scene' })
       .delete(assets)
       .where(and(eq(assets.id, params.id), ONLY_SCENE))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Aset scene tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Scene asset not found.', 404);
     return { ok: true };
   });

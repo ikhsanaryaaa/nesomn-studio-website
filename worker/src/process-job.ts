@@ -16,7 +16,7 @@ export async function processJob(
   resolver = resolveProvider,
 ): Promise<ProcessResult> {
   const original = await db.query.aiJobs.findFirst({ where: eq(aiJobs.id, jobId) });
-  if (!original) return { status: 'failed', error: 'Job tidak ditemukan.' };
+  if (!original) return { status: 'failed', error: 'Job not found.' };
   const claim = await withUserTransaction(original.userId, async (tx) => {
     const job = await tx.query.aiJobs.findFirst({ where: eq(aiJobs.id, jobId) });
     if (!job || job.status !== 'pending') return { job, token: null };
@@ -28,7 +28,7 @@ export async function processJob(
         .set({
           status: 'failed',
           needsReview: true,
-          error: 'Legacy reservation memerlukan rekonsiliasi.',
+          error: 'The legacy reservation requires reconciliation.',
           updatedAt: new Date(),
         })
         .where(eq(aiJobs.id, jobId));
@@ -90,8 +90,8 @@ export async function processJob(
     needsReview = !(failure instanceof ProviderFailure && failure.confirmed);
     if (failure instanceof ProviderFailure) remoteRef = failure.remoteRef ?? remoteRef;
     error = needsReview
-      ? 'Hasil provider belum terkonfirmasi; perlu rekonsiliasi sebelum retry. Credit dikembalikan sesuai expiry.'
-      : 'Provider mengonfirmasi kegagalan; credit dikembalikan sesuai expiry.';
+      ? 'The provider result is unconfirmed. Reconciliation is required before retrying. Credits were refunded with their original expiry.'
+      : 'The provider confirmed failure. Credits were refunded with their original expiry.';
   }
   return withUserTransaction(original.userId, async (tx) => {
     const current = await tx.query.aiJobs.findFirst({ where: eq(aiJobs.id, jobId) });
@@ -153,7 +153,7 @@ export async function recoverJobs(now = new Date()) {
         .set({
           status: 'failed',
           needsReview: job.status === 'processing' || !reservation,
-          error: 'Timeout; periksa provider/legacy sebelum retry manual.',
+          error: 'Timed out. Check the provider or legacy records before retrying manually.',
           leaseToken: null,
           leaseUntil: null,
           updatedAt: now,

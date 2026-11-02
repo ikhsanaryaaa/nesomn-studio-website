@@ -23,11 +23,7 @@ const Demo3DPage = lazy(() => import('@/pages/demo-3d'));
 
 /** Fallback ringan saat chunk editor sedang dimuat. */
 function EditorFallback() {
-  return (
-    <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-      Memuat editor...
-    </div>
-  );
+  return <div className="editor-loading">Loading editor…</div>;
 }
 
 /**

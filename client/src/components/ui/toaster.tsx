@@ -23,7 +23,7 @@ export function Toaster() {
             if (!open) dismiss(id);
           }}
         >
-          <div className="flex flex-col gap-1">
+          <div className="ui-toast-copy">
             {title && <ToastTitle>{title}</ToastTitle>}
             {description && <ToastDescription>{description}</ToastDescription>}
           </div>

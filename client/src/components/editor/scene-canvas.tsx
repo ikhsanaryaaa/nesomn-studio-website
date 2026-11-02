@@ -52,16 +52,16 @@ export const SceneCanvas = forwardRef<Konva.Stage, Props>(function SceneCanvas({
   return (
     <>
       {media.loading && (
-        <p role="status" className="p-3 text-sm leading-normal">
-          Memuat gambar scene…
+        <p role="status" className="editor-image-status">
+          Loading scene images…
         </p>
       )}
       {media.errors > 0 && (
-        <div role="alert" className="max-w-sm p-3 text-sm leading-normal">
-          {media.errors} gambar gagal dimuat. Periksa lisensi atau buka kembali aset dari katalog.
-          Export diblokir sampai semua gambar siap.
+        <div role="alert" className="editor-image-error">
+          {media.errors} images could not be loaded. Check their licenses or reopen the assets from
+          the catalogue. Export is blocked until all images are ready.
           <Button variant="secondary" onClick={media.retry}>
-            Coba lagi gambar
+            Retry images
           </Button>
         </div>
       )}

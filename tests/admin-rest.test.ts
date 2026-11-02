@@ -50,7 +50,7 @@ test('Refine adapter sends authenticated POST/PATCH/DELETE and safe custom reque
       method: 'post',
       payload: {},
     }),
-  ).rejects.toThrow('URL admin');
+  ).rejects.toThrow('Invalid admin URL');
   expect(requests).toHaveLength(4);
   await provider.custom!({
     url: '/api/admin/credit-ledger',

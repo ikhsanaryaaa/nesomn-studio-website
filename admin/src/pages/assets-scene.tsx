@@ -63,7 +63,7 @@ async function uploadTo(kind: 'preview' | 'file', file: File) {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message ?? 'upload gagal');
+    throw new Error(err?.error?.message ?? 'Upload failed');
   }
   return res.json();
 }
@@ -115,19 +115,19 @@ const AssetSceneFields = () => {
   return (
     <>
       <Form.Item label="Title" name="title" rules={[{ required: true }]}>
-        <Input placeholder="Nama aset" />
+        <Input placeholder="Asset name" />
       </Form.Item>
       <Form.Item label="Slug" name="slug" rules={[{ required: true }]}>
-        <Input placeholder="contoh: retro-font-pack" />
+        <Input placeholder="e.g. retro-font-pack" />
       </Form.Item>
       <Form.Item label="Description" name="description">
-        <Input.TextArea rows={3} placeholder="Deskripsi singkat aset" />
+        <Input.TextArea rows={3} placeholder="Short asset description" />
       </Form.Item>
 
       <Row gutter={16}>
         <Col xs={24} sm={12}>
           <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-            <Select options={TYPE_SCENE} placeholder="Pilih tipe" />
+            <Select options={TYPE_SCENE} placeholder="Select a type" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={12}>
@@ -145,7 +145,7 @@ const AssetSceneFields = () => {
       <Row gutter={16}>
         <Col xs={24} sm={8}>
           <Form.Item label="Category" name="category">
-            <Input placeholder="mis. font" />
+            <Input placeholder="e.g. font" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={8}>
@@ -213,7 +213,7 @@ const AssetSceneFields = () => {
       <Card size="small" title="Files & Media" style={{ marginBottom: 24 }}>
         <Form.Item
           label="Preview Image"
-          help="Gambar yang tampil di storefront."
+          help="Image displayed in the storefront."
           style={{ marginBottom: 16 }}
         >
           <Upload
@@ -224,7 +224,7 @@ const AssetSceneFields = () => {
               try {
                 const data = await uploadTo('preview', file as File);
                 form.setFieldValue('previews', [data.previewPath]);
-                message.success('Preview ter-upload');
+                message.success('Preview uploaded');
                 onSuccess?.(data);
               } catch (err) {
                 message.error((err as Error).message);
@@ -237,7 +237,7 @@ const AssetSceneFields = () => {
               type={previews?.length ? 'default' : 'primary'}
               ghost={!previews?.length}
             >
-              {previews?.length ? 'Ganti preview' : 'Upload preview'}
+              {previews?.length ? 'Replace preview' : 'Upload preview'}
             </Button>
           </Upload>
         </Form.Item>
@@ -245,12 +245,12 @@ const AssetSceneFields = () => {
         <Divider style={{ margin: '12px 0' }} />
 
         <Form.Item
-          label="Asset File (file yang dijual)"
+          label="Asset file (downloadable product)"
           style={{ marginBottom: 0 }}
           help={
             fileKey
-              ? `Tersimpan: ${fileKey}`
-              : 'File produk yang diunduh pembeli. Pilih Type dulu agar format sesuai.'
+              ? `Saved: ${fileKey}`
+              : 'Product file downloaded by buyers. Select the type first to match the file format.'
           }
         >
           <Upload
@@ -261,7 +261,7 @@ const AssetSceneFields = () => {
               try {
                 const data = await uploadTo('file', file as File);
                 form.setFieldValue('fileKey', data.fileKey);
-                message.success('File aset ter-upload');
+                message.success('Asset file uploaded');
                 onSuccess?.(data);
               } catch (err) {
                 message.error((err as Error).message);
@@ -274,7 +274,7 @@ const AssetSceneFields = () => {
               type={fileKey ? 'default' : 'primary'}
               ghost={!fileKey}
             >
-              {fileKey ? 'Ganti asset file' : 'Upload asset file'}
+              {fileKey ? 'Replace asset file' : 'Upload asset file'}
             </Button>
           </Upload>
         </Form.Item>

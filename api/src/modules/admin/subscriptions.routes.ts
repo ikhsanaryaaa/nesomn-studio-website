@@ -42,14 +42,14 @@ export const subscriptionAdminRoutes = new Elysia({ prefix: '/subscriptions' })
     const row = await db.query.subscriptions.findFirst({
       where: eq(subscriptions.id, params.id),
     });
-    if (!row) throw new AppError('NOT_FOUND', 'Langganan tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Subscription not found.', 404);
     return row;
   })
   // Attach plan ke user (buat langganan baru). Periode dihitung dari sekarang.
   .post('/', async ({ body, set, user }) => {
     const input = attachBody.parse(body);
     const plan = await db.query.plans.findFirst({ where: eq(plans.id, input.planId) });
-    if (!plan) throw new AppError('NOT_FOUND', 'Plan tidak ditemukan.', 404);
+    if (!plan) throw new AppError('NOT_FOUND', 'Plan not found.', 404);
 
     const start = new Date();
     const end = new Date(start.getTime() + input.periodDays * 24 * 60 * 60 * 1000);
@@ -57,7 +57,7 @@ export const subscriptionAdminRoutes = new Elysia({ prefix: '/subscriptions' })
       if (await effectiveSubscription(input.userId, new Date(), tx))
         throw new AppError(
           'CONFLICT',
-          'Masih ada periode subscription aktif; rekonsiliasi dahulu.',
+          'An active subscription period exists. Reconcile it first.',
           409,
         );
       const [row] = await tx
@@ -96,11 +96,11 @@ export const subscriptionAdminRoutes = new Elysia({ prefix: '/subscriptions' })
     const target = await db.query.subscriptions.findFirst({
       where: eq(subscriptions.id, params.id),
     });
-    if (!target) throw new AppError('NOT_FOUND', 'Langganan tidak ditemukan.', 404);
+    if (!target) throw new AppError('NOT_FOUND', 'Subscription not found.', 404);
     const row = await withUserTransaction(target.userId, async (tx) => {
       const current = await effectiveSubscription(target.userId, new Date(), tx);
       if (['active', 'canceled'].includes(patch.status) && current && current.id !== target.id)
-        throw new AppError('CONFLICT', 'Periode subscription bertabrakan.', 409);
+        throw new AppError('CONFLICT', 'Subscription periods overlap.', 409);
       const [updated] = await tx
         .update(subscriptions)
         .set({ status: patch.status, updatedAt: new Date() })

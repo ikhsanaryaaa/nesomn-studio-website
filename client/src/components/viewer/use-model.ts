@@ -47,11 +47,13 @@ export function useModel(url: string | null, retry = 0) {
               redirect: 'error',
             });
           if (!response.ok)
-            throw Error('Model belum dapat dimuat. Periksa akses storage/CORS dan coba lagi.');
+            throw Error(
+              'Unable to load the model. Check storage access and CORS settings, then try again.',
+            );
           const length = Number(response.headers.get('content-length'));
-          if (length > MAX_MODEL_BYTES) throw Error('Model melebihi25MB.');
+          if (length > MAX_MODEL_BYTES) throw Error('The model exceeds 25 MB.');
           const reader = response.body?.getReader();
-          if (!reader) throw Error('Stream model tidak tersedia.');
+          if (!reader) throw Error('The model stream is unavailable.');
           const chunks: Uint8Array[] = [];
           let size = 0;
           try {
@@ -59,7 +61,7 @@ export function useModel(url: string | null, retry = 0) {
               const { done, value } = await reader.read();
               if (done) break;
               size += value.byteLength;
-              if (size > MAX_MODEL_BYTES) throw Error('Model melebihi25MB.');
+              if (size > MAX_MODEL_BYTES) throw Error('The model exceeds 25 MB.');
               chunks.push(value);
               if (active)
                 setState({
@@ -95,7 +97,7 @@ export function useModel(url: string | null, retry = 0) {
           if (!meshes || vertices > 2000000) {
             disposeModel(owned);
             owned = null;
-            throw Error('Model kosong atau melebihi batas2juta vertex.');
+            throw Error('The model is empty or exceeds the two-million-vertex limit.');
           }
           if (!active) {
             disposeModel(owned);
@@ -112,10 +114,10 @@ export function useModel(url: string | null, retry = 0) {
               progress: 0,
               error:
                 error instanceof Error && error.name === 'AbortError'
-                  ? 'Pemuatan dibatalkan.'
+                  ? 'Loading canceled.'
                   : error instanceof Error
                     ? error.message
-                    : 'Model tidak valid.',
+                    : 'Invalid model.',
             });
         } finally {
           clearTimeout(timeout);

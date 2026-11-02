@@ -53,7 +53,7 @@ async function uploadTo(kind: 'preview' | 'file', file: File) {
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message ?? 'upload gagal');
+    throw new Error(err?.error?.message ?? 'Upload failed');
   }
   return res.json();
 }
@@ -105,19 +105,19 @@ const Asset3dFields = () => {
   return (
     <>
       <Form.Item label="Title" name="title" rules={[{ required: true }]}>
-        <Input placeholder="Nama aset 3D" />
+        <Input placeholder="3D asset name" />
       </Form.Item>
       <Form.Item label="Slug" name="slug" rules={[{ required: true }]}>
-        <Input placeholder="contoh: hoodie-3d-mockup" />
+        <Input placeholder="e.g. hoodie-3d-mockup" />
       </Form.Item>
       <Form.Item label="Description" name="description">
-        <Input.TextArea rows={3} placeholder="Deskripsi singkat aset" />
+        <Input.TextArea rows={3} placeholder="Short asset description" />
       </Form.Item>
 
       <Row gutter={16}>
         <Col xs={24} sm={12}>
           <Form.Item label="Type" name="type" rules={[{ required: true }]}>
-            <Select options={TYPE_3D} placeholder="Pilih tipe 3D" />
+            <Select options={TYPE_3D} placeholder="Select a 3D type" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={12}>
@@ -135,7 +135,7 @@ const Asset3dFields = () => {
       <Row gutter={16}>
         <Col xs={24} sm={8}>
           <Form.Item label="Category" name="category">
-            <Input placeholder="mis. mockup" />
+            <Input placeholder="e.g. mockup" />
           </Form.Item>
         </Col>
         <Col xs={24} sm={8}>
@@ -206,7 +206,7 @@ const Asset3dFields = () => {
       <Card size="small" title="Files & Media" style={{ marginBottom: 24 }}>
         <Form.Item
           label="Preview Image"
-          help="Gambar yang tampil di storefront."
+          help="Image displayed in the storefront."
           style={{ marginBottom: 16 }}
         >
           <Upload
@@ -217,7 +217,7 @@ const Asset3dFields = () => {
               try {
                 const data = await uploadTo('preview', file as File);
                 form.setFieldValue('previews', [data.previewPath]);
-                message.success('Preview ter-upload');
+                message.success('Preview uploaded');
                 onSuccess?.(data);
               } catch (err) {
                 message.error((err as Error).message);
@@ -230,7 +230,7 @@ const Asset3dFields = () => {
               type={previews?.length ? 'default' : 'primary'}
               ghost={!previews?.length}
             >
-              {previews?.length ? 'Ganti preview' : 'Upload preview'}
+              {previews?.length ? 'Replace preview' : 'Upload preview'}
             </Button>
           </Upload>
         </Form.Item>
@@ -240,7 +240,7 @@ const Asset3dFields = () => {
         <Form.Item
           label="3D Model (GLB/GLTF)"
           style={{ marginBottom: 0 }}
-          help={glbFile ? `Tersimpan: ${glbFile}` : 'Model 3D untuk viewer/editor.'}
+          help={glbFile ? `Saved: ${glbFile}` : '3D model for the viewer/editor.'}
         >
           <Upload
             accept=".glb,.gltf,model/gltf-binary,model/gltf+json"
@@ -251,7 +251,7 @@ const Asset3dFields = () => {
                 const data = await uploadTo('file', file as File);
                 form.setFieldValue('glbFile', data.fileKey);
                 form.setFieldValue('fileKey', data.fileKey);
-                message.success('Model 3D ter-upload');
+                message.success('3D model uploaded');
                 onSuccess?.(data);
               } catch (err) {
                 message.error((err as Error).message);
@@ -264,7 +264,7 @@ const Asset3dFields = () => {
               type={glbFile ? 'default' : 'primary'}
               ghost={!glbFile}
             >
-              {(glbFile ?? fileKey) ? 'Ganti GLB' : 'Upload GLB'}
+              {(glbFile ?? fileKey) ? 'Replace GLB' : 'Upload GLB'}
             </Button>
           </Upload>
         </Form.Item>

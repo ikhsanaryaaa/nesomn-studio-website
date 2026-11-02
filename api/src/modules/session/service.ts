@@ -31,7 +31,7 @@ export function createSession(
 ): Promise<string> {
   return withUserTransaction(userId, async (tx) => {
     const account = await tx.query.users.findFirst({ where: eq(users.id, userId) });
-    if (account?.disabledAt) throw new AppError('FORBIDDEN', 'Akun tidak tersedia.', 403);
+    if (account?.disabledAt) throw new AppError('FORBIDDEN', 'Account unavailable.', 403);
     await enforce(tx, userId, 1);
     const [session] = await tx
       .insert(sessions)

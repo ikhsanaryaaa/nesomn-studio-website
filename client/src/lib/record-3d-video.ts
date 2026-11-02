@@ -37,7 +37,7 @@ function recordOnce(
       cleanup();
       reject(error);
     };
-    const abort = () => fail(new DOMException('Rekaman dibatalkan.', 'AbortError'));
+    const abort = () => fail(new DOMException('Recording canceled.', 'AbortError'));
     if (signal?.aborted) {
       abort();
       return;
@@ -45,7 +45,7 @@ function recordOnce(
     signal?.addEventListener('abort', abort, { once: true });
     try {
       if (!context || typeof MediaRecorder === 'undefined')
-        throw Error('MediaRecorder tidak tersedia.');
+        throw Error('MediaRecorder is unavailable.');
       context.drawImage(canvas, 0, 0, copy.width, copy.height);
       // Explicit frame requests work on offscreen/headless compositors as well.
       copy.style.cssText = 'position:fixed;left:-10000px;top:0;pointer-events:none';
@@ -54,20 +54,20 @@ function recordOnce(
       const mime = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'].find((type) =>
         MediaRecorder.isTypeSupported(type),
       );
-      if (!mime) throw Error('WebM tidak didukung.');
+      if (!mime) throw Error('WebM is not supported.');
       recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: 8000000 });
       const chunks: BlobPart[] = [];
       recorder.ondataavailable = (e) => {
         if (e.data.size) chunks.push(e.data);
       };
-      recorder.onerror = () => fail(Error('Perekaman gagal.'));
+      recorder.onerror = () => fail(Error('Recording failed.'));
       recorder.onstop = () => {
         if (finished) return;
         finished = true;
         cleanup();
         const blob = new Blob(chunks, { type: mime });
         if (blob.size < 1024) {
-          reject(Error('Tidak ada frame video yang dapat direkam.'));
+          reject(Error('No video frames could be recorded.'));
           return;
         }
         const url = URL.createObjectURL(blob);
@@ -114,7 +114,7 @@ export async function recordTurntable(
   } catch (error) {
     if (
       error instanceof Error &&
-      error.message === 'Tidak ada frame video yang dapat direkam.' &&
+      error.message === 'No video frames could be recorded.' &&
       !options.signal?.aborted
     ) {
       await recordOnce(canvas, onTick, options);

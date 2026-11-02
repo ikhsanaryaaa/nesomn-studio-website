@@ -1,75 +1,72 @@
 import { forwardRef } from 'react';
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { DropdownMenu as ThemesDropdownMenu } from '@radix-ui/themes';
+import { Portal as MenuPortal } from '@radix-ui/react-dropdown-menu';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
-const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
-const DropdownMenuGroup = DropdownMenuPrimitive.Group;
-const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+const DropdownMenu = ThemesDropdownMenu.Root;
+type TriggerProps = React.ComponentPropsWithoutRef<typeof ThemesDropdownMenu.Trigger> & {
+  asChild?: boolean;
+};
+const DropdownMenuTrigger = forwardRef<
+  React.ElementRef<typeof ThemesDropdownMenu.Trigger>,
+  TriggerProps
+>(({ asChild = false, children, ...props }, ref) => (
+  <ThemesDropdownMenu.Trigger ref={ref} {...props}>
+    {asChild ? children : <button type="button">{children}</button>}
+  </ThemesDropdownMenu.Trigger>
+));
+DropdownMenuTrigger.displayName = 'DropdownMenuTrigger';
+const DropdownMenuGroup = ThemesDropdownMenu.Group;
+const DropdownMenuPortal = MenuPortal;
 
 const DropdownMenuContent = forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+  React.ElementRef<typeof ThemesDropdownMenu.Content>,
+  React.ComponentPropsWithoutRef<typeof ThemesDropdownMenu.Content>
 >(({ className, sideOffset = 6, ...props }, ref) => (
-  <DropdownMenuPrimitive.Portal>
-    <DropdownMenuPrimitive.Content
+  <ThemesDropdownMenu.Content
+    ref={ref}
+    sideOffset={sideOffset}
+    className={cn('nesomn-menu', className)}
+    {...props}
+  />
+));
+DropdownMenuContent.displayName = 'DropdownMenuContent';
+
+type ItemProps = React.ComponentPropsWithoutRef<typeof ThemesDropdownMenu.Item> & {
+  inset?: boolean;
+  asChild?: boolean;
+};
+// Themes3.3.0 forwards asChild to its Radix Item/Slottable, although its public type omits it.
+// Keep this pinned compatibility adapter so existing account links retain native anchor semantics.
+const CompatibleItem = ThemesDropdownMenu.Item as React.ForwardRefExoticComponent<
+  Omit<ItemProps, 'inset'> & React.RefAttributes<HTMLDivElement>
+>;
+const DropdownMenuItem = forwardRef<React.ElementRef<typeof ThemesDropdownMenu.Item>, ItemProps>(
+  ({ className, inset, ...props }, ref) => (
+    <CompatibleItem
       ref={ref}
-      sideOffset={sideOffset}
-      className={cn(
-        'z-50 min-w-[12rem] overflow-hidden rounded-md border border-border bg-surface-3 p-1 shadow-lg',
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
-        className,
-      )}
+      className={cn('nesomn-menu-item', inset && 'nesomn-menu-item--inset', className)}
       {...props}
     />
-  </DropdownMenuPrimitive.Portal>
-));
-DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName;
-
-const DropdownMenuItem = forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
-    inset?: boolean;
-  }
->(({ className, inset, ...props }, ref) => (
-  <DropdownMenuPrimitive.Item
-    ref={ref}
-    className={cn(
-      'relative flex min-h-11 cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-foreground outline-none transition-colors',
-      'focus:bg-surface-2 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-      '[&_svg]:size-4 [&_svg]:shrink-0',
-      inset && 'pl-8',
-      className,
-    )}
-    {...props}
-  />
-));
-DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName;
+  ),
+);
+DropdownMenuItem.displayName = 'DropdownMenuItem';
 
 const DropdownMenuLabel = forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.Label>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label>
+  React.ElementRef<typeof ThemesDropdownMenu.Label>,
+  React.ComponentPropsWithoutRef<typeof ThemesDropdownMenu.Label>
 >(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Label
-    ref={ref}
-    className={cn('px-2 py-1.5 text-xs font-medium text-muted-foreground', className)}
-    {...props}
-  />
+  <ThemesDropdownMenu.Label ref={ref} className={cn('nesomn-menu-label', className)} {...props} />
 ));
-DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName;
-
+DropdownMenuLabel.displayName = 'DropdownMenuLabel';
 const DropdownMenuSeparator = forwardRef<
-  React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
-  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+  React.ElementRef<typeof ThemesDropdownMenu.Separator>,
+  React.ComponentPropsWithoutRef<typeof ThemesDropdownMenu.Separator>
 >(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Separator
-    ref={ref}
-    className={cn('-mx-1 my-1 h-px bg-border', className)}
-    {...props}
-  />
+  <ThemesDropdownMenu.Separator ref={ref} className={className} {...props} />
 ));
-DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName;
+DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
 
 export {
   DropdownMenu,

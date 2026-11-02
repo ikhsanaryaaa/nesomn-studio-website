@@ -1,0 +1,17 @@
+bun test v1.4.4 (38afee6c8)
+
+
+tests\navigation.test.ts:
+(pass) only matching marketplace filter is current; route descendants keep editor active [4.00ms]
+
+tests\public-flow.test.ts:
+(pass) return redirect accepts only app paths and rejects external, auth loops, controls and encoded bypass [5.03ms]
+
+tests\theme.test.ts:
+(pass) system tracks OS, explicit theme overrides; invalid/storage failures safely fall back [1.59ms]
+(pass) controller tracks storage/OS, blocked storage retains session choice, cleanup removes listeners [4.26ms]
+
+ 4 pass
+ 0 fail
+ 29 expect() calls
+Ran 4 tests across 3 files. [170.00ms]

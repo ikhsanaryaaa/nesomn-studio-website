@@ -4,7 +4,7 @@ User direction: **monokrom + orange**, shape reference [UjiHub](https://ujihub.r
 
 ## Single source and palette
 
-`packages/shared/src/theme.css` owns semantic values. Client Tailwind aliases reference them; admin maps them into Ant Design ConfigProvider, including placeholder/error/success and primary foreground. Do not insert arbitrary brand colors in page components.
+`packages/shared/src/theme.css` owns semantic values. Client semantic CSS classes reference them; admin maps them into Ant Design ConfigProvider, including placeholder/error/success and primary foreground. Do not insert arbitrary brand colors in page components.
 
 | Token               | Light             | Dark              |
 | ------------------- | ----------------- | ----------------- |
@@ -22,9 +22,9 @@ Orange differs by theme to preserve text contrast. Body/muted/placeholder tokens
 
 ## Type, shape and interaction
 
-Manrope Variable UI/body and Bricolage Grotesque Variable headings self-hosted via exact `@fontsource-variable/*@5.3.0` (OFL1.1, licenses in installed packages). Browser confirms both loaded, no Google Fonts runtime request. JetBrains Mono retained for data/code; Inter package retained for compatibility but no longer imported by foundation. Display tracking -.025em, balanced heading wraps; existing semantic Tailwind type scale retained rather than changing all page copy/heading sizes at once.
+Manrope Variable UI/body and Bricolage Grotesque Variable headings self-hosted via exact `@fontsource-variable/*@5.3.0` (OFL1.1, licenses in installed packages). Browser confirms both loaded, no Google Fonts runtime request. JetBrains Mono retained for data/code; Inter package retained for compatibility but no longer imported by foundation. Display tracking -.025em, balanced heading wraps; existing type sizes retained rather than changing all page copy/heading sizes at once.
 
-Spacing uses existing Tailwind4px base scale. Shared control token44px; buttons, inputs, tabs, dropdown items, filters and mobile close/trigger minimum44px high. Slider gets44px interaction area with16px visible thumb. Switch44px high. This is not a claim every bespoke editor/admin control already meets target44 in all contexts; those surfaces need phases8–10. Radius6/10/16/28px, pills for large actions/badges/filter controls; task panels keep compact composition. Existing shadows are soft offsets; shared shadow tokens allow consistent extension.
+Spacing uses a4px base scale. Shared control token44px; buttons, inputs, tabs, dropdown items, filters and mobile close/trigger minimum44px high. Slider gets44px interaction area with16px visible thumb. Switch44px high. This is not a claim every bespoke editor/admin control already meets target44 in all contexts; those surfaces need phases8–10. Radius8/16/24/32px, pills for large actions/badges/filter controls; task panels keep compact composition. Existing shadows are soft offsets; shared shadow tokens allow consistent extension.
 
 Focus uses2px orange outline with3px offset and component rings. Input errors link aria-describedby and rolealert. Dialog viewport bounds/scroll, Radix modal focus trap/recovery, full sidebar link labels in collapsed mode, original black/white SVGs selected by theme. Mobile drawer remains expanded independently of desktop collapse state. Skip link targets main. Marketplace category selection uses query-aware aria-current and controls use aria-pressed; URL filters/search are navigable. API error renders explicit retry, not empty/fake catalog.
 
@@ -35,3 +35,25 @@ Motion tokens150/220ms with ease-out, CSS reduced-motion override plus Framer us
 `@nesomn/shared/theme` is a browser-only subpath, not imported by shared domain entry/API. `nesomn-theme` localStorage preference system/light/dark, system default follows OS. Head script sets data-theme/color-scheme before React; controller updates same-tab, storage events and OS changes, removes listeners on unmount. Blocked storage retains a session choice; reload follows OS if persistence is unavailable. Client and admin on same origin share preference. No cookie/backend/user-profile mutation.
 
 Admin `ConfigProvider` keeps Refine/Ant Design; no UI framework migration. Theme selector is available on login and application shell. Original admin logo URL correctly uses `/admin/` base. Admin resource/business workflow redesign remains phase9. Light/dark screenshots and tested scope: [phase6 report](revision/phase-6-report.md).
+
+
+## CSS without Tailwind — November2,2026
+
+Client styles use plain CSS: styles/reset.css (browser normalization), styles/ui.css (Radix/house component styles in the components cascade layer), styles/workspace.css (shell/pages), styles/editors.css (editor/AI panels), styles/content.css (store/viewer). Existing page-specific CSS remains scoped to its surface. No Tailwind plugin, compiler directives, generated utility sheet, dependency or tailwind-merge remains. cn joins semantic classes through clsx; variants choose component modifier classes. New styles should use semantic classes and shared tokens. Admin remains on Ant Design.
+
+
+## Radix Themes — November2,2026
+
+Client imports the official @radix-ui/themes/styles.css and pins @radix-ui/themes3.3.0. AppTheme wraps browser and prerender entry points; resolved stored/OS appearance remains driven by the shared theme controller. Themes accent orange, gray sand, radius large, solid panels; Manrope/Bricolage and Nesomn accent contrast tokens override only brand aliases.
+
+Buttons/IconButtons, TextField, Badge, Card, Tabs, Switch, Skeleton, Dialog and DropdownMenu use actual Themes components. Secondary/ghost buttons use gray, primary uses orange. House adapters preserve existing callers/labels/refs/slot links. The named Slider uses Radix primitives and official Themes CSS because Themes3.3.0 does not forward accessible names to thumbs. Toast retains the existing primitive/custom styling (Themes has no matchingToast component). Custom drawer Theme scope ensures portaled controls inherit appearance. Native browser inputs and authored page/editor layout remain CSS. Admin remains Ant Design. Tailwind remains absent.
+
+
+## English-only UI — November3,2026
+
+Latest user direction: application-authored interface copy is English only across client/admin, accessible names, states and reachableAPIerrors. This overrides earlier Indonesian/mixed-language notes. Client/admin documents declare en, AntDesign uses en_US, English number/date display retains IDRcurrency/businessvalues. Existing authored data is never automatically rewritten. tests/english-ui.test.mjs checks runtime-copy vocabulary and document language; browser selectors follow English labels. See revision/english-ui-2026-11-03.md for scope and evidence.
+
+
+## Rounder shape scale — November3,2026
+
+User-directed shape refinement: shared radii8/16/24/32px; Themes large preset maps controls to16px and panels to24px, login frame/dialogs use32px. Explicit full-radius Themes controls remain pills. App-only pill styles use --radius-pill to avoid the Themes --radius-full=0 variable in large mode. Admin derives its16px base radius from the shared token. Workspace geometry, spacing, focus and44px targets remain. See revision/rounded-ui-2026-11-03.md.

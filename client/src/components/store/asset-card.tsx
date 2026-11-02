@@ -15,7 +15,7 @@ export function AssetCard({ asset }: { asset: AssetDTO }) {
           <h3>{asset.title}</h3>
           <p>{asset.category ?? asset.type}</p>
         </div>
-        <span>{Number(asset.priceIdr) === 0 ? 'Gratis' : rp(asset.priceIdr)}</span>
+        <span>{Number(asset.priceIdr) === 0 ? 'Free' : rp(asset.priceIdr)}</span>
       </div>
     </Link>
   );

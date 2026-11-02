@@ -1,6 +1,17 @@
 import { List, useTable, ShowButton } from '@refinedev/antd';
 import { useShow, useCreate, useList, useNotification } from '@refinedev/core';
-import { Table, Space, Tag, Typography, Card, Descriptions, Form, Select, InputNumber, Button } from 'antd';
+import {
+  Table,
+  Space,
+  Tag,
+  Typography,
+  Card,
+  Descriptions,
+  Form,
+  Select,
+  InputNumber,
+  Button,
+} from 'antd';
 import { useParams } from 'react-router';
 
 export const UserList = () => {
@@ -56,13 +67,13 @@ const AttachSubscription = ({ userId }: { userId: string }) => {
       >
         <Form.Item name="planId" rules={[{ required: true }]}>
           <Select
-            placeholder="Pilih plan"
+            placeholder="Select a plan"
             style={{ minWidth: 200 }}
             options={(plansData?.data ?? []).map((p) => ({ value: p.id, label: p.name as string }))}
           />
         </Form.Item>
         <Form.Item name="periodDays" initialValue={30}>
-          <InputNumber min={1} addonAfter="hari" />
+          <InputNumber min={1} addonAfter="days" />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={isLoading}>

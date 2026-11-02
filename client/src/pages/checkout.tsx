@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Seo } from '@/components/seo';
 import { api } from '@/lib/api';
 const rp = (n: number) =>
-  new Intl.NumberFormat('id-ID', {
+  new Intl.NumberFormat('en-ID', {
     style: 'currency',
     currency: 'IDR',
     maximumFractionDigits: 0,
@@ -41,86 +41,88 @@ function InvoiceContent() {
   }, [value?.status, qc]);
   return (
     <>
-      <Seo title="Checkout QRIS" description="Periksa nominal dan kode unik sebelum membayar." />
+      <Seo
+        title="QRIS checkout"
+        description="Check the amount and unique payment code before paying."
+      />
       <Topbar title="Checkout" />
-      <div className="mx-auto w-full max-w-lg px-5 py-10">
-        <h1 className="mb-6 text-2xl font-semibold">Pembayaran QRIS</h1>
+      <div className="checkout-page">
+        <h1 className="checkout-title">QRIS payment</h1>
         {!id ? (
           <p role="alert">
-            ID pesanan tidak tersedia. <Link to="/account">Buka akun</Link>
+            Order ID is missing. <Link to="/account">Open account</Link>
           </p>
         ) : invoice.isLoading ? (
-          <p role="status">Memuat invoice…</p>
+          <p role="status">Loading invoice…</p>
         ) : invoice.isError ? (
           <div role="alert">
-            <p>
-              Invoice tidak dapat dimuat. Jangan melakukan pembayaran sebelum nominal terverifikasi.
-            </p>
-            <Button className="mt-4 min-h-11" onClick={() => void invoice.refetch()}>
-              Coba lagi
+            <p>Unable to load the invoice. Do not pay until the amount has been verified.</p>
+            <Button className="checkout-refresh" onClick={() => void invoice.refetch()}>
+              Try again
             </Button>
           </div>
         ) : value ? (
           <>
-            <dl className="divide-y divide-border border-y border-border">
+            <dl className="checkout-breakdown">
               {(
                 [
                   ['Subtotal', value.quote.subtotalIdr],
-                  ['Diskon', value.quote.discountIdr ? -value.quote.discountIdr : 0],
-                  ['Kode unik', value.code],
-                  ['Jumlah bayar', value.payableIdr],
+                  ['Discount', value.quote.discountIdr ? -value.quote.discountIdr : 0],
+                  ['Unique payment code', value.code],
+                  ['Amount due', value.payableIdr],
                 ] as const
               ).map(([label, amount]) => (
-                <div key={label} className="flex justify-between gap-4 py-4">
+                <div key={label} className="checkout-line">
                   <dt>{label}</dt>
-                  <dd className="font-mono font-semibold">{rp(amount)}</dd>
+                  <dd className="checkout-amount">{rp(amount)}</dd>
                 </div>
               ))}
             </dl>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Kode unik {rp(value.code)} ditambahkan untuk pencocokan pembayaran. Bayar tepat{' '}
-              {rp(value.payableIdr)}. Kode ini bagian dari jumlah bayar dan tidak menambah credits.
+            <p className="workspace-followup-note">
+              Unique payment code {rp(value.code)} is added to match your payment. Pay exactly{' '}
+              {rp(value.payableIdr)}. This code is part of the payment amount and does not add
+              credits.
             </p>
-            <section aria-live="polite" className="mt-6">
+            <section aria-live="polite" className="checkout-state">
               {qrError && (
-                <p role="alert" className="mb-4">
-                  QR belum dapat dimuat. Periksa status dan coba lagi sebelum membayar.
+                <p role="alert" className="checkout-alert">
+                  Unable to load the QR code. Check the status and try again before paying.
                 </p>
               )}
               {value.status === 'paid' ? (
-                <p className="font-medium">
-                  Pembayaran terverifikasi. <Link to="/account">Buka akun dan riwayat</Link>
+                <p className="checkout-state-heading">
+                  Payment verified. <Link to="/account">Open account and history</Link>
                 </p>
               ) : value.status === 'pending' ? (
                 <>
-                  <p className="mb-4 text-sm">
-                    Berlaku sampai {new Date(value.expiresAt).toLocaleString('id-ID')}. Status
-                    diperbarui dari server.
+                  <p className="checkout-instructions">
+                    Valid until {new Date(value.expiresAt).toLocaleString('en-ID')}. The status is
+                    updated by the server.
                   </p>
                   {!confirmed ? (
                     <Button
-                      className="min-h-11 w-full"
+                      className="checkout-qr-action"
                       onClick={() => {
                         setQrError(false);
                         setConfirmed(true);
                       }}
                     >
-                      Tampilkan QRIS untuk {rp(value.payableIdr)}
+                      Show QRIS for {rp(value.payableIdr)}
                     </Button>
                   ) : (
                     <>
                       <img
-                        className="mx-auto aspect-square w-full max-w-80 bg-white p-3"
+                        className="checkout-qr-image"
                         src={`/api/billing/orders/${encodeURIComponent(id)}/qr`}
-                        alt={`QRIS pesanan ${id}, jumlah bayar ${rp(value.payableIdr)}`}
+                        alt={`QRIS order ${id}, amount due ${rp(value.payableIdr)}`}
                         onError={() => {
                           setQrError(true);
                           setConfirmed(false);
                         }}
                       />
-                      <p className="mt-4 text-sm">
-                        Pindai QR dengan aplikasi pembayaran Anda. Jangan bayar dua kali saat
-                        menunggu konfirmasi.
+                      <p className="checkout-recovery">
+                        Scan the QR code with your payment app. Do not pay twice while waiting for
+                        confirmation.
                       </p>
                     </>
                   )}
@@ -128,22 +130,22 @@ function InvoiceContent() {
               ) : (
                 <p role="alert">
                   {value.status === 'expired'
-                    ? 'Invoice kedaluwarsa. Jangan gunakan QR ini.'
-                    : 'Pembayaran perlu rekonsiliasi. Jangan bayar ulang; hubungi dukungan dengan ID pesanan.'}
+                    ? 'This invoice has expired. Do not use this QR code.'
+                    : 'This payment needs reconciliation. Do not pay again; contact support with your order ID.'}
                 </p>
               )}
               {value.status !== 'paid' && (
                 <Button
                   variant="secondary"
-                  className="mt-4 min-h-11"
+                  className="checkout-refresh"
                   disabled={invoice.isFetching}
                   onClick={() => void invoice.refetch()}
                 >
-                  Periksa status pembayaran
+                  Check payment status
                 </Button>
               )}
             </section>
-            <p className="mt-6 break-all text-xs text-muted-foreground">ID pesanan: {id}</p>
+            <p className="checkout-order-id">Order ID: {id}</p>
           </>
         ) : null}
       </div>

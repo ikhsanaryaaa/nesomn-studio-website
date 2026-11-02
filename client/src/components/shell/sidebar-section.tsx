@@ -22,7 +22,7 @@ export function SidebarSection({
   const id = useId();
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="sidebar-section">
       {!collapsed && (
         <button
           type="button"
@@ -30,22 +30,19 @@ export function SidebarSection({
           aria-expanded={expandable ? open : undefined}
           aria-controls={expandable ? id : undefined}
           onClick={() => expandable && setOpen((v) => !v)}
-          className={cn(
-            'flex items-center justify-between px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground',
-            expandable && 'min-h-11 cursor-pointer hover:text-foreground',
-          )}
+          className={cn('sidebar-section-title', expandable && 'sidebar-section-expandable')}
         >
           <span>{title}</span>
           {expandable && (
             <ChevronDown
-              className={cn('size-3.5 transition-transform duration-200', !open && '-rotate-90')}
+              className={cn('sidebar-section-chevron', !open && 'sidebar-section-closed')}
             />
           )}
         </button>
       )}
-      {collapsed && <div className="my-1 h-px bg-border" />}
+      {collapsed && <div className="sidebar-section-divider" />}
       {(open || collapsed) && (
-        <div id={id} className="flex flex-col gap-0.5">
+        <div id={id} className="sidebar-section-items">
           {children}
         </div>
       )}

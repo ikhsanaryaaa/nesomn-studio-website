@@ -15,7 +15,7 @@ const IV_LEN = 12;
 function getKey(): Buffer {
   const secret = process.env.ENCRYPTION_KEY;
   if (!secret) {
-    throw new Error('ENCRYPTION_KEY belum diset di environment.');
+    throw new Error('ENCRYPTION_KEY is not set in the environment.');
   }
   return createHash('sha256').update(secret).digest();
 }

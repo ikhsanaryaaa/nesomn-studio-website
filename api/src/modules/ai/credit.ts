@@ -12,10 +12,10 @@ import { creditPeriod } from '../../lib/periods.ts';
 
 function amountValid(amount: number) {
   if (!Number.isSafeInteger(amount) || amount <= 0 || amount > 2_000_000_000)
-    throw new Error('Jumlah credit tidak valid.');
+    throw new Error('Invalid credit amount.');
 }
 function operation(userId: string, key: string) {
-  if (!key || key.length > 256) throw new Error('Operation key wajib.');
+  if (!key || key.length > 256) throw new Error('An operation key is required.');
   return `${userId}:${key}`;
 }
 async function account(tx: Tx, userId: string) {
@@ -40,7 +40,7 @@ async function account(tx: Tx, userId: string) {
     ) {
       throw new AppError(
         'CREDIT_RECONCILIATION',
-        'Saldo legacy memerlukan rekonsiliasi sebelum mutasi credit.',
+        'Legacy balances require reconciliation before credit changes.',
         409,
       );
     }
@@ -71,7 +71,7 @@ async function append(
     .where(eq(creditAccounts.userId, userId))
     .returning();
   if (!row || row.balance < 0)
-    throw new AppError('INSUFFICIENT_CREDIT', 'Saldo credit tidak cukup.', 402);
+    throw new AppError('INSUFFICIENT_CREDIT', 'Insufficient credits.', 402);
   await tx.insert(creditLedger).values({
     userId,
     delta,
@@ -87,7 +87,7 @@ async function append(
 async function previous(tx: Tx, userId: string, key: string, delta: number, reason: string) {
   const row = await tx.query.creditLedger.findFirst({ where: eq(creditLedger.operationKey, key) });
   if (row && (row.userId !== userId || row.delta !== delta || row.reason !== reason))
-    throw new Error('Operation key dipakai dengan payload berbeda.');
+    throw new Error('The operation key was used with a different payload.');
   return row;
 }
 export async function grantCreditTx(
@@ -106,11 +106,11 @@ export async function grantCreditTx(
   if (old) {
     const lot = await tx.query.creditLots.findFirst({ where: eq(creditLots.sourceKey, op) });
     if ((lot?.expiresAt?.getTime() ?? null) !== (expiresAt?.getTime() ?? null))
-      throw new Error('Expiry operation berbeda.');
+      throw new Error('The operation expiry does not match.');
     return (await account(tx, userId)).balance;
   }
   if (expiresAt && (!Number.isFinite(expiresAt.getTime()) || expiresAt <= now))
-    throw new Error('Expiry credit tidak valid.');
+    throw new Error('Invalid credit expiry.');
   await tx
     .insert(creditLots)
     .values({ userId, sourceKey: op, initial: amount, remaining: amount, expiresAt });
@@ -167,7 +167,7 @@ export async function deductCreditTx(
   const current = await balanceTx(tx, userId, now);
   const op = operation(userId, `${reason}:${refId}`);
   if (await previous(tx, userId, op, -amount, reason)) return current;
-  if (current < amount) throw new AppError('INSUFFICIENT_CREDIT', 'Saldo credit tidak cukup.', 402);
+  if (current < amount) throw new AppError('INSUFFICIENT_CREDIT', 'Insufficient credits.', 402);
   const lots = await tx
     .select()
     .from(creditLots)
@@ -184,7 +184,7 @@ export async function deductCreditTx(
     await tx.insert(creditAllocations).values({ operationKey: op, lotId: lot.id, amount: take });
     remaining -= take;
   }
-  if (remaining) throw new Error('Credit lots memerlukan rekonsiliasi.');
+  if (remaining) throw new Error('Credit lots require reconciliation.');
   return append(
     tx,
     userId,
@@ -211,7 +211,9 @@ export async function refundCreditTx(
     where: eq(creditLedger.operationKey, chargeKey),
   });
   if (!charge || charge.delta !== -amount || charge.reason !== 'usage')
-    throw new Error('Refund tanpa charge yang sesuai; rekonsiliasi legacy diperlukan.');
+    throw new Error(
+      'No matching charge was found for this refund. Legacy reconciliation is required.',
+    );
   const old = await tx.query.creditLedger.findFirst({
     where: eq(creditLedger.operationKey, refundKey),
   });
@@ -222,7 +224,7 @@ export async function refundCreditTx(
     .innerJoin(creditLots, eq(creditLots.id, creditAllocations.lotId))
     .where(eq(creditAllocations.operationKey, chargeKey));
   if (allocations.reduce((sum, row) => sum + row.allocation.amount, 0) !== amount)
-    throw new Error('Refund allocation tidak cocok.');
+    throw new Error('Refund allocation does not match.');
   let restored = 0;
   for (const { allocation, lot } of allocations) {
     if (lot.expiresAt && lot.expiresAt <= now) continue;

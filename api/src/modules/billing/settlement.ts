@@ -43,7 +43,7 @@ export async function settlePayment(provider: string, event: WebhookResult) {
   });
   if (saved?.fingerprint !== fingerprint) throw new Error('Payment event replay payload mismatch');
   const order = await db.query.orders.findFirst({ where: eq(orders.id, event.orderId) });
-  if (!order) throw new Error('Order tidak ditemukan.');
+  if (!order) throw new Error('Order not found.');
   return withUserTransaction(order.userId, async (tx) => {
     const [current] = await tx.select().from(orders).where(eq(orders.id, order.id)).for('update');
     const [receipt] = await tx

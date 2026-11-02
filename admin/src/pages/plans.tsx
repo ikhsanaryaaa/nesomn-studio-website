@@ -1,12 +1,4 @@
-import {
-  List,
-  useTable,
-  EditButton,
-  DeleteButton,
-  Create,
-  Edit,
-  useForm,
-} from '@refinedev/antd';
+import { List, useTable, EditButton, DeleteButton, Create, Edit, useForm } from '@refinedev/antd';
 import { Table, Space, Tag, Form, Input, Select, InputNumber, Switch } from 'antd';
 
 export const PlanList = () => {
@@ -68,18 +60,38 @@ const PlanFields = () => (
       <InputNumber min={0} style={{ width: '100%' }} />
     </Form.Item>
     <Form.Item label="Max Concurrent Sessions" name="maxConcurrentSessions">
-      <InputNumber min={1} style={{ width: '100%' }} placeholder="kosong = unlimited" />
+      <InputNumber min={1} style={{ width: '100%' }} placeholder="Leave blank for unlimited" />
     </Form.Item>
-    <Form.Item label="Scene 2D" name={['editorAccess', 'scene2d']} valuePropName="checked" initialValue={false}>
+    <Form.Item
+      label="Scene 2D"
+      name={['editorAccess', 'scene2d']}
+      valuePropName="checked"
+      initialValue={false}
+    >
       <Switch />
     </Form.Item>
-    <Form.Item label="Editor 3D" name={['editorAccess', 'editor3d']} valuePropName="checked" initialValue={false}>
+    <Form.Item
+      label="Editor 3D"
+      name={['editorAccess', 'editor3d']}
+      valuePropName="checked"
+      initialValue={false}
+    >
       <Switch />
     </Form.Item>
-    <Form.Item label="Pro Templates" name={['editorAccess', 'proTemplates']} valuePropName="checked" initialValue={false}>
+    <Form.Item
+      label="Pro Templates"
+      name={['editorAccess', 'proTemplates']}
+      valuePropName="checked"
+      initialValue={false}
+    >
       <Switch />
     </Form.Item>
-    <Form.Item label="AI Video" name={['editorAccess', 'aiVideo']} valuePropName="checked" initialValue={false}>
+    <Form.Item
+      label="AI Video"
+      name={['editorAccess', 'aiVideo']}
+      valuePropName="checked"
+      initialValue={false}
+    >
       <Switch />
     </Form.Item>
     <Form.Item label="Commercial" name="commercial" valuePropName="checked" initialValue={false}>

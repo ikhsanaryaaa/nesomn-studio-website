@@ -27,16 +27,16 @@ export const uploadAdminRoutes = new Elysia({ prefix: '/uploads' })
     // kind=preview (default) untuk gambar preview; kind=file untuk file produk.
     const kind = (query as Record<string, string | undefined>).kind ?? 'preview';
     if (kind !== 'file' && kind !== 'preview')
-      throw new AppError('BAD_REQUEST', 'Upload kind tidak valid.', 400);
+      throw new AppError('BAD_REQUEST', 'Invalid upload kind.', 400);
     const isFile = kind === 'file';
 
     const file = (body as { file?: File }).file;
-    if (!file) throw new AppError('NO_FILE', 'File tidak ada.', 400);
+    if (!file) throw new AppError('NO_FILE', 'File is missing.', 400);
 
     const maxBytes = isFile ? MAX_FILE_BYTES : MAX_PREVIEW_BYTES;
     if (file.size > maxBytes) {
       const mb = Math.round(maxBytes / (1024 * 1024));
-      throw new AppError('TOO_LARGE', `Ukuran file melebihi ${mb} MB.`, 400);
+      throw new AppError('TOO_LARGE', `File size exceeds ${mb} MB.`, 400);
     }
 
     const storage = await getStorage();
@@ -45,7 +45,11 @@ export const uploadAdminRoutes = new Elysia({ prefix: '/uploads' })
     try {
       checked = await validateUpload(buf, file.name, file.type, isFile ? 'file' : 'preview');
     } catch {
-      throw new AppError('BAD_TYPE', 'Isi/format file tidak valid atau tidak didukung.', 400);
+      throw new AppError(
+        'BAD_TYPE',
+        'The file contents or format are invalid or unsupported.',
+        400,
+      );
     }
     const base = `assets/${crypto.randomUUID()}-${safeName(file.name)}`;
     let originalKey: string | undefined,

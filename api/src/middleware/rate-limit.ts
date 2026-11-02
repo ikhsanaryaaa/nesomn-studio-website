@@ -45,14 +45,13 @@ export function rateLimit(name: string, opts: RateLimitOptions) {
 
       const bucket = store.get(key);
       if (!bucket || bucket.resetAt < now) {
-        if (store.size >= 10000)
-          throw new AppError('RATE_LIMITED', 'Terlalu banyak permintaan.', 429);
+        if (store.size >= 10000) throw new AppError('RATE_LIMITED', 'Too many requests.', 429);
         store.set(key, { count: 1, resetAt: now + opts.windowMs });
         return;
       }
       bucket.count += 1;
       if (bucket.count > limit) {
-        throw new AppError('RATE_LIMITED', 'Terlalu banyak permintaan. Coba lagi nanti.', 429);
+        throw new AppError('RATE_LIMITED', 'Too many requests. Please try again later.', 429);
       }
     },
   );

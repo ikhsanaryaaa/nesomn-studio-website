@@ -188,7 +188,7 @@ async function click(text) {
 }
 async function activateTab(text) {
   const box = await evaluate(
-    '(()=>{const e=[...document.querySelectorAll("[role=tab]")].find(e=>e.textContent===' +
+    '(()=>{const e=[...document.querySelectorAll("[role=tab]")].find(e=>(e.querySelector(".rt-TabsTriggerInner")?.textContent??e.textContent)===' +
       JSON.stringify(text) +
       ');const r=e.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()',
   );
@@ -205,7 +205,7 @@ async function activateTab(text) {
     clickCount: 1,
   });
   await wait(
-    '[...document.querySelectorAll("[role=tab]")].some(e=>e.textContent===' +
+    '[...document.querySelectorAll("[role=tab]")].some(e=>(e.querySelector(".rt-TabsTriggerInner")?.textContent??e.textContent)===' +
       JSON.stringify(text) +
       '&&e.getAttribute("data-state")==="active")',
   );
@@ -332,12 +332,12 @@ try {
       clickCount: 1,
     });
     await wait(
-      '[...document.querySelectorAll("[role=menuitem]")].some(e=>e.textContent===' +
+      '[...document.querySelectorAll("[role=menuitem]")].some(e=>(e.querySelector(".rt-TabsTriggerInner")?.textContent??e.textContent)===' +
         JSON.stringify(format) +
         ')',
     );
     await evaluate(
-      '[...document.querySelectorAll("[role=menuitem]")].find(e=>e.textContent===' +
+      '[...document.querySelectorAll("[role=menuitem]")].find(e=>(e.querySelector(".rt-TabsTriggerInner")?.textContent??e.textContent)===' +
         JSON.stringify(format) +
         ').click()',
     );
@@ -363,7 +363,7 @@ try {
       await evaluate(
         'localStorage.setItem("nesomn-theme",' +
           JSON.stringify(theme) +
-          ');window.dispatchEvent(new Event("storage"));document.querySelectorAll("button[aria-label=Tutup]").forEach(b=>b.click());',
+          ');window.dispatchEvent(new Event("storage"));document.querySelectorAll("button[aria-label=Close]").forEach(b=>b.click());',
       );
       viewports.push({ theme, ...(await capture('scene-' + theme + '-' + width, width)) });
       const bounds = await evaluate(
@@ -381,7 +381,7 @@ try {
   });
   await sleep(400);
   const shortViewport = await evaluate(
-    '(()=>{const workspace=document.querySelector(\'[aria-label="Area kerja Scene 2D"]\');workspace.scrollTop=workspace.scrollHeight;const aside=workspace.querySelector("aside");aside.scrollTop=aside.scrollHeight;const input=[...aside.querySelectorAll("label")].find(label=>label.textContent.startsWith("opacity")).querySelector("input");input.scrollIntoView({block:"nearest"});const r=input.getBoundingClientRect();return {overflow:getComputedStyle(workspace).overflowY,top:r.top,bottom:r.bottom,height:r.height,hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===input};})()',
+    '(()=>{const workspace=document.querySelector(\'[aria-label="2D scene workspace"]\');workspace.scrollTop=workspace.scrollHeight;const aside=workspace.querySelector("aside");aside.scrollTop=aside.scrollHeight;const input=[...aside.querySelectorAll("label")].find(label=>label.textContent.startsWith("opacity")).querySelector("input");input.scrollIntoView({block:"nearest"});const r=input.getBoundingClientRect();return {overflow:getComputedStyle(workspace).overflowY,top:r.top,bottom:r.bottom,height:r.height,hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===input};})()',
   );
   assert.equal(shortViewport.overflow, 'auto');
   assert.ok(shortViewport.top >= 0 && shortViewport.bottom <= 720);
@@ -392,7 +392,7 @@ try {
     folder + '/scene-properties-short-mobile.png',
     Buffer.from(shortImage.data, 'base64'),
   );
-  await evaluate('document.querySelector(\'[aria-label="Area kerja Scene 2D"]\').scrollTop=0');
+  await evaluate('document.querySelector(\'[aria-label="2D scene workspace"]\').scrollTop=0');
   await send('Emulation.setDeviceMetricsOverride', {
     width: 1440,
     height: 1000,
@@ -410,23 +410,23 @@ try {
   await activateTab('Design');
   await activateTab('AI Scene');
   assert.equal(await evaluate('document.querySelector("#ai-scene-prompt").value'), 'Sample prompt');
-  await wait('document.body.innerText.includes("Batalkan job pending")');
-  await click('Batalkan job pending');
+  await wait('document.body.innerText.includes("Cancel pending job")');
+  await click('Cancel pending job');
   await wait('document.body.innerText.includes("Sample failure")');
-  assert.ok(!(await evaluate('document.body.innerText.includes("Credit dikembalikan")')));
+  assert.ok(!(await evaluate('document.body.innerText.includes("Credits refunded")')));
   creditError = true;
   await go('/editor/scene');
   await sleep(2000);
   await activateTab('AI Scene');
-  await wait('document.body.innerText.includes("Saldo gagal dimuat")');
+  await wait('document.body.innerText.includes("Unable to load balance")');
   await evaluate('document.querySelector("details summary").click()');
-  await click('Muat riwayat job');
+  await click('Load job history');
   await wait('document.body.innerText.includes("sample-j" )');
   await click('sample-j · failed');
   await wait('document.body.innerText.includes("Sample failure")');
   assert.equal(creates, 1);
   await go('/editor/scene?project=wrong-kind');
-  await wait('document.body.innerText.includes("bukan Scene 2D")');
+  await wait('document.body.innerText.includes("not a 2D scene")');
   assert.equal(await evaluate('document.querySelectorAll(".konvajs-content").length'), 0);
   await go('/admin/');
   await wait('location.pathname==="/admin/assets"');

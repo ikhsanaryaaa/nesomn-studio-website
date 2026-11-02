@@ -13,7 +13,7 @@ export const AuditLogList = () => {
         <Table.Column
           dataIndex="createdAt"
           title="Time"
-          render={(v: string) => (v ? new Date(v).toLocaleString() : '-')}
+          render={(v: string) => (v ? new Date(v).toLocaleString('en-GB') : '-')}
         />
         <Table.Column dataIndex="actorId" title="Actor" render={(v: string) => v ?? 'system'} />
         <Table.Column dataIndex="action" title="Action" render={(v: string) => <Tag>{v}</Tag>} />

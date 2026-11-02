@@ -23,7 +23,7 @@ export function exportRendererImage(
   fileName = 'nesomn-3d',
 ): void {
   const source = gl.domElement;
-  if(!source.width||!source.height)throw Error('Renderer belum memiliki frame.');
+  if (!source.width || !source.height) throw Error('The renderer has no frame to export yet.');
   const scale = clampScale(source.width, source.height);
 
   // Salin ke canvas sementara dengan ukuran ter-clamp agar <= 1080p.
@@ -31,7 +31,7 @@ export function exportRendererImage(
   target.width = Math.round(source.width * scale);
   target.height = Math.round(source.height * scale);
   const ctx = target.getContext('2d');
-  if (!ctx) throw Error('Canvas2D tidak tersedia.');
+  if (!ctx) throw Error('A 2D canvas is unavailable.');
   ctx.drawImage(source, 0, 0, target.width, target.height);
 
   const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';

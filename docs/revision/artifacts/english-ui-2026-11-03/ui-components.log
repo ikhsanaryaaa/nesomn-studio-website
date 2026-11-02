@@ -1,0 +1,15 @@
+bun test v1.4.4 (38afee6c8)
+
+$ bun test --no-env-file --no-install tests/ui-classes.test.tsx
+
+tests\ui-classes.test.tsx:
+(pass) invalid inputs retain caller classes, labels and error association [22.77ms]
+(pass) button semantic variants preserve class overrides and slot links [3.64ms]
+(pass) application SSR renders an actual orange Radix Themes provider [3.55ms]
+(pass) slider thumbs keep their accessible labels with the Themes skin [13.90ms]
+(pass) dialog adapters retain native buttons for plain text children [2.68ms]
+
+ 5 pass
+ 0 fail
+ 23 expect() calls
+Ran 5 tests across 1 file. [2.50s]

@@ -29,7 +29,7 @@ export const sessionAdminRoutes = new Elysia({ prefix: '/sessions' })
   })
   .delete('/:id', async ({ params, user }) => {
     const [row] = await db.delete(sessions).where(eq(sessions.id, params.id)).returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Sesi tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Session not found.', 404);
     await writeAudit((user as AuthUser).id, 'revoke', 'session', row.id, {
       userId: row.userId,
     });

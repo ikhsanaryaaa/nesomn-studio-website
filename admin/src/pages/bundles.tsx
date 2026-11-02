@@ -62,8 +62,8 @@ const BundleFields = () => {
           ]}
         />
       </Form.Item>
-      <Form.Item label="Assets dalam bundle" name="assetIds">
-        <Select mode="multiple" maxCount={200} {...selectProps} placeholder="Pilih aset" />
+      <Form.Item label="Assets in this bundle" name="assetIds">
+        <Select mode="multiple" maxCount={200} {...selectProps} placeholder="Select assets" />
       </Form.Item>
     </>
   );

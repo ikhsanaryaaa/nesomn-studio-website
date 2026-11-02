@@ -37,30 +37,28 @@ type Props = {
 
 function Swatches({ value, onPick }: { value: string; onPick: (c: string) => void }) {
   return (
-    <div className="flex flex-col gap-3">
-      <div className="grid grid-cols-5 gap-2">
+    <div className="editor-control-stack">
+      <div className="editor-swatches">
         {SWATCHES.map((c) => (
           <button
             key={c}
             type="button"
             title={c}
             onClick={() => onPick(c)}
-            className={`size-8 rounded-md border transition-transform hover:scale-110 ${
-              value.toLowerCase() === c.toLowerCase()
-                ? 'border-accent ring-2 ring-accent'
-                : 'border-border'
+            className={`editor-color-swatch ${
+              value.toLowerCase() === c.toLowerCase() ? 'editor-color-swatch--selected' : ''
             }`}
             style={{ backgroundColor: c }}
           />
         ))}
       </div>
-      <label className="flex items-center gap-2 text-sm">
-        <span className="text-muted-foreground">Kustom</span>
+      <label className="editor-custom-color">
+        <span className="editor-muted">Custom</span>
         <input
           type="color"
           value={value}
           onChange={(e) => onPick(e.target.value)}
-          className="h-8 w-12 cursor-pointer rounded border border-border bg-transparent"
+          className="editor-color-input"
         />
       </label>
     </div>
@@ -85,22 +83,22 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
 
   if (tab === 'design') {
     return (
-      <div className="flex flex-col gap-4 p-4">
+      <div className="editor-tool-panel">
         <Button id="add-design-3d" variant="secondary" onClick={onAddDesign}>
-          <Plus className="size-4" />
+          <Plus className="editor-action-icon" />
           Add Design
         </Button>
         {decal && (
-          <section className="flex flex-col gap-3" aria-label="Properties decal">
-            <h3 className="font-semibold">Properties decal</h3>
-            <label className="text-sm">
+          <section className="editor-control-stack" aria-label="Decal properties">
+            <h3 className="editor-strong">Decal properties</h3>
+            <label className="editor-text">
               Target mesh
               <select
-                className="theme-select w-full"
+                className="theme-select editor-mesh-select"
                 value={decal.meshPath ?? ''}
                 onChange={(e) => update(decal.id, { meshPath: e.target.value || undefined })}
               >
-                <option value="">Otomatis (mesh terbesar)</option>
+                <option value="">Automatic (largest mesh)</option>
                 {meshes.map((m) => (
                   <option key={m.path} value={m.path}>
                     {m.name}
@@ -110,16 +108,16 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
             </label>
             {(['position', 'rotation'] as const).map((field) => (
               <div key={field}>
-                <span className="text-sm">
-                  {field === 'position' ? 'Posisi lokal' : 'Rotasi (radian)'}
+                <span className="editor-text">
+                  {field === 'position' ? 'Local position' : 'Rotation (radians)'}
                 </span>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="editor-axis-grid">
                   {[0, 1, 2].map((axis) => (
-                    <label key={axis} className="text-xs">
+                    <label key={axis} className="editor-caption">
                       {['X', 'Y', 'Z'][axis]}
                       <input
                         type="number"
-                        className="h-11 w-full rounded-md border bg-surface-2 px-2"
+                        className="editor-number-input"
                         step="0.1"
                         value={decal[field][axis]}
                         onChange={(e) => {
@@ -135,11 +133,11 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
                 </div>
               </div>
             ))}
-            <label className="text-sm">
-              Skala
+            <label className="editor-text">
+              Scale
               <input
                 type="number"
-                className="h-11 w-full rounded-md border bg-surface-2 px-2"
+                className="editor-number-input"
                 min="0.01"
                 max="100"
                 step="0.1"
@@ -154,22 +152,17 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
         )}
 
         <section>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Decals ({decals.length})
-          </h3>
+          <h3 className="editor-section-title">Decals ({decals.length})</h3>
           {decals.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Belum ada desain. Tambahkan untuk menempel ke permukaan model.
+            <p className="editor-description">
+              No designs yet. Add one to place it on the model surface.
             </p>
           ) : (
-            <ul className="flex flex-col gap-2">
+            <ul className="editor-result-stack">
               {decals.map((d, i) => (
-                <li
-                  key={d.id}
-                  className="flex items-center justify-between rounded-md border border-border bg-surface-2 px-3 py-2 text-sm"
-                >
+                <li key={d.id} className="editor-decal-row">
                   <button
-                    className="min-h-11 truncate"
+                    className="editor-decal-select"
                     aria-pressed={selected === d.id}
                     onClick={() => select(d.id)}
                   >
@@ -178,9 +171,9 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
                   <button
                     type="button"
                     onClick={() => removeDecal(d.id)}
-                    className="min-h-11 px-2 text-xs text-muted-foreground hover:text-danger"
+                    className="editor-decal-remove"
                   >
-                    Hapus
+                    Remove
                   </button>
                 </li>
               ))}
@@ -189,10 +182,8 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
         </section>
 
         <section>
-          <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Camera Angle
-          </h3>
-          <div className="grid grid-cols-2 gap-2">
+          <h3 className="editor-section-title">Camera Angle</h3>
+          <div className="editor-paired-controls">
             {CAMERA_PRESETS.map((p) => (
               <Button
                 key={p.value}
@@ -210,27 +201,21 @@ export function ControlsPanel3D({ tab, onAddDesign, meshes = [] }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="editor-color-panel">
       <section>
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Warna objek
-        </h3>
+        <h3 className="editor-section-title">Object color</h3>
         <Swatches value={materialColor} onPick={setMaterialColor} />
       </section>
 
       <section>
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Background
-        </h3>
+        <h3 className="editor-section-title">Background</h3>
         <Swatches value={background} onPick={setBackground} />
       </section>
 
       <section>
-        <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Grain
-          </h3>
-          <span className="font-mono text-xs text-foreground">{grain}</span>
+        <div className="editor-control-heading">
+          <h3 className="editor-control-title">Grain</h3>
+          <span className="editor-control-value">{grain}</span>
         </div>
         <Slider value={[grain]} onValueChange={(v) => setGrain(v[0])} max={100} step={1} />
       </section>

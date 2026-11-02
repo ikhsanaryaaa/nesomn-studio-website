@@ -1,0 +1,14 @@
+✔ light semantic foreground/accent/focus meet contrast (2.0114ms)
+✔ dark semantic foreground/accent/focus meet contrast (2.186ms)
+✔ application-authored UI and reachable error copy is English (724.1481ms)
+✔ public/admin documents and public prerender declare English (6.5655ms)
+✔ client builds with ordinary CSS and no Tailwind packages or compiler directives (14.0243ms)
+✔ component class expressions contain semantic CSS classes rather than utility syntax (334.3223ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1343.7044

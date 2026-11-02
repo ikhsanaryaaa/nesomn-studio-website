@@ -1,3 +1,4 @@
+import { selectTheme as selectThemeControl } from './lib/theme-control.mjs';
 import { waitChromeReady } from './lib/browser-runtime.mjs';
 import { launchChrome } from './lib/browser-runtime.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
@@ -99,13 +100,9 @@ async function click(text) {
   );
 }
 async function theme(mode) {
-  await evaluate(
-    '(()=>{const s=[...document.querySelectorAll("select")].find(s=>s.getBoundingClientRect().height>0);s.value=' +
-      JSON.stringify(mode) +
-      ';s.dispatchEvent(new Event("change",{bubbles:true}));})()',
-  );
-  await wait('document.documentElement.dataset.theme===' + JSON.stringify(mode));
+  await selectThemeControl(evaluate, wait, mode);
 }
+
 async function capture(name, width) {
   await send('Emulation.setDeviceMetricsOverride', {
     width,
@@ -197,28 +194,30 @@ try {
   await go('/marketplace/' + asset.slug);
   await wait('document.querySelector(".asset-details")');
   await capture('asset-dark-390', 390);
-  await click('Tambah ke bundle');
+  await click('Add to bundle');
   await go('/bundle-builder');
-  await wait('document.body.innerText.includes("Login untuk melihat harga")');
+  await wait('document.body.innerText.includes("Log in to view prices")');
   await capture('bundle-anonymous-390', 390);
-  await click('Login');
+  await click('Log in');
   await wait('document.querySelector("input[name=email]")');
   await capture('login-dark-390', 390);
-  await click('Daftar');
+  await click('Sign up');
   await wait('document.querySelector("input[name=name]")');
   await input('name', 'Demo / Sample creator');
   await input('email', 'phase7-' + run + '@test.invalid');
   await input('password', 'Synthetic-phase7-password-only');
-  await click('Buat akun');
+  await click('Create account');
   await wait(
-    'location.pathname==="/bundle-builder"&&document.body.innerText.includes("Lanjut ke checkout")',
+    'location.pathname==="/bundle-builder"&&document.body.innerText.includes("Continue to checkout")',
   );
   const me = await api('/me');
   assert.equal(me.status, 200);
   userId = me.body.id;
   await capture('bundle-authenticated-1440', 1440);
-  await click('Lanjut ke checkout');
-  await wait('location.pathname==="/checkout"&&document.body.innerText.includes("Kode unik")');
+  await click('Continue to checkout');
+  await wait(
+    'location.pathname==="/checkout"&&document.body.innerText.includes("Unique payment code")',
+  );
   const orderId = await evaluate('new URLSearchParams(location.search).get("order")');
   const invoice = await api('/billing/orders/' + orderId);
   assert.equal(invoice.body.baseIdr, 100);
@@ -226,7 +225,7 @@ try {
   assert.equal(invoice.body.payableIdr, 100 + invoice.body.code);
   await capture('invoice-before-qr-390', 390);
   await evaluate(
-    '[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Tampilkan QRIS")).click()',
+    '[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Show QRIS")).click()',
   );
   await wait('[...document.images].some(i=>i.src.includes("/qr")&&i.complete&&i.naturalWidth>0)');
   await capture('invoice-qr-390', 390);
@@ -256,12 +255,12 @@ try {
     assert.equal(r.status, 200);
     assert.equal((await r.json()).outcome, 'applied');
   }
-  await wait('document.body.innerText.includes("Pembayaran terverifikasi")');
+  await wait('document.body.innerText.includes("Payment verified")');
   await capture('invoice-paid-390', 390);
   await go('/library');
   await wait('document.body.innerText.includes("Demo / Sample — Nesomn asset")');
   await capture('library-dark-390', 390);
-  await click('Siapkan download');
+  await click('Prepare download');
   await wait('document.querySelector("a[target=_blank]")');
   const download = await evaluate('document.querySelector("a[target=_blank]").href');
   const payload = await evaluate('fetch(' + JSON.stringify(download) + ').then(r=>r.text())');
@@ -269,27 +268,27 @@ try {
   const owned = await api('/store/library');
   assert.equal(owned.body.filter((x) => x.id === asset.id).length, 1);
   await go('/account');
-  await wait('document.body.innerText.includes("Riwayat pembayaran")');
+  await wait('document.body.innerText.includes("Payment history")');
   await capture('account-dark-390', 390);
   await theme('light');
   await capture('account-light-1440', 1440);
   await go('/editor/projects');
-  await wait('document.body.innerText.includes("Belum ada project")');
+  await wait('document.body.innerText.includes("No saved projects yet")');
   await capture('projects-light-390', 390);
   // Revoke current session in UI, log in again and simulate a failed Library request.
   await go('/account');
-  await wait('document.body.innerText.includes("Keluar sesi ini")');
-  await click('Keluar sesi ini');
+  await wait('document.body.innerText.includes("Log out of this session")');
+  await click('Log out of this session');
   await wait('location.pathname==="/login"');
   await go('/login?returnTo=/library');
   await send('Network.setBlockedURLs', { urls: [base + '/api/store/library*'] });
   await input('email', 'phase7-' + run + '@test.invalid');
   await input('password', 'Synthetic-phase7-password-only');
-  await click('Login');
-  await wait('document.body.innerText.includes("Library tidak dapat dimuat")');
+  await click('Log in');
+  await wait('document.body.innerText.includes("Unable to load your Library")');
   await capture('library-offline-390', 390);
   await send('Network.setBlockedURLs', { urls: [] });
-  await click('Coba lagi');
+  await click('Try again');
   await wait('document.body.innerText.includes("Demo / Sample — Nesomn asset")');
   assert.deepEqual(exceptions, []);
   writeFileSync(

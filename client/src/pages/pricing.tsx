@@ -15,7 +15,7 @@ import { api, ApiRequestError } from '@/lib/api';
 import type { PlanDTO, BillingCycle } from '@nesomn/shared';
 
 function formatIdr(value: string | number) {
-  return new Intl.NumberFormat('id-ID', {
+  return new Intl.NumberFormat('en-ID', {
     style: 'currency',
     currency: 'IDR',
     maximumFractionDigits: 0,
@@ -28,10 +28,14 @@ function planFeatures(plan: PlanDTO): string[] {
   if (plan.editorAccess.scene2d) f.push('Scene Editor 2D');
   if (plan.editorAccess.editor3d) f.push('3D Editor');
   if (plan.editorAccess.aiVideo) f.push('AI Video (Motion)');
-  if (plan.editorAccess.proTemplates) f.push('Template Pro');
-  if (plan.creditQuota > 0) f.push(`${plan.creditQuota} AI credits / siklus`);
-  if (plan.commercial) f.push('Lisensi komersial');
-  f.push(plan.maxConcurrentSessions ? `${plan.maxConcurrentSessions} sesi` : 'Sesi tak terbatas');
+  if (plan.editorAccess.proTemplates) f.push('Pro templates');
+  if (plan.creditQuota > 0) f.push(`${plan.creditQuota} AI credits / cycle`);
+  if (plan.commercial) f.push('Commercial licence');
+  f.push(
+    plan.maxConcurrentSessions
+      ? `Concurrent sessions: ${plan.maxConcurrentSessions}`
+      : 'Unlimited sessions',
+  );
   return f;
 }
 
@@ -68,12 +72,12 @@ export default function PricingPage() {
       });
       navigate(checkoutUrl);
     } catch (err) {
-      const msg = err instanceof ApiRequestError ? err.message : 'Gagal memulai checkout.';
+      const msg = err instanceof ApiRequestError ? err.message : 'Unable to start checkout.';
       const needLogin = err instanceof ApiRequestError && err.status === 401;
       if (needLogin) navigate(loginUrl('/pricing'));
       toast({
-        title: needLogin ? 'Perlu masuk' : 'Checkout gagal',
-        description: needLogin ? 'Silakan masuk untuk berlangganan.' : msg,
+        title: needLogin ? 'Login required' : 'Checkout failed',
+        description: needLogin ? 'Please log in to subscribe.' : msg,
         variant: 'danger',
       });
     } finally {
@@ -85,35 +89,27 @@ export default function PricingPage() {
     <>
       <Seo
         title="Pricing"
-        description="Pilih paket Nesomn Studio: Free Basic, Scene Editor, Full Access, atau Enterprise."
+        description="Choose a Nesomn Studio plan: Free Basic, Scene Editor, Full Access, or Enterprise."
       />
       <Topbar title="Pricing" />
       <div className="page-wrap">
         <div className="page-heading">
-          <h1 className="text-4xl font-bold tracking-tight">Harga yang sederhana dan transparan</h1>
-          <p className="max-w-xl text-muted-foreground">
-            Mulai gratis, tingkatkan saat Anda butuh.
-          </p>
-          <div className="flex items-center gap-3">
+          <h1 className="pricing-title">Simple, transparent pricing</h1>
+          <p className="pricing-description">Start for free. Upgrade when you need more.</p>
+          <div className="pricing-cycle">
             <span
-              className={cn(
-                'text-sm font-medium',
-                !yearly ? 'text-foreground' : 'text-muted-foreground',
-              )}
+              className={cn('pricing-cycle-label', !yearly ? 'pricing-text' : 'workspace-muted')}
             >
               Monthly
             </span>
             <Switch
               checked={yearly}
               onCheckedChange={setYearly}
-              aria-label="Toggle harga tahunan"
+              aria-label="Toggle yearly billing"
               id="pricing-cycle-toggle"
             />
             <span
-              className={cn(
-                'text-sm font-medium',
-                yearly ? 'text-foreground' : 'text-muted-foreground',
-              )}
+              className={cn('pricing-cycle-label', yearly ? 'pricing-text' : 'workspace-muted')}
             >
               Yearly
             </span>
@@ -121,62 +117,58 @@ export default function PricingPage() {
         </div>
 
         {plansQuery.isError ? (
-          <PageState title="Paket tidak dapat dimuat" retry={() => void plansQuery.refetch()} />
+          <PageState title="Unable to load plans" retry={() => void plansQuery.refetch()} />
         ) : plansQuery.isLoading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="size-6 animate-spin text-muted-foreground" />
+          <div className="pricing-loading">
+            <Loader2 className="pricing-loading-icon" />
           </div>
         ) : !visible.length ? (
-          <PageState title="Belum ada paket tersedia untuk siklus ini" />
+          <PageState title="No plans are available for this billing cycle" />
         ) : (
-          <div className="grid gap-5 xl:grid-cols-3">
+          <div className="pricing-grid">
             {visible.map((plan) => {
               const isFree = Number(plan.priceIdr) === 0;
               const popular = plan.code.startsWith('full_');
               return (
                 <Card
                   key={plan.id}
-                  className={cn('relative flex flex-col', popular && 'border-accent')}
+                  className={cn('pricing-plan', popular && 'pricing-plan-popular')}
                 >
                   <CardHeader>
-                    <CardTitle className="text-base">{plan.name}</CardTitle>
-                    <div className="mt-2 flex items-baseline gap-1">
+                    <CardTitle className="pricing-plan-name">{plan.name}</CardTitle>
+                    <div className="pricing-price">
                       {isFree ? (
-                        <span className="text-3xl font-bold">Rp0</span>
+                        <span className="pricing-free">Rp0</span>
                       ) : (
                         <>
-                          <span className="font-mono text-3xl font-bold">
-                            {formatIdr(plan.priceIdr)}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            /{yearly ? 'thn' : 'bln'}
-                          </span>
+                          <span className="pricing-amount">{formatIdr(plan.priceIdr)}</span>
+                          <span className="workspace-description">/{yearly ? 'yr' : 'mo'}</span>
                         </>
                       )}
                     </div>
                   </CardHeader>
-                  <CardContent className="flex flex-1 flex-col gap-4">
-                    <ul className="flex flex-col gap-2.5">
+                  <CardContent className="pricing-plan-content">
+                    <ul className="pricing-features">
                       {planFeatures(plan).map((f) => (
-                        <li key={f} className="flex items-center gap-2 text-sm">
-                          <Check className="size-4 shrink-0 text-success" />
-                          <span className="text-foreground">{f}</span>
+                        <li key={f} className="pricing-feature">
+                          <Check className="pricing-feature-icon" />
+                          <span className="pricing-text">{f}</span>
                         </li>
                       ))}
                     </ul>
                     <Button
                       id={`subscribe-${plan.code}`}
                       variant={popular ? 'primary' : 'secondary'}
-                      className="mt-auto w-full"
+                      className="pricing-select-plan"
                       disabled={pendingId !== null}
                       onClick={() => handleSubscribe(plan)}
                     >
                       {pendingId === plan.id ? (
-                        <Loader2 className="size-4 animate-spin" />
+                        <Loader2 className="pricing-select-loading" />
                       ) : isFree ? (
-                        'Mulai Gratis'
+                        'Start for free'
                       ) : (
-                        'Berlangganan'
+                        'Subscribe'
                       )}
                     </Button>
                   </CardContent>
