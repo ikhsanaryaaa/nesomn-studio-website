@@ -292,7 +292,15 @@ try {
   await click('Decal 1');
   await wait('document.body.innerText.includes("Properties decal")');
   await click('Save');
-  await wait('document.body.innerText.includes("Project tersimpan")');
+  // Assert the save protocol and settled UI, rather than historical toast copy.
+  for (let i = 0; i < 100 && !saved; i++) await sleep(100);
+  assert.ok(saved, 'Save request did not reach the fixture');
+  await wait(
+    '[...document.querySelectorAll("button")].some(b => b.textContent.trim() === "Save" && !b.disabled)',
+  );
+  await wait(
+    'document.querySelector(".editor3d-inspector [role=status]")?.textContent.includes("Tidak ada perubahan tertunda")',
+  );
   assert.equal(saved.state.modelKey, scene.modelKey);
   assert.equal(saved.state.grain, 0);
   assert.equal(saved.state.decals[0].meshPath, '0.0');
