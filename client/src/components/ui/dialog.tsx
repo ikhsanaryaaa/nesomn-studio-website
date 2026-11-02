@@ -1,84 +1,94 @@
-import { forwardRef } from 'react';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { forwardRef, useRef } from 'react';
+import { Dialog as ThemesDialog, IconButton } from '@radix-ui/themes';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const Dialog = DialogPrimitive.Root;
-const DialogTrigger = DialogPrimitive.Trigger;
-const DialogClose = DialogPrimitive.Close;
-const DialogPortal = DialogPrimitive.Portal;
-
-const DialogOverlay = forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn(
-      'fixed inset-0 z-50 bg-black/60 backdrop-blur-[4px]',
-      'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-      className,
-    )}
-    {...props}
-  />
-));
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
+const Dialog = ThemesDialog.Root;
+type TriggerProps = React.ComponentPropsWithoutRef<typeof ThemesDialog.Trigger> & {
+  asChild?: boolean;
+};
+const DialogTrigger = forwardRef<React.ElementRef<typeof ThemesDialog.Trigger>, TriggerProps>(
+  ({ asChild = false, children, ...props }, ref) => (
+    <ThemesDialog.Trigger ref={ref} {...props}>
+      {asChild ? children : <button type="button">{children}</button>}
+    </ThemesDialog.Trigger>
+  ),
+);
+DialogTrigger.displayName = 'DialogTrigger';
+type CloseProps = React.ComponentPropsWithoutRef<typeof ThemesDialog.Close> & { asChild?: boolean };
+const DialogClose = forwardRef<React.ElementRef<typeof ThemesDialog.Close>, CloseProps>(
+  ({ asChild = false, children, ...props }, ref) => (
+    <ThemesDialog.Close ref={ref} {...props}>
+      {asChild ? children : <button type="button">{children}</button>}
+    </ThemesDialog.Close>
+  ),
+);
+DialogClose.displayName = 'DialogClose';
 
 const DialogContent = forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <DialogPrimitive.Content
+  React.ElementRef<typeof ThemesDialog.Content>,
+  React.ComponentPropsWithoutRef<typeof ThemesDialog.Content>
+>(({ className, children, onOpenAutoFocus, onCloseAutoFocus, ...props }, ref) => {
+  const returnFocus = useRef<HTMLElement | null>(null);
+  return (
+    <ThemesDialog.Content
       ref={ref}
-      className={cn(
-        'fixed left-1/2 top-1/2 z-50 grid max-h-[calc(100dvh-32px)] w-[calc(100%_-_32px)] max-w-lg -translate-x-1/2 -translate-y-1/2 gap-4 overflow-y-auto',
-        'rounded-xl border border-border bg-surface-2 p-6 shadow-lg duration-200',
-        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
-        className,
-      )}
+      className={cn('nesomn-dialog', className)}
       {...props}
+      onOpenAutoFocus={(event) => {
+        returnFocus.current =
+          document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        onOpenAutoFocus?.(event);
+      }}
+      onCloseAutoFocus={(event) => {
+        onCloseAutoFocus?.(event);
+        if (!event.defaultPrevented && returnFocus.current?.isConnected) {
+          event.preventDefault();
+          returnFocus.current.focus();
+        }
+      }}
     >
       {children}
-      <DialogPrimitive.Close
-        className="absolute right-2 top-2 flex size-11 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-surface-3 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        aria-label="Tutup"
-      >
-        <X className="size-4" />
-      </DialogPrimitive.Close>
-    </DialogPrimitive.Content>
-  </DialogPortal>
-));
-DialogContent.displayName = DialogPrimitive.Content.displayName;
+      <ThemesDialog.Close>
+        <IconButton
+          type="button"
+          variant="ghost"
+          color="gray"
+          className="nesomn-dialog-close"
+          aria-label="Close"
+        >
+          <X size={18} aria-hidden="true" />
+        </IconButton>
+      </ThemesDialog.Close>
+    </ThemesDialog.Content>
+  );
+});
+DialogContent.displayName = 'DialogContent';
 
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex flex-col gap-1.5', className)} {...props} />;
+  return <div className={cn('ui-dialog-header', className)} {...props} />;
 }
-
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('flex justify-end gap-2 pt-2', className)} {...props} />;
+  return <div className={cn('ui-dialog-footer', className)} {...props} />;
 }
-
 const DialogTitle = forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
+  React.ElementRef<typeof ThemesDialog.Title>,
+  React.ComponentPropsWithoutRef<typeof ThemesDialog.Title>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title ref={ref} className={cn('text-lg font-semibold', className)} {...props} />
+  <ThemesDialog.Title ref={ref} className={cn('nesomn-dialog-title', className)} {...props} />
 ));
-DialogTitle.displayName = DialogPrimitive.Title.displayName;
-
+DialogTitle.displayName = 'DialogTitle';
 const DialogDescription = forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
+  React.ElementRef<typeof ThemesDialog.Description>,
+  React.ComponentPropsWithoutRef<typeof ThemesDialog.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description
+  <ThemesDialog.Description
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('nesomn-dialog-description', className)}
     {...props}
   />
 ));
-DialogDescription.displayName = DialogPrimitive.Description.displayName;
+DialogDescription.displayName = 'DialogDescription';
 
 export {
   Dialog,

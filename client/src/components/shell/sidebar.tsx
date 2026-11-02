@@ -33,6 +33,7 @@ import { useAuth, useLogout } from '@/hooks/use-auth';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/stores/cart-store';
 import { ThemeControl } from './theme-control';
+import './sidebar.css';
 
 export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   const storedCollapsed = useUiStore((s) => s.sidebarCollapsed);
@@ -45,17 +46,19 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-border bg-surface transition-[width] duration-200',
-        mobile ? 'w-full' : collapsed ? 'w-20' : 'w-64',
+        'sidebar-shell',
+        collapsed && 'sidebar-shell-collapsed',
+        mobile && 'sidebar-shell-mobile',
+        mobile
+          ? 'sidebar-full-width'
+          : collapsed
+            ? 'sidebar-width-collapsed'
+            : 'sidebar-width-expanded',
       )}
     >
       {/* Logo + toggle */}
-      <div className={cn('flex h-14 items-center gap-2 px-4', collapsed && 'justify-center px-0')}>
-        <Link
-          to="/"
-          aria-label="Nesomn Studio beranda"
-          className="flex min-h-11 items-center overflow-hidden"
-        >
+      <div className="sidebar-brand-row">
+        <Link to="/" aria-label="Nesomn Studio home" className="sidebar-brand">
           {collapsed ? (
             <>
               <img
@@ -81,17 +84,26 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
                 alt="Nesomn Studio"
                 className="brand-logo brand-logo-dark"
               />
-              <span className="font-display text-base font-bold">Nesomn Studio</span>
+              <span className="sidebar-wordmark">Nesomn Studio</span>
             </>
           )}
         </Link>
+        {!mobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="sidebar-collapse"
+            onClick={toggleSidebar}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            id="sidebar-toggle"
+          >
+            {collapsed ? <PanelLeft /> : <PanelLeftClose />}
+          </Button>
+        )}
       </div>
 
       {/* Nav scrollable */}
-      <nav
-        aria-label="Navigasi utama"
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto px-3 py-2"
-      >
+      <nav aria-label="Main navigation" className="sidebar-navigation">
         <SidebarSection title="Web App" collapsed={collapsed}>
           <SidebarItem
             to="/editor/projects"
@@ -167,98 +179,85 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
       </nav>
 
       {/* Footer: search, pricing, auth */}
-      <div className="shrink-0 space-y-2 border-t border-border p-3">
-        {!collapsed && !mobile && <ThemeControl />}
+      <div className="sidebar-footer">
         {!collapsed && (
-          <form action="/marketplace" className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-faint-foreground" />
+          <form action="/marketplace" className="sidebar-search">
+            <Search className="sidebar-search-icon" />
             <Input
               id={mobile ? 'mobile-sidebar-search' : 'sidebar-search'}
               name="q"
               placeholder="Search assets..."
-              className="pl-9"
+              className="sidebar-search-input"
               aria-label="Search assets"
             />
           </form>
         )}
 
-        <Button
-          variant="primary"
-          size={collapsed ? 'icon' : 'md'}
-          className="w-full"
-          aria-label="Lihat harga"
-          asChild
-        >
-          <Link to="/pricing">
-            <Sparkles />
-            {!collapsed && <span>View Pricing</span>}
-          </Link>
-        </Button>
-
-        {isAuthenticated && user ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                id={mobile ? 'mobile-sidebar-user-menu' : 'sidebar-user-menu'}
-                aria-label="Menu akun"
-                className={cn(
-                  'flex min-h-11 w-full items-center gap-2 rounded-md p-1.5 text-left transition-colors hover:bg-surface-2',
-                  collapsed && 'justify-center',
-                )}
-              >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-subtle text-xs font-semibold text-accent">
-                  {user.name.charAt(0).toUpperCase()}
-                </span>
-                {!collapsed && (
-                  <span className="flex-1 truncate text-sm font-medium">{user.name}</span>
-                )}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" side="top">
-              <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/account">
-                  <User />
-                  Account
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => logout.mutate()}
-                className="text-danger focus:bg-danger/10"
-              >
-                <LogOut />
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
+        <div className="sidebar-footer-actions">
           <Button
-            variant="secondary"
+            variant="primary"
             size={collapsed ? 'icon' : 'md'}
-            className="w-full"
-            aria-label="Login"
+            className="sidebar-full-width"
+            aria-label="View pricing"
             asChild
           >
-            <Link to="/login">
-              <LogIn />
-              {!collapsed && <span>Login</span>}
+            <Link to="/pricing">
+              <Sparkles />
+              {!collapsed && <span>View Pricing</span>}
             </Link>
           </Button>
-        )}
 
-        {!mobile && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-full"
-            onClick={toggleSidebar}
-            aria-label={collapsed ? 'Buka sidebar' : 'Tutup sidebar'}
-            id="sidebar-toggle"
-          >
-            {collapsed ? <PanelLeft /> : <PanelLeftClose />}
-          </Button>
-        )}
+          {isAuthenticated && user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  id={mobile ? 'mobile-sidebar-user-menu' : 'sidebar-user-menu'}
+                  aria-label="Account menu"
+                  className={cn(
+                    'sidebar-account-trigger',
+                    collapsed && 'sidebar-account-collapsed',
+                  )}
+                >
+                  <span className="sidebar-account-avatar">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                  {!collapsed && <span className="sidebar-account-name">{user.name}</span>}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" side="top">
+                <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/account">
+                    <User />
+                    Account
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => logout.mutate()}
+                  className="sidebar-account-logout"
+                >
+                  <LogOut />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              variant="secondary"
+              size={collapsed ? 'icon' : 'md'}
+              className="sidebar-full-width"
+              aria-label="Log in"
+              asChild
+            >
+              <Link to="/login">
+                <LogIn />
+                {!collapsed && <span>Log in</span>}
+              </Link>
+            </Button>
+          )}
+        </div>
+        {!collapsed && !mobile && <ThemeControl />}
       </div>
     </aside>
   );

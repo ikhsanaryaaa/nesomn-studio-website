@@ -52,7 +52,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       binding = cookie.nesomn_oauth?.value;
     cookie.nesomn_oauth!.remove();
     if (!state || !code || code.length > 4096 || typeof binding !== 'string')
-      throw new AppError('INVALID_OAUTH', 'Google login tidak terverifikasi.', 401);
+      throw new AppError('INVALID_OAUTH', 'Google login could not be verified.', 401);
     let result;
     try {
       result = await completeGoogle(code, state, binding);
@@ -60,7 +60,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       if (error instanceof AppError) throw error;
       throw new AppError(
         'INVALID_OAUTH',
-        'Google login tidak terverifikasi. Mulai ulang login.',
+        'Google login could not be verified. Please start again.',
         401,
       );
     }
@@ -82,7 +82,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     const existing = await db.query.users.findFirst({
       where: sql`lower(${users.email}) = ${input.email.toLowerCase()}`,
     });
-    if (existing) throw new AppError('EMAIL_TAKEN', 'Email sudah terdaftar.', 409);
+    if (existing) throw new AppError('EMAIL_TAKEN', 'This email is already registered.', 409);
 
     const passwordHash = await hashPassword(input.password);
     const [user] = await db
@@ -90,7 +90,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       .values({ email: input.email.toLowerCase(), passwordHash, name: input.name, role: 'user' })
       .onConflictDoNothing()
       .returning();
-    if (!user) throw new AppError('EMAIL_TAKEN', 'Email sudah terdaftar.', 409);
+    if (!user) throw new AppError('EMAIL_TAKEN', 'This email is already registered.', 409);
 
     const { userAgent, ip } = clientInfo(request);
     const sessionId = await createSession(user.id, userAgent, ip);
@@ -107,11 +107,11 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       where: sql`lower(${users.email}) = ${input.email.toLowerCase()}`,
     });
     if (!user || user.disabledAt || !user.passwordHash) {
-      throw new AppError('INVALID_CREDENTIALS', 'Email atau password salah.', 401);
+      throw new AppError('INVALID_CREDENTIALS', 'Incorrect email or password.', 401);
     }
 
     const ok = await verifyPassword(input.password, user.passwordHash);
-    if (!ok) throw new AppError('INVALID_CREDENTIALS', 'Email atau password salah.', 401);
+    if (!ok) throw new AppError('INVALID_CREDENTIALS', 'Incorrect email or password.', 401);
 
     const { userAgent, ip } = clientInfo(request);
     const sessionId = await createSession(user.id, userAgent, ip);

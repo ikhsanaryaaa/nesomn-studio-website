@@ -1,0 +1,233 @@
+{
+  "fixture": "Compiled assets + explicit HTTP401/503 API fixture, no real DB/user/merchant",
+  "browser": "Chrome/156.0.8078.74",
+  "viewports": [
+    {
+      "mode": "light",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "mode": "light",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "mode": "light",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "mode": "light",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "mode": "light",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "mode": "dark",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "mode": "dark",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "mode": "dark",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "mode": "dark",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "mode": "dark",
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "authRoutes": [
+    "/login",
+    "/register",
+    "/editor/projects"
+  ],
+  "authWidths": [
+    360,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "authThemes": [
+    "light",
+    "dark"
+  ],
+  "failedLoginStaysOnForm": true,
+  "sidebarCollapse": true,
+  "themeMenuKeyboard": true,
+  "radixThemesDialogTrap": 12,
+  "radixDialogFocusRecovery": true,
+  "persistence": true,
+  "clientAdminSync": true,
+  "drawerTabTrap": 20,
+  "escapeFocusRecovery": true,
+  "reducedMotion": true,
+  "storeFailure": true,
+  "fonts": {
+    "body": "\"Manrope Variable\", system-ui, -apple-system, sans-serif",
+    "heading": "\"Bricolage Grotesque Variable\", \"Manrope Variable\", system-ui, sans-serif",
+    "loaded": true,
+    "displayLoaded": true
+  },
+  "diagnostics": {
+    "consoleErrors": 0,
+    "consoleWarnings": 12,
+    "failedRequests": [],
+    "httpErrors": [
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/credit",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/models",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/models",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/credit",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/models",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/models",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/auth/login",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/catalog/assets",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/me",
+        "status": 401
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/credit",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/models",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/ai/models",
+        "status": 503
+      },
+      {
+        "path": "http://127.0.0.1:18086/api/store/library",
+        "status": 503
+      }
+    ]
+  },
+  "exceptions": []
+}

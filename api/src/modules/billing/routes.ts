@@ -103,7 +103,7 @@ export const billingRoutes = new Elysia({ prefix: '/billing' })
           request.headers.get('stripe-signature'),
         );
       } catch {
-        throw new AppError('INVALID_SIGNATURE', 'Webhook tidak terverifikasi.', 400);
+        throw new AppError('INVALID_SIGNATURE', 'Webhook could not be verified.', 400);
       }
       if (!result) return { ok: true, ignored: true };
       const settled = await settlePayment(params.gateway, result);
@@ -120,9 +120,9 @@ export const billingRoutes = new Elysia({ prefix: '/billing' })
       const order = await db.query.orders.findFirst({
         where: and(eq(orders.id, z.string().uuid().parse(params.orderId)), eq(orders.userId, u.id)),
       });
-      if (!order) throw new AppError('NOT_FOUND', 'Order tidak ditemukan.', 404);
+      if (!order) throw new AppError('NOT_FOUND', 'Order not found.', 404);
       if (order.gateway !== 'stub' || !order.gatewayRef)
-        throw new AppError('FORBIDDEN', 'Hanya Demo / Sample stub.', 403);
+        throw new AppError('FORBIDDEN', 'Demo / Sample stub only.', 403);
       return settlePayment('stub', {
         eventId: 'demo-' + order.id,
         orderId: order.id,
@@ -142,7 +142,11 @@ export const billingRoutes = new Elysia({ prefix: '/billing' })
       try {
         raw = await readReceiptBody(request);
       } catch {
-        throw new AppError('BAD_RECEIPT', 'Receipt melebihi batas atau encoding tidak valid.', 400);
+        throw new AppError(
+          'BAD_RECEIPT',
+          'The receipt exceeds the size limit or has invalid encoding.',
+          400,
+        );
       }
       if (
         !verifyReceiptSignature(
@@ -152,12 +156,12 @@ export const billingRoutes = new Elysia({ prefix: '/billing' })
           config.secret,
         )
       )
-        throw new AppError('INVALID_SIGNATURE', 'Receipt tidak terverifikasi.', 401);
+        throw new AppError('INVALID_SIGNATURE', 'Receipt could not be verified.', 401);
       let payload: unknown;
       try {
         payload = JSON.parse(raw);
       } catch {
-        throw new AppError('BAD_RECEIPT', 'Receipt JSON tidak valid.', 400);
+        throw new AppError('BAD_RECEIPT', 'Invalid receipt JSON.', 400);
       }
       return ingestReceipt(payload);
     },
@@ -171,7 +175,7 @@ export const billingRoutes = new Elysia({ prefix: '/billing' })
     async ({ params, user }) => {
       const state = await invoiceStatus((user as AuthUser).id, params.id);
       if (state.status !== 'pending')
-        throw new AppError('INVOICE_NOT_PAYABLE', 'Invoice tidak dapat dibayar.', 409);
+        throw new AppError('INVOICE_NOT_PAYABLE', 'This invoice cannot be paid.', 409);
       const invoice = await db.query.qrisInvoices.findFirst({
         where: and(
           eq(qrisInvoices.orderId, params.id),
@@ -226,7 +230,7 @@ export const billingRoutes = new Elysia({ prefix: '/billing' })
       const u = user as AuthUser;
       return withUserTransaction(u.id, async (tx) => {
         const sub = await effectiveSubscription(u.id, new Date(), tx);
-        if (!sub) throw new AppError('NOT_FOUND', 'Tidak ada langganan aktif.', 404);
+        if (!sub) throw new AppError('NOT_FOUND', 'No active subscription.', 404);
         if (sub.status === 'canceled') return sub;
         const [updated] = await tx
           .update(subscriptions)

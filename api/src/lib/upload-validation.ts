@@ -6,7 +6,7 @@ export async function validateUpload(
   _claimed: string,
   kind: 'file' | 'preview',
 ) {
-  if (!bytes.length) throw new Error('File kosong.');
+  if (!bytes.length) throw new Error('The file is empty.');
   const ext = name.split('.').pop()?.toLowerCase();
   const b = Buffer.from(bytes);
   if (['png', 'jpg', 'jpeg', 'webp', 'gif'].includes(ext ?? '')) {
@@ -19,11 +19,11 @@ export async function validateUpload(
       >
     )[meta.format ?? ''];
     if (!mime || !meta.width || !meta.height || meta.width * meta.height > 40_000_000)
-      throw new Error('Gambar tidak valid.');
+      throw new Error('Invalid image.');
     const thumb = await img.resize({ width: 600, withoutEnlargement: true }).webp().toBuffer();
     return { mime, width: meta.width, height: meta.height, thumb };
   }
-  if (kind !== 'file') throw new Error('Preview harus gambar raster valid.');
+  if (kind !== 'file') throw new Error('Previews must be valid raster images.');
   if (ext === 'glb') {
     if (
       b.length < 20 ||
@@ -61,7 +61,9 @@ export async function validateUpload(
     return { mime: 'video/mp4' };
   if (ext === 'webm' && b.length > 12 && b.readUInt32BE(0) === 0x1a45dfa3)
     return { mime: 'video/webm' };
-  throw new Error('Format/isi file tidak didukung. SVG aktif tidak diterima.');
+  throw new Error(
+    'The file format or contents are unsupported. Active SVG content is not accepted.',
+  );
 }
 function validateGltf(value: unknown) {
   const json = value as {

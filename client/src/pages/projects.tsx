@@ -45,28 +45,28 @@ function ProjectsContent() {
     mutationFn: (id: string) => api.projects.remove(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['projects', kind] });
-      toast({ title: 'Project dihapus' });
+      toast({ title: 'Project deleted' });
     },
-    onError: () => toast({ title: 'Gagal menghapus project', variant: 'danger' }),
+    onError: () => toast({ title: 'Unable to delete project', variant: 'danger' }),
   });
 
   return (
     <>
-      <Seo title="My Projects" description="Scene 2D tersimpan milik Anda di Nesomn Studio." />
+      <Seo title="My Projects" description="Your saved scenes in Nesomn Studio." />
       <Topbar
         title="My Projects"
         right={
           <Button asChild size="sm">
             <Link to={editorPath}>
-              <Plus className="size-4" />
-              {kind === 'scene3d' ? 'Scene 3D baru' : 'Scene baru'}
+              <Plus className="workspace-action-icon" />
+              {kind === 'scene3d' ? 'New 3D scene' : 'New scene'}
             </Link>
           </Button>
         }
       />
       <div className="page-wrap">
-        <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold tracking-tight">My Projects</h1>
+        <div className="projects-heading">
+          <h1 className="projects-title">My Projects</h1>
           <Tabs value={kind} onValueChange={(v) => setKind(v as ProjectKind)}>
             <TabsList>
               <TabsTrigger value="scene2d">2D</TabsTrigger>
@@ -76,55 +76,52 @@ function ProjectsContent() {
         </div>
 
         {!authLoading && !isAuthenticated ? (
-          <p className="text-sm text-muted-foreground">Login untuk melihat project Anda.</p>
+          <p className="workspace-description">Log in to view your projects.</p>
         ) : isError ? (
-          <PageState title="Project tidak dapat dimuat" retry={() => void refetch()} />
+          <PageState title="Unable to load projects" retry={() => void refetch()} />
         ) : isLoading ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="projects-grid">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="aspect-[4/3] w-full" />
+              <Skeleton key={i} className="projects-placeholder" />
             ))}
           </div>
         ) : projects && projects.length > 0 ? (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="projects-grid">
             {projects.map((p) => (
-              <Card key={p.id} className="overflow-hidden">
-                <Link
-                  to={`${editorPath}?project=${p.id}`}
-                  className="flex aspect-[4/3] items-center justify-center bg-surface-2 transition-colors hover:bg-surface-3"
-                >
+              <Card key={p.id} className="project-card">
+                <Link to={`${editorPath}?project=${p.id}`} className="project-open">
                   {kind === 'scene3d' ? (
-                    <Box className="size-8 text-muted-foreground" />
+                    <Box className="workspace-project-icon" />
                   ) : (
-                    <Layers className="size-8 text-muted-foreground" />
+                    <Layers className="workspace-project-icon" />
                   )}
                 </Link>
-                <CardContent className="flex items-center justify-between gap-2 p-3">
-                  <span className="truncate text-[13px] font-medium">{p.title}</span>
+                <CardContent className="project-caption">
+                  <span className="project-name">{p.title}</span>
                   <Button
                     size="icon"
                     variant="ghost"
-                    title="Hapus"
-                    aria-label={'Hapus ' + p.title}
+                    title="Delete"
+                    aria-label={'Remove ' + p.title}
                     onClick={() => {
-                      if (window.confirm('Hapus project ini? Tindakan ini tidak dapat dibatalkan.'))
+                      if (window.confirm('Delete this project? This action cannot be undone.'))
                         remove.mutate(p.id);
                     }}
                     disabled={remove.isPending}
                   >
-                    <Trash2 className="size-4" />
+                    <Trash2 className="workspace-action-icon" />
                   </Button>
                 </CardContent>
               </Card>
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-muted-foreground">Belum ada project tersimpan.</p>
+          <div className="projects-empty">
+            <p className="workspace-description">No saved projects yet.</p>
             <Button asChild variant="secondary">
               <Link to={editorPath}>
-                <Plus className="size-4" />
-                {kind === 'scene3d' ? 'Buat scene 3D pertama' : 'Buat scene pertama'}
+                <Plus className="workspace-action-icon" />
+                {kind === 'scene3d' ? 'Create your first 3D scene' : 'Create your first scene'}
               </Link>
             </Button>
           </div>

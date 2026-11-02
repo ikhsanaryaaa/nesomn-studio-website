@@ -68,11 +68,11 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
           sql`(${assets.previews} @> ${JSON.stringify([path])}::jsonb OR ${assets.thumbnail} = ${path})`,
         ),
       });
-      if (!published) throw new AppError('NOT_FOUND', 'Preview tidak ditemukan.', 404);
+      if (!published) throw new AppError('NOT_FOUND', 'Preview not found.', 404);
     }
     const row = await db.query.media.findFirst({ where: eq(media.id, id) });
     if (!row || !['image/png', 'image/jpeg', 'image/webp'].includes(row.mimeType))
-      throw new AppError('NOT_FOUND', 'Preview tidak ditemukan.', 404);
+      throw new AppError('NOT_FOUND', 'Preview not found.', 404);
     const location = await (await getStorage()).getSignedUrl(validateStorageKey(row.key), 300);
     set.headers['cache-control'] = 'no-store';
     return new Response(null, { status: 302, headers: { location, 'cache-control': 'no-store' } });
@@ -112,7 +112,7 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
     const row = await db.query.assets.findFirst({
       where: and(eq(assets.slug, params.slug), eq(assets.status, 'published')),
     });
-    if (!row) throw new AppError('NOT_FOUND', 'Aset tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Asset not found.', 404);
     return publicAsset(row);
   })
   // Loader khusus editor: kembalikan field yang dibutuhkan editor + signed URL
@@ -121,11 +121,11 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
     '/editor-asset/:slug',
     async ({ params, user }) => {
       const row = await db.query.assets.findFirst({ where: eq(assets.slug, params.slug) });
-      if (!row) throw new AppError('NOT_FOUND', 'Aset tidak ditemukan.', 404);
+      if (!row) throw new AppError('NOT_FOUND', 'Asset not found.', 404);
 
       const u = user as AuthUser;
       if (u.role !== 'admin' && !(await canUseAsset(u.id, row.id)))
-        throw new AppError('FORBIDDEN', 'Aset tidak termasuk lisensi/plan Anda.', 403);
+        throw new AppError('FORBIDDEN', 'The asset is not included in your licence or plan.', 403);
       const storage = await getStorage();
       // 3D pakai glbFile; mockup 2D pakai fileKey (gambar base) bila ada.
       const is3d = row.type === 'mockup3d' || row.type === 'asset3d';
@@ -149,10 +149,10 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
     async ({ params, user }) => {
       const row = await db.query.assets.findFirst({ where: eq(assets.slug, params.slug) });
       if (!row || row.type !== 'mockup2d' || !row.fileKey)
-        throw new AppError('NOT_FOUND', 'Gambar katalog tidak ditemukan.', 404);
+        throw new AppError('NOT_FOUND', 'Catalogue image not found.', 404);
       const u = user as AuthUser;
       if (u.role !== 'admin' && !(await canUseAsset(u.id, row.id)))
-        throw new AppError('FORBIDDEN', 'Aset tidak termasuk lisensi/plan Anda.', 403);
+        throw new AppError('FORBIDDEN', 'The asset is not included in your licence or plan.', 403);
       const location = await (
         await getStorage()
       ).getSignedUrl(validateStorageKey(row.fileKey), 300);
@@ -171,7 +171,7 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
       if (!key)
         throw new AppError(
           'NOT_FOUND',
-          'Sumber gambar lama tidak dikenali. Buka kembali aset dari katalog.',
+          'The legacy image source is not recognised. Reopen the asset from the catalogue.',
           404,
         );
       const rows = await db.query.assets.findMany({
@@ -184,7 +184,7 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
       }
       throw new AppError(
         'NOT_FOUND',
-        'Gambar tidak tersedia atau lisensi tidak aktif. Buka kembali aset dari katalog.',
+        'The image is unavailable or its licence is inactive. Reopen the asset from the catalogue.',
         404,
       );
     },
@@ -209,7 +209,7 @@ export const catalogRoutes = new Elysia({ prefix: '/catalog' })
   })
   .get('/bundles/:slug', async ({ params }) => {
     const bundle = await db.query.bundles.findFirst({ where: eq(bundles.slug, params.slug) });
-    if (!bundle) throw new AppError('NOT_FOUND', 'Bundle tidak ditemukan.', 404);
+    if (!bundle) throw new AppError('NOT_FOUND', 'Bundle not found.', 404);
     const items = await db.query.bundleItems.findMany({
       where: eq(bundleItems.bundleId, bundle.id),
     });

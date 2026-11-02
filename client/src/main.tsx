@@ -1,3 +1,4 @@
+import { AppTheme } from './components/app-theme';
 import { StrictMode } from 'react';
 import App from './App';
 import './index.css';
@@ -20,7 +21,9 @@ async function mountBrowser() {
   createRoot(rootEl).render(
     <StrictMode>
       <BrowserRouter>
-        <App />
+        <AppTheme>
+          <App />
+        </AppTheme>
       </BrowserRouter>
     </StrictMode>,
   );
@@ -40,7 +43,9 @@ export async function prerender(data: { url: string }) {
   const html = renderToString(
     <StrictMode>
       <StaticRouter location={data.url}>
-        <App />
+        <AppTheme>
+          <App />
+        </AppTheme>
       </StaticRouter>
     </StrictMode>,
   );
@@ -53,7 +58,7 @@ export async function prerender(data: { url: string }) {
   return {
     html,
     head: {
-      lang: 'id',
+      lang: 'en',
       title: formatTitle(meta.title),
       elements: new Set([
         {

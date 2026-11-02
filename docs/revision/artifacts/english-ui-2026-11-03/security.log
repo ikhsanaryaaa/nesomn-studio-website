@@ -1,0 +1,22 @@
+bun test v1.4.4 (38afee6c8)
+
+
+tests\security\guards.test.ts:
+(pass) production never resolves stub payments or missing providers into a simulation [6.01ms]
+(pass) unsigned stub webhook is never a payment confirmation even in test mode [0.14ms]
+(pass) Stripe verification authenticates raw bytes/timestamp and only paid checkout events [32.38ms]
+(pass) origin gate protects cookie mutations, permits verified-callback boundary, and ignores forged proxy headers by default [9.93ms]
+(pass) private storage keys and HMAC reject traversal, invalid/expired/nonfinite tokens [2.48ms]
+
+tests\security\periods.test.ts:
+(pass) calendar billing anchors clamp month ends without cumulative drift [2.94ms]
+(pass) renewal keeps original calendar anchor after a short February [0.18ms]
+
+tests\security\validation.test.ts:
+(pass) provider URL allowlist blocks local/credential/redirect targets and reserved addresses [12.37ms]
+(pass) upload ignores claimed MIME, rejects script/corrupt images and non-contained glTF [14.51ms]
+
+ 9 pass
+ 0 fail
+ 64 expect() calls
+Ran 9 tests across 3 files. [5.05s]

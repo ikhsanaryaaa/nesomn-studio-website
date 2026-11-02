@@ -33,7 +33,7 @@ async function priceItems(assetIds: string[]) {
     rows.length !== assetIds.length ||
     rows.some((a) => a.status !== 'published' || !a.isMarketplace)
   )
-    throw new AppError('NOT_FOUND', 'Sebagian aset tidak tersedia.', 404);
+    throw new AppError('NOT_FOUND', 'Some assets are unavailable.', 404);
   return rows.map((a) => ({
     id: a.id,
     priceIdr: Number(a.priceIdr),
@@ -60,9 +60,9 @@ export const storeRoutes = new Elysia({ prefix: '/store' })
       const u = user as AuthUser;
       const asset = await db.query.assets.findFirst({ where: eq(assets.id, params.id) });
       if (!asset || asset.status !== 'published' || !asset.isMarketplace)
-        throw new AppError('NOT_FOUND', 'Aset tidak ditemukan.', 404);
+        throw new AppError('NOT_FOUND', 'Asset not found.', 404);
       if (asset.tier !== 'free' || Number(asset.priceIdr) !== 0 || Number(asset.priceUsd) !== 0) {
-        throw new AppError('PAYMENT_REQUIRED', 'Aset ini berbayar. Checkout menyusul di M8.', 402);
+        throw new AppError('PAYMENT_REQUIRED', 'This is a paid asset.', 402);
       }
       return withUserTransaction(u.id, async (tx) => {
         await tx
@@ -118,11 +118,11 @@ export const storeRoutes = new Elysia({ prefix: '/store' })
       const lic = await db.query.licenses.findFirst({
         where: and(eq(licenses.userId, u.id), eq(licenses.assetId, params.id)),
       });
-      if (!lic) throw new AppError('FORBIDDEN', 'Anda belum memiliki aset ini.', 403);
+      if (!lic) throw new AppError('FORBIDDEN', 'You do not own this asset.', 403);
 
       const asset = await db.query.assets.findFirst({ where: eq(assets.id, params.id) });
       const key = lic.fileKey ?? asset?.fileKey ?? asset?.glbFile;
-      if (!key) throw new AppError('NOT_FOUND', 'File aset belum tersedia.', 404);
+      if (!key) throw new AppError('NOT_FOUND', 'The asset file is not available yet.', 404);
 
       const storage = await getStorage();
       const url = await storage.getSignedUrl(key);

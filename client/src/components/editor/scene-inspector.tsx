@@ -10,40 +10,40 @@ export function SceneInspector() {
   const update = useSceneEditor((s) => s.updateObject);
   const selected = objects.find((o) => o.id === selectedId);
   return (
-    <section className="mt-4 space-y-3" aria-label="Layers dan properties">
-      <h3 className="text-sm font-semibold">Layers</h3>
+    <section className="editor-inspector" aria-label="Layers and properties">
+      <h3 className="editor-panel-title">Layers</h3>
       {!objects.length && (
-        <p className="text-sm text-muted-foreground">Tambahkan design atau teks untuk mulai.</p>
+        <p className="editor-description">Add a design or text to get started.</p>
       )}
-      <ul className="max-h-48 space-y-1 overflow-y-auto">
+      <ul className="editor-layer-list">
         {[...objects].reverse().map((o, i) => (
           <li key={o.id}>
             <Button
-              className="w-full justify-start truncate"
+              className="editor-layer-action"
               variant={o.id === selectedId ? 'secondary' : 'ghost'}
               aria-pressed={o.id === selectedId}
               onClick={() => select(o.id)}
             >
-              {o.type === 'text' ? o.text || 'Teks' : `Image ${objects.length - i}`}
+              {o.type === 'text' ? o.text || 'Text' : `Image ${objects.length - i}`}
             </Button>
           </li>
         ))}
       </ul>
       {selected && (
-        <fieldset className="space-y-3">
-          <legend className="text-sm font-semibold">Properties</legend>
+        <fieldset className="editor-properties">
+          <legend className="editor-panel-title">Properties</legend>
           {selected.type === 'text' && (
-            <label className="block text-xs">
-              Teks
+            <label className="editor-property-label">
+              Text
               <Input
                 value={selected.text ?? ''}
                 onChange={(e) => update(selected.id, { text: e.target.value })}
               />
             </label>
           )}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="editor-property-grid">
             {(['x', 'y', 'width', 'height', 'rotation', 'opacity'] as const).map((key) => (
-              <label key={key} className="block text-xs">
+              <label key={key} className="editor-property-label">
                 {key}
                 <Input
                   type="number"

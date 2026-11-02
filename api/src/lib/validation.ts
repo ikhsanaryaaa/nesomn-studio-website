@@ -5,7 +5,7 @@ export const moneyString = z
   .transform(String)
   .refine(
     (value) => /^\d{1,10}(\.\d{1,2})?$/.test(value),
-    'Harga harus nonnegative, maksimal dua desimal.',
+    'Price must be nonnegative with at most two decimal places.',
   );
 export const storageKeySchema = z.string().refine((value) => {
   try {
@@ -14,7 +14,7 @@ export const storageKeySchema = z.string().refine((value) => {
   } catch {
     return false;
   }
-}, 'Storage key tidak valid.');
+}, 'Invalid storage key.');
 export const publicMediaUrl = z
   .string()
   .max(2048)
@@ -32,7 +32,7 @@ export const publicMediaUrl = z
     } catch {
       return false;
     }
-  }, 'URL media harus HTTPS atau path lokal.');
+  }, 'Media URLs must use HTTPS or a local path.');
 
 /** Zod4 defaults apply inside optional fields. PATCH may only write keys actually sent. */
 export function parsePatch<T extends Record<string, unknown>>(

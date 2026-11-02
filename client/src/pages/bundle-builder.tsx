@@ -30,7 +30,7 @@ export default function BundleBuilderPage() {
       cart.clear();
       navigate(result.checkoutUrl);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Checkout belum berhasil.');
+      setError(err instanceof Error ? err.message : 'Unable to start checkout.');
     } finally {
       setPending(false);
     }
@@ -45,15 +45,16 @@ export default function BundleBuilderPage() {
           Studio Bundle
         </h1>
         <p>
-          Tambahkan aset dari marketplace. Harga dan diskon dihitung oleh server sebelum pembayaran.
+          Add assets from the marketplace. Prices and discounts are calculated by the server before
+          payment.
         </p>
       </header>
       <div className="bundle-layout">
         <section>
           {!ids.length ? (
-            <PageState title="Bundle masih kosong">
+            <PageState title="Your bundle is empty">
               <Button variant="secondary" asChild>
-                <Link to="/marketplace">Jelajahi Marketplace</Link>
+                <Link to="/marketplace">Explore Marketplace</Link>
               </Button>
             </PageState>
           ) : (
@@ -64,11 +65,11 @@ export default function BundleBuilderPage() {
                   <Link to={'/marketplace/' + a.slug}>{a.title}</Link>
                   <Button
                     variant="ghost"
-                    aria-label={'Hapus ' + a.title}
+                    aria-label={'Remove ' + a.title}
                     disabled={pending}
                     onClick={() => cart.remove(a.id)}
                   >
-                    Hapus
+                    Delete
                   </Button>
                 </li>
               ))}
@@ -76,24 +77,24 @@ export default function BundleBuilderPage() {
           )}
         </section>
         <aside className="order-summary">
-          <h2>Ringkasan bundle</h2>
-          <p>{ids.length} item dipilih</p>
+          <h2>Bundle summary</h2>
+          <p>Selected items: {ids.length}</p>
           {auth.isLoading ? (
-            <PageState loading title="Memeriksa sesi…" />
+            <PageState loading title="Checking your session…" />
           ) : auth.isError ? (
-            <PageState title="Sesi tidak dapat diperiksa" retry={() => void auth.refetch()} />
+            <PageState title="Unable to check your session" retry={() => void auth.refetch()} />
           ) : !auth.isAuthenticated ? (
-            <PageState title="Login untuk melihat harga">
+            <PageState title="Log in to view prices">
               <Button asChild>
-                <Link to={loginUrl('/bundle-builder')}>Login</Link>
+                <Link to={loginUrl('/bundle-builder')}>Log in</Link>
               </Button>
             </PageState>
           ) : !ids.length ? (
-            <p className="text-muted-foreground">Pilih aset terlebih dahulu.</p>
+            <p className="workspace-muted">Choose some assets first.</p>
           ) : price.isLoading ? (
-            <PageState loading title="Menghitung harga…" />
+            <PageState loading title="Calculating price…" />
           ) : price.isError ? (
-            <PageState title="Harga tidak dapat dimuat" retry={() => void price.refetch()} />
+            <PageState title="Unable to load prices" retry={() => void price.refetch()} />
           ) : (
             price.data && (
               <>
@@ -103,31 +104,31 @@ export default function BundleBuilderPage() {
                     <dd>{rp(price.data.subtotalIdr)}</dd>
                   </div>
                   <div>
-                    <dt>Diskon</dt>
+                    <dt>Discount</dt>
                     <dd>{rp(price.data.discountIdr)}</dd>
                   </div>
                   <div>
-                    <dt>Total sebelum kode unik</dt>
+                    <dt>Total before the unique payment code</dt>
                     <dd>{rp(price.data.totalIdr)}</dd>
                   </div>
                 </dl>
                 <Button
-                  className="w-full"
+                  className="workspace-wide-action"
                   disabled={pending || price.isFetching}
                   onClick={() => void checkout()}
                 >
-                  {pending ? 'Membuat invoice…' : 'Lanjut ke checkout'}
+                  {pending ? 'Creating invoice…' : 'Continue to checkout'}
                 </Button>
               </>
             )
           )}
           {error && (
-            <p role="alert" className="text-danger">
+            <p role="alert" className="workspace-error">
               {error}
             </p>
           )}
-          <p className="text-sm text-muted-foreground">
-            Kode unik dan jumlah bayar final ditampilkan terpisah di checkout QRIS.
+          <p className="workspace-description">
+            The unique payment code and final payment amount are shown separately at QRIS checkout.
           </p>
         </aside>
       </div>

@@ -1,0 +1,92 @@
+Bun 1.4.4
+@nesomn/admin build: vite v7.3.7 building client environment for production...
+@nesomn/admin build: transforming...
+@nesomn/client build: vite v7.3.7 building client environment for production...
+@nesomn/client build: transforming...
+@nesomn/admin build: ✓ 3937 modules transformed.
+@nesomn/client build: ✓ 3085 modules transformed.
+@nesomn/client build: rendering chunks...
+@nesomn/client build: [plugin vite:reporter]
+@nesomn/client build: (!) C:/Users/ikhsan/Desktop/nesomn-studio-website/node_modules/.bun/react-router@7.18.2+7492c01c6988791b/node_modules/react-router/dist/development/index.mjs is dynamically imported by C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/main.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/main.tsx but also statically imported by C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/App.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/page-state.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/app-layout.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/page-transition.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/sidebar-item.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/shell/sidebar.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/components/store/asset-card.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/account.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/asset-detail.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/auth.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/bundle-builder.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/checkout.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/editor-3d.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/home.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/library.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/marketplace.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/not-found.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/pricing.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/projects.tsx, C:/Users/ikhsan/Desktop/nesomn-studio-website/client/src/pages/scene-editor.tsx, dynamic import will not move module into another chunk.
+@nesomn/client build:
+@nesomn/client build: computing gzip size...
+@nesomn/client build: dist/assets/jetbrains-mono-greek-400-normal-C190GLew.woff2                 4.23 kB
+@nesomn/client build: dist/assets/jetbrains-mono-greek-500-normal-JpySY46c.woff2                 4.28 kB
+@nesomn/client build: dist/assets/jetbrains-mono-cyrillic-400-normal-BEIGL1Tu.woff2              5.33 kB
+@nesomn/client build: dist/assets/jetbrains-mono-cyrillic-500-normal-DmUKJPL_.woff2              5.36 kB
+@nesomn/client build: dist/assets/jetbrains-mono-vietnamese-400-normal-CqNFfHCs.woff             5.37 kB
+@nesomn/client build: dist/assets/jetbrains-mono-vietnamese-500-normal-DNRqzVM1.woff             5.48 kB
+@nesomn/client build: dist/assets/jetbrains-mono-greek-400-normal-B9oWc5Lo.woff                  5.66 kB
+@nesomn/client build: dist/assets/jetbrains-mono-greek-500-normal-D7SFKleX.woff                  5.72 kB
+@nesomn/client build: dist/assets/jetbrains-mono-cyrillic-400-normal-ugxPyKxw.woff               6.98 kB
+@nesomn/client build: dist/assets/jetbrains-mono-cyrillic-500-normal-DJqRU3vO.woff               7.02 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-ext-400-normal-Bc8Ftmh3.woff2             7.34 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-ext-500-normal-Cut-4mMH.woff2             7.53 kB
+@nesomn/client build: dist/assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2                  8.52 kB
+@nesomn/client build: dist/assets/bricolage-grotesque-vietnamese-wght-normal-BUzh504Q.woff2      8.61 kB
+@nesomn/client build: dist/assets/manrope-greek-wght-normal-DL7QRZyv.woff2                       9.44 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-ext-400-normal-fXTG6kC5.woff             10.13 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-ext-500-normal-ckzbgY84.woff             10.34 kB
+@nesomn/client build: dist/assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2                   14.50 kB
+@nesomn/client build: dist/assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2                  15.12 kB
+@nesomn/client build: dist/pricing\index.html                                                   17.94 kB │ gzip:   3.55 kB
+@nesomn/client build: dist/assets/bricolage-grotesque-latin-ext-wght-normal-CcLUaPy7.woff2      18.67 kB
+@nesomn/client build: dist/index.html                                                           20.33 kB │ gzip:   3.82 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-400-normal-V6pRDFza.woff2                21.17 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-500-normal-BWZEU5yA.woff2                21.83 kB
+@nesomn/client build: dist/marketplace\index.html                                               22.05 kB │ gzip:   3.71 kB
+@nesomn/client build: dist/assets/manrope-latin-wght-normal-DHIcAJRg.woff2                      24.84 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-400-normal-6-qcROiO.woff                 27.50 kB
+@nesomn/client build: dist/assets/jetbrains-mono-latin-500-normal-CJOVTJB7.woff                 28.21 kB
+@nesomn/client build: dist/assets/bricolage-grotesque-latin-wght-normal-DLoelf7F.woff2          41.34 kB
+@nesomn/client build: dist/assets/main-DLcyD7Vq.css                                            768.39 kB │ gzip: 109.86 kB
+@nesomn/client build: dist/assets/trash-2-BpBjKbfF.js                                            0.35 kB │ gzip:   0.24 kB
+@nesomn/client build: dist/assets/index-CPPIKvJG.js                                              0.74 kB │ gzip:   0.41 kB
+@nesomn/client build: dist/assets/manifest-DfpQOgAE.js                                           1.04 kB │ gzip:   0.31 kB
+@nesomn/client build: dist/assets/index-BmAKEufH.js                                              1.40 kB │ gzip:   0.77 kB
+@nesomn/client build: dist/assets/demo-3d-CxjpMr4G.js                                            3.11 kB │ gzip:   1.00 kB
+@nesomn/client build: dist/assets/index-vTjRLKaw.js                                              4.00 kB │ gzip:   1.67 kB
+@nesomn/client build: dist/assets/tabs-C4xSi6-a.js                                               4.64 kB │ gzip:   1.77 kB
+@nesomn/client build: dist/assets/model-viewer-DCUuXFJR.js                                       6.99 kB │ gzip:   1.68 kB
+@nesomn/client build: dist/assets/projects-Cn33rMJz.js                                           7.22 kB │ gzip:   1.43 kB
+@nesomn/client build: dist/assets/slider-b_UkYGEb.js                                            20.52 kB │ gzip:   6.87 kB
+@nesomn/client build: dist/assets/editor-3d-C0GyFtG3.js                                         99.80 kB │ gzip:  26.19 kB
+@nesomn/client build: dist/assets/server.edge-BszVBlik.js                                      314.59 kB │ gzip:  96.20 kB
+@nesomn/client build: dist/assets/client-C3n8XJY6.js                                           349.79 kB │ gzip: 105.05 kB
+@nesomn/client build: dist/assets/scene-editor-tRWnpXj4.js                                     500.31 kB │ gzip: 140.60 kB
+@nesomn/client build: dist/assets/main-Bx8UeInJ.js                                             560.75 kB │ gzip: 156.02 kB
+@nesomn/client build: dist/assets/render-boundary-GVafCrjn.js                                1,029.30 kB │ gzip: 279.79 kB
+@nesomn/client build:
+@nesomn/client build: (!) Some chunks are larger than 500 kB after minification. Consider:
+@nesomn/client build: - Using dynamic import() to code-split the application
+@nesomn/client build: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+@nesomn/client build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+@nesomn/client build: ✓ built in 33.37s
+@nesomn/client build: Prerendered 3 pages:
+@nesomn/client build:   /
+@nesomn/client build:   /pricing
+@nesomn/client build:   /marketplace
+@nesomn/client build: Exited with code 0
+@nesomn/admin build: rendering chunks...
+@nesomn/admin build: computing gzip size...
+@nesomn/admin build: dist/index.html                                                            1.11 kB │ gzip:   0.51 kB
+@nesomn/admin build: dist/assets/manrope-vietnamese-wght-normal-usUDDRr7.woff2                  8.52 kB
+@nesomn/admin build: dist/assets/bricolage-grotesque-vietnamese-wght-normal-BUzh504Q.woff2      8.61 kB
+@nesomn/admin build: dist/assets/manrope-greek-wght-normal-DL7QRZyv.woff2                       9.44 kB
+@nesomn/admin build: dist/assets/manrope-cyrillic-wght-normal-Dvxsihut.woff2                   14.50 kB
+@nesomn/admin build: dist/assets/manrope-latin-ext-wght-normal-Ch3YOpNY.woff2                  15.12 kB
+@nesomn/admin build: dist/assets/bricolage-grotesque-latin-ext-wght-normal-CcLUaPy7.woff2      18.67 kB
+@nesomn/admin build: dist/assets/manrope-latin-wght-normal-DHIcAJRg.woff2                      24.84 kB
+@nesomn/admin build: dist/assets/bricolage-grotesque-latin-wght-normal-DLoelf7F.woff2          41.34 kB
+@nesomn/admin build: dist/assets/index-Bv35nncl.css                                            12.46 kB │ gzip:   5.72 kB
+@nesomn/admin build: dist/assets/index-DFr3R3kM.js                                          2,255.02 kB │ gzip: 685.13 kB
+@nesomn/admin build:
+@nesomn/admin build: (!) Some chunks are larger than 500 kB after minification. Consider:
+@nesomn/admin build: - Using dynamic import() to code-split the application
+@nesomn/admin build: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+@nesomn/admin build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+@nesomn/admin build: ✓ built in 36.83s
+@nesomn/admin build: Exited with code 0
+
+$ bun run check:runtime && bun --filter '*' build
+$ bun run scripts/check-runtime.mjs

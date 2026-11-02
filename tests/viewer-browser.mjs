@@ -8,7 +8,9 @@ import { launchChrome } from './lib/browser-runtime.mjs';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
 const dist = resolve(process.env.NESOMN_VIEWER_DIST ?? 'client/dist'),
-  folder = artifactDirectory('viewer', 'docs/revision/artifacts/phase-8'),
+  folder =
+    process.env.NESOMN_VIEWER_ARTIFACTS ??
+    artifactDirectory('viewer', 'docs/revision/artifacts/phase-8'),
   downloads = resolve(
     cacheDirectory('viewer', '.cache/revision-phase-8') + '/downloads/run-' + Date.now(),
   );
@@ -252,7 +254,7 @@ try {
   await click('Auto-Rotate Off');
   await sleep(300);
   await click('Auto-Rotate On');
-  await click('Latar terang');
+  await click('Background: light');
   await click('Fullscreen');
   await sleep(300);
   assert.equal(await evaluate('!!document.fullscreenElement'), true);
@@ -272,7 +274,7 @@ try {
   await wait('document.querySelector(".viewer-stage[data-state=error]")');
   await capture('invalid-model-390', 390);
   badModel = false;
-  await click('Coba lagi');
+  await click('Try again');
   await ready();
   await send('Emulation.setEmulatedMedia', {
     features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }],
@@ -282,7 +284,7 @@ try {
       'const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return type.startsWith("webgl")?null:original.call(this,type,...args);};',
   });
   await go('/demo/3d');
-  await wait('document.body.innerText.includes("tidak mendukung WebGL")');
+  await wait('document.body.innerText.includes("does not support WebGL")');
   await capture('no-webgl-390', 390);
   await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: noGL.identifier });
   await go('/editor/3d?project=demo-project');
@@ -290,7 +292,7 @@ try {
   await sleep(1000);
   await capture('editor3d-1440', 1440);
   await click('Decal 1');
-  await wait('document.body.innerText.includes("Properties decal")');
+  await wait('document.body.innerText.includes("Decal properties")');
   await click('Save');
   // Assert the save protocol and settled UI, rather than historical toast copy.
   for (let i = 0; i < 100 && !saved; i++) await sleep(100);
@@ -299,7 +301,7 @@ try {
     '[...document.querySelectorAll("button")].some(b => b.textContent.trim() === "Save" && !b.disabled)',
   );
   await wait(
-    'document.querySelector(".editor3d-inspector [role=status]")?.textContent.includes("Tidak ada perubahan tertunda")',
+    'document.querySelector(".editor3d-inspector [role=status]")?.textContent.includes("No unsaved changes")',
   );
   assert.equal(saved.state.modelKey, scene.modelKey);
   assert.equal(saved.state.grain, 0);
@@ -308,7 +310,7 @@ try {
   await click('JPEG');
   await click('Render Video');
   await wait(
-    'document.body.innerText.includes("Video tersimpan")||document.body.innerText.includes("Rekaman gagal")',
+    'document.body.innerText.includes("Video saved")||document.body.innerText.includes("Recording failed")',
   );
   await sleep(500);
   console.log(

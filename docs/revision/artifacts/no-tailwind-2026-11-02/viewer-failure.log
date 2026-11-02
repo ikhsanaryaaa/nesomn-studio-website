@@ -1,0 +1,49 @@
+video status {
+  visible: 'visible',
+  notice: 'a perubahan tertunda\n' +
+    '\n' +
+    'Nama project\n' +
+    'Add Design\n' +
+    'Properties decal\n' +
+    'Target mesh\n' +
+    'Otomatis (mesh terbesar)\n' +
+    'Product_Box_0\n' +
+    'Product_Box_1\n' +
+    'Product_Box_2\n' +
+    'Product_Box_3\n' +
+    'Posisi lokal\n' +
+    'X\n' +
+    'Y\n' +
+    'Z\n' +
+    'Rotasi (radian)\n' +
+    'X\n' +
+    'Y\n' +
+    'Z\n' +
+    'Skala\n' +
+    'DECALS (1)\n' +
+    'Decal 1\n' +
+    'Hapus\n' +
+    'CAMERA ANGLE\n' +
+    'Front\n' +
+    '3/4\n' +
+    'Side\n' +
+    'Top\n' +
+    'Rekaman gagal\n' +
+    'Notification Rekaman gagal'
+}
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: missing webm
+    at file:///C:/Users/ikhsan/Desktop/nesomn-studio-website/tests/viewer-browser.mjs:324:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

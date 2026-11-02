@@ -57,7 +57,7 @@ export const userAdminRoutes = new Elysia({ prefix: '/users' })
   })
   .get('/:id', async ({ params }) => {
     const u = await db.query.users.findFirst({ where: eq(users.id, params.id) });
-    if (!u) throw new AppError('NOT_FOUND', 'User tidak ditemukan.', 404);
+    if (!u) throw new AppError('NOT_FOUND', 'User not found.', 404);
     const sub = await activeSubscription(u.id);
     const plan = sub ? await db.query.plans.findFirst({ where: eq(plans.id, sub.planId) }) : null;
     return {

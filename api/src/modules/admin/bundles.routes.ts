@@ -33,7 +33,7 @@ async function replaceItems(tx: Tx, id: string, ids: string[]) {
     .from(bundles)
     .where(eq(bundles.id, id))
     .for('update');
-  if (!rows.length) throw new AppError('NOT_FOUND', 'Bundle tidak ditemukan.', 404);
+  if (!rows.length) throw new AppError('NOT_FOUND', 'Bundle not found.', 404);
   if (ids.length) {
     const found = await tx
       .select({ id: assets.id })
@@ -41,7 +41,7 @@ async function replaceItems(tx: Tx, id: string, ids: string[]) {
       .where(inArray(assets.id, ids))
       .for('key share');
     if (found.length !== ids.length)
-      throw new AppError('INVALID_ASSETS', 'Ada aset bundle yang tidak ditemukan.', 422);
+      throw new AppError('INVALID_ASSETS', 'Some bundle assets were not found.', 422);
   }
   await tx.delete(bundleItems).where(eq(bundleItems.bundleId, id));
   if (ids.length)
@@ -76,7 +76,7 @@ export const bundleAssetOptionsRoutes = new Elysia({ prefix: '/bundle-assets' })
       .select({ id: assets.id, title: assets.title, editorType: assets.editorType })
       .from(assets)
       .where(eq(assets.id, z.string().uuid().parse(params.id)));
-    if (!row) throw new AppError('NOT_FOUND', 'Aset tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Asset not found.', 404);
     return row;
   });
 
@@ -94,7 +94,7 @@ export const bundleAdminRoutes = new Elysia({ prefix: '/bundles' })
   })
   .get('/:id', async ({ params }) => {
     const row = await db.query.bundles.findFirst({ where: eq(bundles.id, params.id) });
-    if (!row) throw new AppError('NOT_FOUND', 'Bundle tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Bundle not found.', 404);
     const items = await db.query.bundleItems.findMany({
       where: eq(bundleItems.bundleId, params.id),
     });
@@ -118,7 +118,7 @@ export const bundleAdminRoutes = new Elysia({ prefix: '/bundles' })
         .set({ ...values, updatedAt: new Date() })
         .where(eq(bundles.id, params.id))
         .returning();
-      if (!row) throw new AppError('NOT_FOUND', 'Bundle tidak ditemukan.', 404);
+      if (!row) throw new AppError('NOT_FOUND', 'Bundle not found.', 404);
       if (assetIds !== undefined) await replaceItems(tx, row.id, assetIds);
       const items = await tx.query.bundleItems.findMany({
         where: eq(bundleItems.bundleId, row.id),
@@ -128,7 +128,7 @@ export const bundleAdminRoutes = new Elysia({ prefix: '/bundles' })
   })
   .delete('/:id', async ({ params }) => {
     const [row] = await db.delete(bundles).where(eq(bundles.id, params.id)).returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Bundle tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Bundle not found.', 404);
     return { ok: true };
   })
   .put('/:id/items', async ({ params, body }) => {

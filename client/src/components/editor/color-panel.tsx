@@ -29,74 +29,70 @@ export function ColorPanel() {
   const canFill = selected?.type === 'text';
 
   return (
-    <div className="flex flex-col gap-6 p-4">
+    <div className="editor-color-panel">
       <section>
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Warna objek
-        </h3>
+        <h3 className="editor-section-title">Object color</h3>
         {selected ? (
           canFill ? (
-            <div className="flex flex-col gap-3">
-              <div className="grid grid-cols-5 gap-2">
+            <div className="editor-control-stack">
+              <div className="editor-swatches">
                 {SWATCHES.map((c) => (
                   <button
                     key={c}
                     type="button"
                     title={c}
                     onClick={() => setFill(selected.id, c)}
-                    className={`size-8 rounded-md border transition-transform hover:scale-110 ${
-                      selected.fill === c ? 'border-accent ring-2 ring-accent' : 'border-border'
+                    className={`editor-color-swatch ${
+                      selected.fill === c ? 'editor-color-swatch--selected' : ''
                     }`}
                     style={{ backgroundColor: c }}
                   />
                 ))}
               </div>
-              <label className="flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">Kustom</span>
+              <label className="editor-custom-color">
+                <span className="editor-muted">Custom</span>
                 <input
                   type="color"
                   value={selected.fill ?? '#111111'}
                   onChange={(e) => setFill(selected.id, e.target.value)}
-                  className="h-8 w-12 cursor-pointer rounded border border-border bg-transparent"
+                  className="editor-color-input"
                 />
               </label>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">
-              Objek gambar tidak punya warna isi. Pilih objek teks untuk mengubah warna.
+            <p className="editor-description">
+              Image objects do not have a fill color. Select a text object to change its color.
             </p>
           )
         ) : (
-          <p className="text-sm text-muted-foreground">Pilih objek dulu untuk ganti warna.</p>
+          <p className="editor-description">Select an object to change its color.</p>
         )}
       </section>
 
       <section>
-        <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Background canvas
-        </h3>
-        <div className="flex flex-col gap-3">
-          <div className="grid grid-cols-5 gap-2">
+        <h3 className="editor-section-title">Canvas background</h3>
+        <div className="editor-control-stack">
+          <div className="editor-swatches">
             {SWATCHES.map((c) => (
               <button
                 key={c}
                 type="button"
                 title={c}
                 onClick={() => setBackground(c)}
-                className={`size-8 rounded-md border transition-transform hover:scale-110 ${
-                  canvas.background === c ? 'border-accent ring-2 ring-accent' : 'border-border'
+                className={`editor-color-swatch ${
+                  canvas.background === c ? 'editor-color-swatch--selected' : ''
                 }`}
                 style={{ backgroundColor: c }}
               />
             ))}
           </div>
-          <label className="flex items-center gap-2 text-sm">
-            <span className="text-muted-foreground">Kustom</span>
+          <label className="editor-custom-color">
+            <span className="editor-muted">Custom</span>
             <input
               type="color"
               value={canvas.background}
               onChange={(e) => setBackground(e.target.value)}
-              className="h-8 w-12 cursor-pointer rounded border border-border bg-transparent"
+              className="editor-color-input"
             />
           </label>
         </div>

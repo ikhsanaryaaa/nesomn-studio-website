@@ -9,17 +9,17 @@ import { api } from '@/lib/api';
 const tools = [
   [
     'Scene Editor 2D',
-    'Susun mockup, atur layer, ganti warna, dan ekspor desain langsung dari browser.',
+    'Arrange mockups, manage layers, change colours, and export designs in your browser.',
     '/editor/scene',
   ],
   [
     '3D Editor',
-    'Kustomisasi mockup produk 3D, atur material, kamera, dan render image atau video.',
+    'Customise 3D product mockups, adjust materials and cameras, and render images or video.',
     '/editor/3d',
   ],
   [
     'AI-powered',
-    'Generate scene dan motion dengan AI. Cukup deskripsikan, biarkan studio yang bekerja.',
+    'Generate scenes and motion with AI. Describe your idea and let the studio do the work.',
     '/editor/scene',
   ],
 ];
@@ -37,33 +37,33 @@ export default function HomePage() {
               <span>Build the scene</span> with AI.
             </h1>
             <p>
-              Nesomn Studio menyatukan editor 2D, 3D, dan generasi AI dalam satu ruang kerja kreatif
-              yang cepat dan elegan.
+              Nesomn Studio brings 2D and 3D editors together with AI generation in one streamlined
+              creative workspace.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="workspace-actions">
               <Button size="lg" asChild>
                 <Link to="/editor/scene">
-                  Mulai Berkarya <ArrowUpRight size={18} />
+                  Start creating <ArrowUpRight size={18} />
                 </Link>
               </Button>
               <Button size="lg" variant="secondary" asChild>
-                <Link to="/marketplace">Jelajahi aset</Link>
+                <Link to="/marketplace">Explore assets</Link>
               </Button>
             </div>
           </div>
           <div className="brand-cover" aria-label="Nesomn creative workspace">
-            <img src="/nesomn-logo-black.svg" alt="Logo Nesomn" />
+            <img src="/nesomn-logo-black.svg" alt="Nesomn logo" />
             <span>
               Creative
               <br />
               workspace.
             </span>
             <Link to="/editor/projects">
-              Buka project <ArrowUpRight size={20} />
+              Open projects <ArrowUpRight size={20} />
             </Link>
           </div>
         </section>
-        <section className="tool-index" aria-label="Tools Nesomn">
+        <section className="tool-index" aria-label="Nesomn tools">
           {tools.map(([title, desc, to]) => (
             <Link to={to} key={title}>
               <h2>{title}</h2>
@@ -74,15 +74,15 @@ export default function HomePage() {
         </section>
         <section className="home-catalog">
           <div className="section-heading">
-            <h2>Aset untuk ide berikutnya.</h2>
+            <h2>Assets for your next idea.</h2>
             <Link to="/marketplace">
-              Lihat katalog <ArrowUpRight size={18} />
+              View catalogue <ArrowUpRight size={18} />
             </Link>
           </div>
           {catalog.isLoading ? (
-            <PageState loading title="Memuat katalog…" />
+            <PageState loading title="Loading catalogue…" />
           ) : catalog.isError ? (
-            <PageState title="Katalog belum dapat dimuat" retry={() => void catalog.refetch()} />
+            <PageState title="Unable to load the catalogue" retry={() => void catalog.refetch()} />
           ) : catalog.data?.length ? (
             <div className="asset-grid">
               {catalog.data.slice(0, 4).map((asset) => (
@@ -90,14 +90,14 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            <PageState title="Belum ada aset tersedia">
-              Editor tetap dapat dibuka dari navigasi.
+            <PageState title="No assets are available yet">
+              You can still open the editors from the navigation.
             </PageState>
           )}
         </section>
         <footer className="public-footer">
           <span>Nesomn Studio</span>
-          <Link to="/pricing">Harga</Link>
+          <Link to="/pricing">Pricing</Link>
           <Link to="/library">Library</Link>
           <Link to="/account">Account</Link>
         </footer>

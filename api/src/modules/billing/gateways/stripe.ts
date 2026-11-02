@@ -8,7 +8,7 @@ export class StripeGateway implements PaymentProvider {
   readonly name = 'stripe' as const;
 
   async createCheckout(): Promise<CreateCheckoutResult> {
-    throw new AppError('LEGACY_PAYMENT_DISABLED', 'Checkout Stripe baru tidak diaktifkan.', 503);
+    throw new AppError('LEGACY_PAYMENT_DISABLED', 'New Stripe checkouts are not enabled.', 503);
   }
 
   async verifyWebhook(rawBody: string, signature: string | null): Promise<WebhookResult | null> {

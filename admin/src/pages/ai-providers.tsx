@@ -1,12 +1,4 @@
-import {
-  List,
-  useTable,
-  EditButton,
-  DeleteButton,
-  Create,
-  Edit,
-  useForm,
-} from '@refinedev/antd';
+import { List, useTable, EditButton, DeleteButton, Create, Edit, useForm } from '@refinedev/antd';
 import { useCustomMutation, useNotification } from '@refinedev/core';
 import { Table, Space, Tag, Form, Input, Select, InputNumber, Switch, Button } from 'antd';
 
@@ -35,7 +27,7 @@ const TestButton = ({ id }: { id: string }) => {
               const res = data?.data as { ok: boolean; detail: string };
               open?.({
                 type: res?.ok ? 'success' : 'error',
-                message: res?.ok ? 'Koneksi OK' : 'Koneksi gagal',
+                message: res?.ok ? 'Connection successful' : 'Connection failed',
                 description: res?.detail,
               });
             },
@@ -86,7 +78,7 @@ export const ProviderList = () => {
 const ProviderFields = ({ isEdit }: { isEdit?: boolean }) => (
   <>
     <Form.Item label="Key" name="key" rules={[{ required: true }]}>
-      <Input placeholder="mis. kie-flux-image" />
+      <Input placeholder="e.g. kie-flux-image" />
     </Form.Item>
     <Form.Item label="Model Name" name="modelName" rules={[{ required: true }]}>
       <Input />
@@ -103,7 +95,7 @@ const ProviderFields = ({ isEdit }: { isEdit?: boolean }) => (
     <Form.Item
       label="API Key"
       name="apiKey"
-      help={isEdit ? 'Kosongkan untuk mempertahankan key lama.' : 'Disimpan terenkripsi.'}
+      help={isEdit ? 'Leave blank to keep the current key.' : 'Stored encrypted.'}
     >
       <Input.Password placeholder={isEdit ? '••••••••' : ''} />
     </Form.Item>

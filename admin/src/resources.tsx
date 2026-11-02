@@ -94,7 +94,7 @@ export const resources: ResourceProps[] = [
     list: '/audit-logs',
     meta: { label: 'Audit Logs', icon: <FileSearchOutlined />, parent: 'system' },
   },
-  { name: 'catalog', meta: { label: 'Katalog' } },
+  { name: 'catalog', meta: { label: 'Catalogue' } },
   { name: 'ai', meta: { label: 'AI System' } },
-  { name: 'system', meta: { label: 'Sistem' } },
+  { name: 'system', meta: { label: 'System' } },
 ];

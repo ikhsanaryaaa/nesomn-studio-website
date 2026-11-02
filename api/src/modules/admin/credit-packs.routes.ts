@@ -39,7 +39,7 @@ export const creditPackAdminRoutes = new Elysia({ prefix: '/credit-packs' })
   })
   .get('/:id', async ({ params }) => {
     const row = await db.query.creditPacks.findFirst({ where: eq(creditPacks.id, params.id) });
-    if (!row) throw new AppError('NOT_FOUND', 'Credit pack tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Credit pack not found.', 404);
     return row;
   })
   .post('/', async ({ body, set }) => {
@@ -55,11 +55,11 @@ export const creditPackAdminRoutes = new Elysia({ prefix: '/credit-packs' })
       .set({ ...input, updatedAt: new Date() })
       .where(eq(creditPacks.id, params.id))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Credit pack tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Credit pack not found.', 404);
     return row;
   })
   .delete('/:id', async ({ params }) => {
     const [row] = await db.delete(creditPacks).where(eq(creditPacks.id, params.id)).returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Credit pack tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Credit pack not found.', 404);
     return { ok: true };
   });

@@ -23,12 +23,12 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/pricing': {
     title: 'Pricing',
     description:
-      'Pilih paket Nesomn Studio: Free Basic, Scene Editor, Full Access, atau Enterprise.',
+      'Choose a Nesomn Studio plan: Free Basic, Scene Editor, Full Access, or Enterprise.',
   },
   '/marketplace': {
     title: 'Marketplace',
     description:
-      'Jelajahi katalog mockup, aset 3D, font, dan motion pack premium di Nesomn Studio.',
+      'Explore mockups, 3D assets, fonts, and premium motion packs in the Nesomn Studio catalogue.',
   },
 };
 

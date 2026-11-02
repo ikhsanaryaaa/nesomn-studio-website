@@ -7,10 +7,10 @@ export const registerSchema = z.object({
     .string()
     .trim()
     .max(254)
-    .email('Email tidak valid.')
+    .email('Invalid email address.')
     .transform((value) => value.toLowerCase()),
-  password: z.string().min(8, 'Password minimal 8 karakter.').max(1024),
-  name: z.string().min(1, 'Nama wajib diisi.').max(120),
+  password: z.string().min(8, 'Password must contain at least 8 characters.').max(1024),
+  name: z.string().min(1, 'Name is required.').max(120),
 });
 
 export const loginSchema = z.object({
@@ -18,9 +18,9 @@ export const loginSchema = z.object({
     .string()
     .trim()
     .max(254)
-    .email('Email tidak valid.')
+    .email('Invalid email address.')
     .transform((value) => value.toLowerCase()),
-  password: z.string().min(1, 'Password wajib diisi.').max(1024),
+  password: z.string().min(1, 'Password is required.').max(1024),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

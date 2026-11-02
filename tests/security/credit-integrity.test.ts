@@ -94,7 +94,7 @@ test('legacy balance inconsistency is preserved and blocked for reconciliation',
       createdAt: new Date('2026-01-02'),
     },
   ]);
-  await expect(getBalance(id)).rejects.toThrow(/rekonsiliasi/i);
+  await expect(getBalance(id)).rejects.toThrow(/reconciliation/i);
   expect(
     await db.query.creditAccounts.findFirst({ where: eq(creditAccounts.userId, id) }),
   ).toBeUndefined();

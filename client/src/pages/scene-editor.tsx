@@ -79,14 +79,14 @@ export default function SceneEditorPage() {
         .get(projectIdParam)
         .then((p) => {
           if (!active) return;
-          if (p.kind !== 'scene2d') throw new Error('Project ini bukan Scene 2D.');
+          if (p.kind !== 'scene2d') throw new Error('This project is not a 2D scene.');
           loadState(p.state as SceneState, p.id, p.title);
         })
         .catch((err) => {
           if (!active) return;
-          const msg = err instanceof Error ? err.message : 'Gagal memuat project.';
+          const msg = err instanceof Error ? err.message : 'Unable to load the project.';
           setLoadError(msg);
-          toast({ title: 'Tidak dapat membuka project', description: msg, variant: 'danger' });
+          toast({ title: 'Unable to open project', description: msg, variant: 'danger' });
         })
         .finally(() => {
           if (active) setLoading(false);
@@ -126,8 +126,8 @@ export default function SceneEditorPage() {
         img.onerror = () => {
           if (active)
             toast({
-              title: 'Gambar gagal dimuat',
-              description: 'Coba buka ulang aset untuk memperbarui URL.',
+              title: 'Unable to load image',
+              description: 'Try reopening the asset to refresh its URL.',
               variant: 'danger',
             });
         };
@@ -135,8 +135,8 @@ export default function SceneEditorPage() {
       })
       .catch((err) => {
         if (!active || epoch !== editorEpoch()) return;
-        const msg = err instanceof ApiRequestError ? err.message : 'Gagal memuat mockup.';
-        toast({ title: 'Tidak dapat memuat mockup', description: msg, variant: 'danger' });
+        const msg = err instanceof ApiRequestError ? err.message : 'Unable to load the mockup.';
+        toast({ title: 'Unable to load mockup', description: msg, variant: 'danger' });
       });
     return () => {
       active = false;
@@ -169,16 +169,18 @@ export default function SceneEditorPage() {
   function handleExport(format: ExportFormat) {
     if (!stageRef.current || loading || loadError) return;
     try {
-      if (stageRef.current.getAttr('nesomnImagesReady') !== true) throw Error('Gambar belum siap');
+      if (stageRef.current.getAttr('nesomnImagesReady') !== true)
+        throw Error('The image is not ready');
       exportStage(stageRef.current, format, title || 'nesomn-scene', canvas);
       toast({
-        title: 'Export dimulai',
-        description: `Mengunduh ${format.toUpperCase()} (maks 1080p).`,
+        title: 'Export started',
+        description: `Downloading ${format.toUpperCase()} (up to 1080p).`,
       });
     } catch {
       toast({
-        title: 'Export gagal',
-        description: 'Periksa gambar dan izin CORS sumber. Canvas tetap dapat diedit.',
+        title: 'Export failed',
+        description:
+          "Check the image and the source's CORS permissions. You can still edit the canvas.",
         variant: 'danger',
       });
     }
@@ -227,13 +229,13 @@ export default function SceneEditorPage() {
       if (epoch !== editorEpoch() || documentKey !== activeDocument.current) return;
       addImage(url, img.naturalWidth, img.naturalHeight);
       setTab('design');
-      toast({ title: 'Hasil ditambahkan', description: 'Image AI masuk ke canvas.' });
+      toast({ title: 'Result added', description: 'The AI image has been added to the canvas.' });
     };
     img.onerror = () => {
       aiImages.current.delete(img);
       toast({
-        title: 'Gagal memuat hasil',
-        description: 'Sumber gambar tidak valid.',
+        title: 'Unable to load result',
+        description: 'The image source is invalid.',
         variant: 'danger',
       });
     };
@@ -251,39 +253,42 @@ export default function SceneEditorPage() {
         const updated = await api.projects.update(projectId, { title, state });
         if (epoch !== editorEpoch() || activeDocument.current !== documentKey) return;
         markSaved(updated.id, title, state);
-        toast({ title: 'Tersimpan', description: 'Perubahan project disimpan.' });
+        toast({ title: 'Saved', description: 'Your project changes have been saved.' });
       } else {
         const created = await api.projects.create({ title, kind: 'scene2d', state });
         if (epoch !== editorEpoch() || activeDocument.current !== documentKey) return;
         markSaved(created.id, title, state);
         createdProject.current = created.id;
         setSearchParams({ project: created.id }, { replace: true });
-        toast({ title: 'Project dibuat', description: 'Scene baru tersimpan.' });
+        toast({ title: 'Project created', description: 'Your new scene has been saved.' });
       }
     } catch (err) {
-      const msg = err instanceof ApiRequestError ? err.message : 'Gagal menyimpan.';
+      const msg = err instanceof ApiRequestError ? err.message : 'Unable to save.';
       const hint =
-        err instanceof ApiRequestError && err.status === 401 ? ' Login dulu untuk menyimpan.' : '';
-      toast({ title: 'Gagal menyimpan', description: msg + hint, variant: 'danger' });
+        err instanceof ApiRequestError && err.status === 401 ? ' Log in to save your work.' : '';
+      toast({ title: 'Unable to save', description: msg + hint, variant: 'danger' });
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col overflow-hidden">
-      <Seo title="Scene Editor" description="Editor mockup 2D berbasis browser di Nesomn Studio." />
+    <section className="scene-page">
+      <Seo
+        title="Scene Editor"
+        description="A browser-based 2D mockup editor from Nesomn Studio."
+      />
       <Topbar
         title="Scene Editor"
-        right={<span className="text-xs text-muted-foreground">2D Workspace</span>}
+        right={<span className="workspace-caption">2D Workspace</span>}
       />
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-surface p-2">
-        <div className="min-w-0 max-w-full overflow-x-auto">
+      <div className="scene-actions">
+        <div className="scene-document-tabs">
           {
             <Tabs
               value={tab}
               onValueChange={(v) => setTab(v as 'design' | 'colour' | 'ai-scene' | 'ai-motion')}
-              className="ml-4"
+              className="scene-reset"
             >
               <TabsList>
                 <TabsTrigger value="design">Design</TabsTrigger>
@@ -301,24 +306,17 @@ export default function SceneEditorPage() {
         />
       </div>
 
-      <div
-        role="region"
-        aria-label="Area kerja Scene 2D"
-        className="flex min-h-0 flex-1 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden"
-      >
+      <div role="region" aria-label="2D scene workspace" className="scene-workspace">
         {/* Area canvas */}
-        <div
-          ref={viewportRef}
-          className="flex min-h-[320px] min-w-0 flex-1 items-center justify-center overflow-hidden bg-surface-2 p-4"
-        >
-          <div className="shadow-2xl ring-1 ring-border" style={{ lineHeight: 0 }}>
+        <div ref={viewportRef} className="scene-canvas-region">
+          <div className="scene-canvas-frame" style={{ lineHeight: 0 }}>
             {loading ? (
-              <p role="status">Memuat project...</p>
+              <p role="status">Loading project…</p>
             ) : loadError ? (
-              <div role="alert" className="max-w-xs p-4 text-sm leading-normal">
+              <div role="alert" className="scene-render-error">
                 {loadError}
                 <Button variant="secondary" onClick={() => window.location.reload()}>
-                  Coba lagi
+                  Try again
                 </Button>
               </div>
             ) : (
@@ -328,25 +326,22 @@ export default function SceneEditorPage() {
         </div>
 
         {/* Panel kanan */}
-        <aside className="flex max-h-[55dvh] w-full shrink-0 flex-col overflow-y-auto border-t border-border bg-surface lg:max-h-none lg:w-80 lg:border-l lg:border-t-0">
-          <div className="border-b border-border p-4">
-            <label
-              htmlFor="project-title"
-              className="mb-1 block text-xs font-medium text-muted-foreground"
-            >
-              Nama project
+        <aside className="scene-properties">
+          <div className="scene-project-settings">
+            <label htmlFor="project-title" className="scene-project-label">
+              Project name
             </label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} id="project-title" />
           </div>
 
           {tab === 'design' && (
-            <div className="flex flex-col gap-2 p-4">
+            <div className="scene-add-actions">
               <Button id="add-design" variant="secondary" onClick={() => setAddOpen(true)}>
-                <Plus className="size-4" />
+                <Plus className="workspace-action-icon" />
                 Add Design
               </Button>
-              <Button id="add-text" variant="ghost" onClick={() => addText('Teks baru')}>
-                <Type className="size-4" />
+              <Button id="add-text" variant="ghost" onClick={() => addText('New text')}>
+                <Type className="workspace-action-icon" />
                 Add Text
               </Button>
               <SceneInspector />

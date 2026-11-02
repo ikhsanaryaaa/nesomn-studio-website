@@ -10,14 +10,14 @@ export function SubscriptionList() {
   return (
     <List title="Subscriptions" canCreate={false}>
       <p>
-        Periode dan status dari server. Pembatalan tidak selalu langsung mengakhiri hak akses
-        periode berjalan.
+        Billing periods and statuses come from the server. Cancellation may leave access available
+        until the current period ends.
       </p>
       {tableQuery.isError && (
         <Alert
           type="error"
-          message="Langganan gagal dimuat"
-          action={<Button onClick={() => void tableQuery.refetch()}>Coba lagi</Button>}
+          message="Unable to load subscriptions"
+          action={<Button onClick={() => void tableQuery.refetch()}>Try again</Button>}
         />
       )}
       <Table {...tableProps} rowKey="id" scroll={{ x: 1000 }}>
@@ -25,8 +25,8 @@ export function SubscriptionList() {
         <Table.Column dataIndex="planId" title="Plan ID" />
         <Table.Column dataIndex="status" title="Status" render={(v) => <Tag>{v}</Tag>} />
         <Table.Column dataIndex="gateway" title="Provider" />
-        <Table.Column dataIndex="currentPeriodStart" title="Mulai" />
-        <Table.Column dataIndex="currentPeriodEnd" title="Berakhir" />
+        <Table.Column dataIndex="currentPeriodStart" title="Starts" />
+        <Table.Column dataIndex="currentPeriodEnd" title="Ends" />
       </Table>
     </List>
   );
@@ -40,23 +40,23 @@ export function CreditLedgerList() {
   return (
     <List title="Credit ledger" canCreate={false}>
       <p>
-        Riwayat transaksi credits dari server. Halaman ini tidak mengubah saldo atau status
-        pembayaran.
+        Credit transaction history from the server. This page does not change balances or payment
+        statuses.
       </p>
       {tableQuery.isError && (
         <Alert
           type="error"
-          message="Ledger gagal dimuat"
-          action={<Button onClick={() => void tableQuery.refetch()}>Coba lagi</Button>}
+          message="Unable to load the ledger"
+          action={<Button onClick={() => void tableQuery.refetch()}>Try again</Button>}
         />
       )}
       <Table {...tableProps} rowKey="id" scroll={{ x: 1100 }}>
         <Table.Column dataIndex="userId" title="User ID" />
-        <Table.Column dataIndex="delta" title="Perubahan" />
-        <Table.Column dataIndex="balanceAfter" title="Saldo sesudah" />
-        <Table.Column dataIndex="reason" title="Alasan" />
-        <Table.Column dataIndex="refId" title="Referensi" />
-        <Table.Column dataIndex="createdAt" title="Waktu" />
+        <Table.Column dataIndex="delta" title="Change" />
+        <Table.Column dataIndex="balanceAfter" title="Balance after" />
+        <Table.Column dataIndex="reason" title="Reason" />
+        <Table.Column dataIndex="refId" title="Reference" />
+        <Table.Column dataIndex="createdAt" title="Time" />
       </Table>
     </List>
   );

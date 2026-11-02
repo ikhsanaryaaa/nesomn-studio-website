@@ -19,7 +19,7 @@ export function createR2Driver(): StorageDriver {
   const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
 
   if (!bucket || !endpoint || !accessKeyId || !secretAccessKey) {
-    throw new Error('Konfigurasi R2 belum lengkap (R2_* env).');
+    throw new Error('R2 configuration is incomplete (R2_* environment variables).');
   }
 
   const client = new S3Client({

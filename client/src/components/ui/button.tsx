@@ -1,46 +1,60 @@
 import { forwardRef } from 'react';
-import { Slot } from '@radix-ui/react-slot';
+import { Button as ThemesButton, IconButton } from '@radix-ui/themes';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:shrink-0',
-  {
-    variants: {
-      variant: {
-        primary: 'bg-accent text-accent-foreground hover:bg-accent-hover shadow-sm',
-        secondary: 'bg-surface-2 border border-border text-foreground hover:border-border-strong',
-        ghost: 'text-foreground hover:bg-surface-2',
-        danger: 'border border-danger text-danger hover:bg-danger/10',
-        link: 'text-accent underline-offset-4 hover:underline',
-      },
-      size: {
-        sm: 'min-h-11 rounded-md px-3 text-[13px] [&_svg]:size-4',
-        md: 'min-h-11 rounded-md px-4 text-sm [&_svg]:size-4',
-        lg: 'min-h-12 rounded-full px-6 text-base [&_svg]:size-5',
-        icon: 'size-11 rounded-md [&_svg]:size-[18px]',
-      },
+const buttonVariants = cva('ui-button', {
+  variants: {
+    variant: {
+      primary: 'ui-button--primary',
+      secondary: 'ui-button--secondary',
+      ghost: 'ui-button--ghost',
+      danger: 'ui-button--danger',
+      link: 'ui-button--link',
     },
-    defaultVariants: {
-      variant: 'primary',
-      size: 'md',
+    size: {
+      sm: 'ui-button--sm',
+      md: 'ui-button--md',
+      lg: 'ui-button--lg',
+      icon: 'ui-button--icon',
     },
   },
-);
-
+  defaultVariants: { variant: 'primary', size: 'md' },
+});
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
-
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
-    return (
-      <Comp ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
+  ({ className, variant = 'primary', size = 'md', asChild = false, ...props }, ref) => {
+    const appearance =
+      variant === 'secondary'
+        ? 'surface'
+        : variant === 'danger'
+          ? 'outline'
+          : variant === 'ghost' || variant === 'link'
+            ? 'ghost'
+            : 'solid';
+    const shared = {
+      ...props,
+      ref,
+      asChild,
+      radius: size === 'lg' ? 'full' : undefined,
+      variant: appearance,
+      color:
+        variant === 'danger'
+          ? 'red'
+          : variant === 'secondary' || variant === 'ghost'
+            ? 'gray'
+            : undefined,
+      className: cn(buttonVariants({ variant, size }), className),
+    } as const;
+    return size === 'icon' ? (
+      <IconButton {...shared} size="3" />
+    ) : (
+      <ThemesButton {...shared} size={size === 'lg' ? '3' : '2'} />
     );
   },
 );
 Button.displayName = 'Button';
-
 export { Button, buttonVariants };

@@ -165,11 +165,11 @@ try {
     sameSite: 'Lax',
   });
   await send('Page.navigate', { url: base + '/checkout?order=' + order.id });
-  await wait('document.body.innerText.includes("Kode unik")');
+  await wait('document.body.innerText.includes("Unique payment code")');
   const screenshots = [];
   screenshots.push(await capture('checkout-before-confirm-390', 390, 844));
   await evaluate(
-    '[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Tampilkan QRIS")).click()',
+    '[...document.querySelectorAll("button")].find(b=>b.textContent.includes("Show QRIS")).click()',
   );
   await wait('[...document.images].some(i=>i.src.includes("/qr")&&i.complete&&i.naturalWidth>0)');
   screenshots.push(await capture('checkout-qr-390', 390, 844));
@@ -214,7 +214,7 @@ try {
     recovered = delivery(false);
   const balance = await (await fetch(base + '/api/ai/credit', { headers: { cookie } })).json();
   assert.equal(balance.balance, 10);
-  await wait('document.body.innerText.includes("Pembayaran terverifikasi")');
+  await wait('document.body.innerText.includes("Payment verified")');
   await capture('checkout-paid-390', 390, 844);
   writeFileSync(
     folder + '/http-browser-worker.json',

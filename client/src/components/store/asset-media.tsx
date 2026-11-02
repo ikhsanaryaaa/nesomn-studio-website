@@ -14,7 +14,7 @@ export function AssetMedia({
       {src && !failed ? (
         <img src={src} alt={title} loading="lazy" onError={() => setFailed(true)} />
       ) : (
-        <span>{failed ? 'Preview tidak dapat dimuat' : 'Preview belum tersedia'}</span>
+        <span>{failed ? 'Unable to load preview' : 'No preview is available yet'}</span>
       )}
     </div>
   );

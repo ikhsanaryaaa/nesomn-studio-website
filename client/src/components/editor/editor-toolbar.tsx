@@ -29,7 +29,7 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
   const canRedo = useSceneEditor((s) => s.future.length > 0);
 
   return (
-    <div className="flex max-w-full flex-wrap items-center gap-1">
+    <div className="editor-action-toolbar">
       <Button
         id="editor-duplicate"
         variant="ghost"
@@ -38,7 +38,7 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         disabled={!selectedId}
         onClick={duplicate}
       >
-        <Copy className="size-4" />
+        <Copy className="editor-action-icon" />
       </Button>
       <Button
         id="editor-delete"
@@ -48,9 +48,9 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         disabled={!selectedId}
         onClick={deleteSelected}
       >
-        <Trash2 className="size-4" />
+        <Trash2 className="editor-action-icon" />
       </Button>
-      <span className="mx-1 h-5 w-px bg-border" />
+      <span className="editor-toolbar-divider" />
       <Button
         id="editor-undo"
         variant="ghost"
@@ -59,7 +59,7 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         disabled={!canUndo}
         onClick={undo}
       >
-        <Undo2 className="size-4" />
+        <Undo2 className="editor-action-icon" />
       </Button>
       <Button
         id="editor-redo"
@@ -69,15 +69,15 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         disabled={!canRedo}
         onClick={redo}
       >
-        <Redo2 className="size-4" />
+        <Redo2 className="editor-action-icon" />
       </Button>
-      <span className="mx-1 h-5 w-px bg-border" />
+      <span className="editor-toolbar-divider" />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button id="editor-export" variant="secondary" size="sm">
-            <Download className="size-4" />
+            <Download className="editor-action-icon" />
             Export
-            <ChevronDown className="size-3" />
+            <ChevronDown className="editor-chevron-icon" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -86,8 +86,8 @@ export function EditorToolbar({ onExport, onSave, saving }: Props) {
         </DropdownMenuContent>
       </DropdownMenu>
       <Button id="editor-save" size="sm" onClick={onSave} disabled={saving}>
-        <Save className="size-4" />
-        {saving ? 'Menyimpan...' : 'Save'}
+        <Save className="editor-action-icon" />
+        {saving ? 'Saving…' : 'Save'}
       </Button>
     </div>
   );

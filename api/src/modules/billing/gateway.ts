@@ -60,10 +60,10 @@ export async function resolveGateway(
     return new StubGateway();
   }
   if (name !== 'stripe' && name !== 'pakasir')
-    throw new AppError('UNKNOWN_GATEWAY', 'Gateway tidak dikenal.', 400);
+    throw new AppError('UNKNOWN_GATEWAY', 'Unknown payment gateway.', 400);
   throw new AppError(
     'LEGACY_PAYMENT_DISABLED',
-    'Gateway legacy belum diaktifkan untuk transaksi baru/rekonsiliasi otomatis. Tidak ada fallback simulasi.',
+    'The legacy gateway is not enabled for new transactions or automatic reconciliation. No simulated fallback is available.',
     503,
   );
 }

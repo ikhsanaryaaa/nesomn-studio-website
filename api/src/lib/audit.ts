@@ -17,6 +17,6 @@ export async function writeAudit(
   try {
     await db.insert(auditLogs).values({ actorId, action, targetType, targetId, meta });
   } catch (err) {
-    console.error('[audit] gagal mencatat audit log:', err);
+    console.error('[audit] Failed to record audit log:', err);
   }
 }

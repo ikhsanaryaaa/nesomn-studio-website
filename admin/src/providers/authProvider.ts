@@ -26,7 +26,7 @@ export const authProvider: AuthProvider = {
     if (!res.ok) {
       return {
         success: false,
-        error: { name: 'LoginError', message: 'Email atau password salah.' },
+        error: { name: 'LoginError', message: 'Incorrect email or password.' },
       };
     }
     const user = await res.json();
@@ -35,7 +35,7 @@ export const authProvider: AuthProvider = {
       await call('/auth/logout', { method: 'POST' });
       return {
         success: false,
-        error: { name: 'ForbiddenError', message: 'Akses khusus admin.' },
+        error: { name: 'ForbiddenError', message: 'Admin access only.' },
       };
     }
     return { success: true, redirectTo: '/' };

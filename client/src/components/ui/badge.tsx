@@ -1,30 +1,36 @@
+import { Badge as ThemesBadge } from '@radix-ui/themes';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
-
-const badgeVariants = cva(
-  'inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide',
-  {
-    variants: {
-      variant: {
-        new: 'bg-accent text-accent-foreground',
-        popular: 'bg-accent text-accent-foreground',
-        beta: 'bg-accent-subtle text-accent',
-        save: 'bg-success/15 text-success',
-        neutral: 'bg-surface-3 text-muted-foreground',
-        count: 'bg-surface-3 text-foreground',
-      },
-    },
-    defaultVariants: {
-      variant: 'neutral',
+const badgeVariants = cva('ui-badge', {
+  variants: {
+    variant: {
+      new: 'ui-badge--accent',
+      popular: 'ui-badge--accent',
+      beta: 'ui-badge--beta',
+      save: 'ui-badge--save',
+      neutral: 'ui-badge--neutral',
+      count: 'ui-badge--count',
     },
   },
-);
-
+  defaultVariants: { variant: 'neutral' },
+});
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {}
-
 export function Badge({ className, variant, ...props }: BadgeProps) {
-  return <span className={cn(badgeVariants({ variant }), className)} {...props} />;
+  return (
+    <ThemesBadge
+      {...props}
+      color={
+        variant === 'save'
+          ? 'green'
+          : variant === 'neutral' || variant === 'count' || !variant
+            ? 'gray'
+            : undefined
+      }
+      variant={variant === 'new' || variant === 'popular' ? 'solid' : 'soft'}
+      radius="full"
+      className={cn(badgeVariants({ variant }), className)}
+    />
+  );
 }
-
 export { badgeVariants };

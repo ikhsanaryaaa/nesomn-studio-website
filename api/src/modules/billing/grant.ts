@@ -34,11 +34,11 @@ export async function fulfillOrderTx(tx: Tx, order: typeof orders.$inferSelect, 
     where: eq(orderFulfillments.orderId, order.id),
   });
   if (marker?.state === 'legacy_review')
-    throw new FulfillmentReviewError('Order legacy memerlukan rekonsiliasi manual.');
+    throw new FulfillmentReviewError('Legacy orders require manual reconciliation.');
   if (marker?.state === 'fulfilled') return;
-  if (order.status !== 'paid') throw new FulfillmentReviewError('Order belum paid.');
+  if (order.status !== 'paid') throw new FulfillmentReviewError('The order has not been paid.');
   const items = await tx.select().from(orderItems).where(eq(orderItems.orderId, order.id));
-  if (!items.length) throw new FulfillmentReviewError('Order tanpa item.');
+  if (!items.length) throw new FulfillmentReviewError('The order has no items.');
   if (order.type === 'subscription') {
     const item = items[0]!;
     if (items.length !== 1 || item.refType !== 'plan')
@@ -47,7 +47,7 @@ export async function fulfillOrderTx(tx: Tx, order: typeof orders.$inferSelect, 
     const existing = await effectiveSubscription(order.userId, now, tx);
     if (existing && (existing.planId !== item.refId || existing.cycle !== benefits.cycle))
       throw new FulfillmentReviewError(
-        'Pergantian plan/periode aktif memerlukan rekonsiliasi; proration tidak otomatis.',
+        'Changing an active plan or period requires reconciliation. Proration is not automatic.',
       );
     if (existing) {
       if (
@@ -60,7 +60,7 @@ export async function fulfillOrderTx(tx: Tx, order: typeof orders.$inferSelect, 
         )
       )
         throw new FulfillmentReviewError(
-          'Perubahan benefit atau renewal legacy/manual memerlukan rekonsiliasi.',
+          'Benefit changes and legacy or manual renewals require reconciliation.',
         );
       await tx
         .update(subscriptions)
@@ -106,7 +106,7 @@ export async function fulfillOrderTx(tx: Tx, order: typeof orders.$inferSelect, 
       if (item.refType !== 'asset' || item.qty !== 1)
         throw new FulfillmentReviewError('Invalid asset item');
       const asset = await tx.query.assets.findFirst({ where: eq(assets.id, item.refId) });
-      if (!asset) throw new FulfillmentReviewError('Aset tidak tersedia untuk fulfillment.');
+      if (!asset) throw new FulfillmentReviewError('The asset is unavailable for fulfilment.');
       const snapshot = z.object({ fileKey: z.string().nullable() }).parse(item.benefitSnapshot);
       await tx
         .insert(licenses)
@@ -124,14 +124,14 @@ export async function fulfillOrderTx(tx: Tx, order: typeof orders.$inferSelect, 
 /** Legacy compatibility entry: never makes a pending order paid. */
 export async function grantOrder(orderId: string): Promise<void> {
   const order = await db.query.orders.findFirst({ where: eq(orders.id, orderId) });
-  if (!order) throw new FulfillmentReviewError('Order tidak ditemukan.');
+  if (!order) throw new FulfillmentReviewError('Order not found.');
   await withUserTransaction(order.userId, async (tx) => {
     const [current] = await tx
       .select()
       .from(orders)
       .where(and(eq(orders.id, orderId), eq(orders.userId, order.userId)))
       .for('update');
-    if (!current) throw new FulfillmentReviewError('Order tidak ditemukan.');
+    if (!current) throw new FulfillmentReviewError('Order not found.');
     await fulfillOrderTx(tx, current);
   });
 }
@@ -157,5 +157,5 @@ export async function validateSubscriptionPurchase(
           existing.benefits.editorAccess[key as keyof typeof benefits.editorAccess] !== value,
       ))
   )
-    throw new FulfillmentReviewError('Subscription memerlukan rekonsiliasi sebelum checkout.');
+    throw new FulfillmentReviewError('The subscription requires reconciliation before checkout.');
 }

@@ -52,7 +52,7 @@ export const planAdminRoutes = new Elysia({ prefix: '/plans' })
   })
   .get('/:id', async ({ params }) => {
     const row = await db.query.plans.findFirst({ where: eq(plans.id, params.id) });
-    if (!row) throw new AppError('NOT_FOUND', 'Plan tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Plan not found.', 404);
     return row;
   })
   .post('/', async ({ body, set }) => {
@@ -68,11 +68,11 @@ export const planAdminRoutes = new Elysia({ prefix: '/plans' })
       .set({ ...input, updatedAt: new Date() })
       .where(eq(plans.id, params.id))
       .returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Plan tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Plan not found.', 404);
     return row;
   })
   .delete('/:id', async ({ params }) => {
     const [row] = await db.delete(plans).where(eq(plans.id, params.id)).returning();
-    if (!row) throw new AppError('NOT_FOUND', 'Plan tidak ditemukan.', 404);
+    if (!row) throw new AppError('NOT_FOUND', 'Plan not found.', 404);
     return { ok: true };
   });

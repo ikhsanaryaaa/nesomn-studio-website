@@ -161,7 +161,7 @@ try {
   await wait('document.querySelector(".konvajs-content canvas")');
   await sleep(800);
   await click('Save');
-  await wait('document.body.innerText.includes("Tersimpan")');
+  await wait('document.body.innerText.includes("Saved")');
   assert.deepEqual((await (await api('/projects/' + project.id)).json()).state, scene);
   await click('Add Text');
   await click('Save');

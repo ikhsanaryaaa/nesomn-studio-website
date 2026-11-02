@@ -18,7 +18,7 @@ export const UsageList = () => {
     if (value === undefined) return;
     mutate(
       { resource: 'ai-providers', id, values: { creditCost: value } },
-      { onSuccess: () => open?.({ type: 'success', message: 'Credit cost diperbarui' }) },
+      { onSuccess: () => open?.({ type: 'success', message: 'Credit cost updated' }) },
     );
   };
 
@@ -42,7 +42,12 @@ export const UsageList = () => {
           title="Actions"
           render={(_, record: { id: string }) => (
             <Space>
-              <Button size="small" type="primary" loading={isLoading} onClick={() => save(record.id)}>
+              <Button
+                size="small"
+                type="primary"
+                loading={isLoading}
+                onClick={() => save(record.id)}
+              >
                 Save
               </Button>
             </Space>

@@ -1,0 +1,59 @@
+/* Alias project tokens at :root before Themes defines its own similarly named tokens. */
+:root {
+  --nesomn-background: var(--color-background);
+  --nesomn-surface: var(--color-surface);
+}
+.radix-themes {
+  --default-font-family: var(--font-sans);
+  --heading-font-family: var(--font-display);
+  --code-font-family: var(--font-mono);
+  --strong-font-family: var(--font-sans);
+  --color-background: var(--nesomn-background);
+  --color-surface: var(--nesomn-surface);
+}
+.nesomn-theme-root {
+  min-height: 100dvh;
+}
+.radix-themes[data-accent-color='orange'],
+.radix-themes [data-accent-color='orange'] {
+  --accent-9: var(--color-accent);
+  --accent-10: var(--color-accent-hover);
+  --accent-11: var(--color-accent);
+  --accent-contrast: var(--color-accent-foreground);
+}
+
+/* Keep the platform's44px minimum while Themes supplies surfaces and states. */
+.ui-button {
+  min-height: 44px;
+  margin: 0;
+  gap: 8px;
+}
+.ui-button--lg {
+  min-height: 48px;
+}
+.ui-button--icon {
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+}
+.ui-input {
+  --text-field-height: 44px;
+  min-height: 44px;
+}
+
+.ui-slider .rt-SliderThumb::before {
+  width: max(44px, calc(var(--slider-thumb-size) * 3));
+  height: max(44px, calc(var(--slider-thumb-size) * 3));
+}
+
+/* Shared large-radius scale, including portaled Themes scopes.
+   Explicit Radix full-radius controls retain their preset. */
+.radix-themes[data-radius='large'] {
+  --radius-1: var(--radius-sm);
+  --radius-2: var(--radius-md);
+  --radius-3: var(--radius-md);
+  --radius-4: var(--radius-lg);
+  --radius-5: var(--radius-lg);
+  --radius-6: var(--radius-xl);
+}

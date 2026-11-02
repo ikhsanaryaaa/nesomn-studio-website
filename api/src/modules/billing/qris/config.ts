@@ -14,9 +14,9 @@ export function qrisConfig(env: Record<string, string | undefined> = process.env
     secret.length < 32 ||
     digest(payload) !== env.QRIS_TEMPLATE_SHA256
   )
-    throw new AppError('QRIS_NOT_CONFIGURED', 'QRIS belum dikonfigurasi/diaktifkan.', 503);
+    throw new AppError('QRIS_NOT_CONFIGURED', 'QRIS is not configured or enabled.', 503);
   const qr = parseQr(payload);
   if (qr.get('59') !== env.QRIS_EXPECTED_NAME)
-    throw new AppError('QRIS_NOT_CONFIGURED', 'Identitas QRIS belum diverifikasi.', 503);
+    throw new AppError('QRIS_NOT_CONFIGURED', 'QRIS merchant identity has not been verified.', 503);
   return { merchant, store, payload, secret };
 }

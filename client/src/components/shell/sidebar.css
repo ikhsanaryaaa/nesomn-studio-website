@@ -1,0 +1,115 @@
+.sidebar-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 88px;
+  padding: 16px 12px;
+}
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  min-width: 0;
+  flex: 1;
+  padding: 0 4px;
+}
+.sidebar-brand .brand-logo {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+.sidebar-brand > span {
+  font-size: 14px;
+  line-height: 1.25;
+}
+.sidebar-collapse {
+  flex-shrink: 0;
+  color: var(--color-muted-foreground);
+}
+.sidebar-shell-mobile .sidebar-brand-row {
+  padding-right: 48px;
+}
+.sidebar-shell-collapsed .sidebar-brand-row {
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 12px 8px;
+}
+.sidebar-shell-collapsed .sidebar-brand {
+  flex: none;
+  justify-content: center;
+  width: 44px;
+}
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--color-border);
+  padding: 16px 12px;
+}
+.sidebar-footer-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+.sidebar-footer-actions > a {
+  gap: 4px;
+  min-width: 0;
+  padding-inline: 8px;
+  font-size: 12px;
+}
+.sidebar-shell-collapsed .sidebar-footer-actions {
+  grid-template-columns: minmax(0, 1fr);
+}
+.theme-control {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-muted-foreground);
+  font-size: 13px;
+  cursor: pointer;
+}
+.theme-control:hover,
+.theme-control[data-state='open'] {
+  background: var(--color-surface-2);
+  color: var(--color-foreground);
+}
+.theme-control-chevron {
+  margin-left: auto;
+}
+.theme-menu {
+  min-width: 200px;
+}
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+.theme-option[data-highlighted] {
+  background: var(--color-surface-2);
+}
+.theme-option[data-state='checked'] {
+  color: var(--color-accent);
+}
+.theme-option-check {
+  margin-left: auto;
+}
+.theme-control:focus-visible,
+.theme-option:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

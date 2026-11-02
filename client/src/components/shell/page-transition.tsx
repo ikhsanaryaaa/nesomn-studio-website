@@ -13,7 +13,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
       initial={reduced ? false : { opacity: 1, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduced ? 0 : 0.18, ease: 'easeOut' }}
-      className="h-full"
+      className="app-page-transition"
     >
       {children}
     </motion.div>

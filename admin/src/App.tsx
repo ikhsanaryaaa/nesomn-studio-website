@@ -1,3 +1,4 @@
+import enUS from 'antd/locale/en_US';
 import { Refine } from '@refinedev/core';
 import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from '@refinedev/antd';
 import routerProvider, { NavigateToResource, CatchAllNavigate } from '@refinedev/react-router';
@@ -47,17 +48,17 @@ export default function App() {
       colorSuccess: token('--color-success'),
       colorBorder: token('--color-border'),
       fontFamily: token('--font-sans'),
-      borderRadius: 10,
+      borderRadius: Number.parseFloat(token('--radius-md')),
       controlHeight: 44,
     },
     components: { Button: { primaryColor: token('--color-accent-foreground') } },
   };
   return (
     <BrowserRouter basename="/admin">
-      <ConfigProvider theme={studioTheme}>
+      <ConfigProvider locale={enUS} theme={studioTheme}>
         <AntdApp>
           <div className="admin-theme-bar">
-            <a href="/" aria-label="Nesomn Studio beranda">
+            <a href="/" aria-label="Nesomn Studio home">
               <img
                 className="brand-logo"
                 alt="Nesomn Studio"

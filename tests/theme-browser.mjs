@@ -1,3 +1,4 @@
+import { selectTheme as selectThemeControl } from './lib/theme-control.mjs';
 import { waitChromeReady } from './lib/browser-runtime.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
 import { chromeExecutable, artifactDirectory, cacheDirectory } from './lib/browser-runtime.mjs';
@@ -9,7 +10,9 @@ import { resolve, extname } from 'node:path';
 import { launchChrome } from './lib/browser-runtime.mjs';
 const root = resolve(process.env.NESOMN_UI_DIST ?? 'client/dist');
 const admin = resolve(process.env.NESOMN_ADMIN_DIST ?? 'admin/dist');
-const folder = resolve(artifactDirectory('theme', 'docs/revision/artifacts/phase-6'));
+const folder = resolve(
+  process.env.NESOMN_UI_ARTIFACTS ?? artifactDirectory('theme', 'docs/revision/artifacts/phase-6'),
+);
 mkdirSync(folder, { recursive: true });
 const mime = {
   '.js': 'text/javascript',
@@ -95,11 +98,9 @@ async function go(path) {
   await delay(400);
 }
 async function selectTheme(mode) {
-  await evaluate(
-    `(()=>{const s=[...document.querySelectorAll('select')].find(s=>s.getBoundingClientRect().height>0);s.value=${JSON.stringify(mode)};s.dispatchEvent(new Event('change',{bubbles:true}));})()`,
-  );
-  await wait(`document.documentElement.dataset.theme===${JSON.stringify(mode)}`);
+  await selectThemeControl(evaluate, wait, mode);
 }
+
 async function screenshot(name, width) {
   await send('Emulation.setDeviceMetricsOverride', {
     width,
@@ -124,7 +125,7 @@ async function navigation() {
     mobile: true,
   });
   await go('/marketplace?type=font');
-  await evaluate('document.querySelector(\'[aria-label="Buka navigasi"]\').click()');
+  await evaluate('document.querySelector(\'[aria-label="Open navigation"]\').click()');
   await wait('document.querySelector("[role=dialog]")');
   const active = await evaluate(
     'document.querySelector("[role=dialog]").querySelectorAll("nav a[aria-current=page]").length',
@@ -203,7 +204,7 @@ try {
     await send('Page.reload');
     await delay(600);
     await wait(
-      '[...document.querySelectorAll("select")].some(s=>Object.keys(s).some(k=>k.startsWith("__reactProps")))',
+      '[...document.querySelectorAll("[data-theme-control], select")].some(s=>Object.keys(s).some(k=>k.startsWith("__reactProps")))',
     );
     assert.equal(await evaluate('document.documentElement.dataset.theme'), 'dark');
     await selectTheme('light');
@@ -226,7 +227,7 @@ try {
       deviceScaleFactor: 1,
       mobile: true,
     });
-    await evaluate('document.querySelector(\'[aria-label="Buka navigasi"]\').click()');
+    await evaluate('document.querySelector(\'[aria-label="Open navigation"]\').click()');
     await wait('document.querySelector("[role=dialog]")');
     for (let i = 0; i < 20; i++) {
       await send('Input.dispatchKeyEvent', {
@@ -262,16 +263,16 @@ try {
     });
     await wait('!document.querySelector("[role=dialog]")');
     // Radix restores focus after the portal is removed; DOM absence alone is not readiness.
-    await wait('document.activeElement?.getAttribute("aria-label") === "Buka navigasi"');
+    await wait('document.activeElement?.getAttribute("aria-label") === "Open navigation"');
     assert.equal(
       await evaluate('document.activeElement.getAttribute("aria-label")'),
-      'Buka navigasi',
+      'Open navigation',
     );
     await go('/marketplace?type=font&q=sample');
     await wait('document.querySelector("[role=alert]")');
     assert.match(
       await evaluate('document.querySelector("[role=alert]").textContent'),
-      /tidak dapat dimuat/,
+      /Unable to load/,
     );
     assert.equal(
       await evaluate('document.querySelector("input:not(#sidebar-search)")?.value'),
@@ -286,6 +287,108 @@ try {
     await selectTheme('dark');
     await screenshot('scene-dark-1440', 1440);
 
+    // Signed-out offline fixture, compiled production assets.
+    for (const route of ['/login', '/register', '/editor/projects']) {
+      await go(route);
+      await wait(
+        route.includes('editor')
+          ? 'document.querySelector(".workspace-access")'
+          : 'document.querySelector(".auth-screen")',
+      );
+      if (route === '/login') {
+        const corners = await evaluate(
+          '(()=>{const radius=s=>parseFloat(getComputedStyle(document.querySelector(s)).borderTopLeftRadius);return {button:radius(".auth-screen button[type=submit]"),input:radius(".auth-screen .rt-TextFieldRoot"),frame:radius(".auth-studio-frame")}})()',
+        );
+        assert.ok(corners.button >= 16, 'Button radius: ' + JSON.stringify(corners));
+        assert.ok(corners.input >= 16, 'Input radius: ' + JSON.stringify(corners));
+        assert.ok(corners.frame >= 32, 'Auth frame radius: ' + JSON.stringify(corners));
+      }
+      for (const mode of ['light', 'dark']) {
+        await selectTheme(mode);
+        for (const width of [360, 390, 768, 1024, 1440]) {
+          await screenshot(route.split('/').pop() + '-' + mode + '-' + width, width);
+          assert.equal(
+            await evaluate(
+              '(()=>{const e=document.querySelector(".auth-screen,.workspace-access");return e.scrollWidth>e.clientWidth+1})()',
+            ),
+            false,
+            route + ' content overflow',
+          );
+        }
+      }
+    }
+    await go('/login?returnTo=%2Feditor%2Fprojects');
+    await wait('document.querySelector("input[name=email]")');
+    await evaluate(
+      '(()=>{document.querySelector("input[name=email]").value="ui-fixture@example.invalid";document.querySelector("input[name=password]").value="fixture-password";document.querySelector(".auth-screen form").requestSubmit()})()',
+    );
+    await wait('document.querySelector(".auth-screen [role=alert]")');
+    await wait('!document.querySelector(".auth-screen button[type=submit]").disabled');
+    assert.match(await evaluate('location.pathname'), /login/);
+    assert.ok(
+      (await evaluate('document.querySelector("a[href*=register]").href')).includes('returnTo='),
+    );
+    await screenshot('login-error-dark-390', 390);
+
+    await go('/');
+    await screenshot('sidebar-expanded-dark-1440', 1440);
+    await evaluate('document.querySelector("#sidebar-toggle").click()');
+    await wait('document.querySelector(".sidebar-shell-collapsed")');
+    await screenshot('sidebar-collapsed-dark-1440', 1440);
+    await evaluate('document.querySelector("#sidebar-toggle").click()');
+    await wait('!document.querySelector(".sidebar-shell-collapsed")');
+    const searchInset = await evaluate(
+      '(()=>{const i=document.querySelector("#sidebar-search"),r=i.closest(".rt-TextFieldRoot");return i.getBoundingClientRect().left-r.getBoundingClientRect().left+parseFloat(getComputedStyle(i).paddingLeft)})()',
+    );
+    assert.ok(searchInset >= 32 && searchInset <= 44, 'Search text inset doubled: ' + searchInset);
+
+    await evaluate('document.querySelector("[data-theme-control]").focus()');
+    async function key(key, code, number) {
+      for (const type of ['keyDown', 'keyUp'])
+        await send('Input.dispatchKeyEvent', { type, key, code, windowsVirtualKeyCode: number });
+    }
+    await key('Enter', 'Enter', 13);
+    await wait('document.querySelector("[role=menuitemradio]")');
+    await wait('document.activeElement?.getAttribute("role") === "menuitemradio"');
+    await key('End', 'End', 35);
+    await wait('document.activeElement?.getAttribute("data-theme-option") === "dark"');
+    await key('Enter', 'Enter', 13);
+    await wait('!document.querySelector("[role=menu]")');
+    await wait('document.activeElement?.hasAttribute("data-theme-control")');
+    assert.equal(await evaluate('document.documentElement.dataset.theme'), 'dark');
+    await key('Enter', 'Enter', 13);
+    await wait('document.querySelector("[role=menuitemradio]")');
+    await screenshot('theme-menu-dark-1440', 1440);
+    await key('Escape', 'Escape', 27);
+    await wait('document.activeElement?.hasAttribute("data-theme-control")');
+
+    await go('/editor/scene');
+    await wait('document.querySelector("#add-design")');
+    await evaluate(
+      'document.querySelector("#add-design").focus();document.querySelector("#add-design").click()',
+    );
+    await wait('document.querySelector("[role=dialog] .nesomn-dialog-title")');
+    assert.equal(
+      await evaluate(
+        'document.querySelector("[role=dialog]").closest(".radix-themes")?.classList.contains("dark")',
+      ),
+      true,
+    );
+    for (let i = 0; i < 12; i++) {
+      await key('Tab', 'Tab', 9);
+      assert.equal(await evaluate('!!document.activeElement.closest("[role=dialog]")'), true);
+    }
+    assert.ok(
+      await evaluate(
+        'parseFloat(getComputedStyle(document.querySelector(".nesomn-dialog")).borderTopLeftRadius) >= 32',
+      ),
+      'Dialog radius must be32px',
+    );
+    await screenshot('radix-dialog-dark-390', 390);
+    await key('Escape', 'Escape', 27);
+    await wait('!document.querySelector("[role=dialog]")');
+    await wait('document.activeElement?.id === "add-design"');
+
     assert.match(fonts.body, /Manrope/);
     assert.equal(fonts.loaded, true);
     assert.deepEqual(errors, []);
@@ -296,6 +399,15 @@ try {
           fixture: 'Compiled assets + explicit HTTP401/503 API fixture, no real DB/user/merchant',
           browser: version.Browser,
           viewports: shots,
+          authRoutes: ['/login', '/register', '/editor/projects'],
+          authWidths: [360, 390, 768, 1024, 1440],
+          authThemes: ['light', 'dark'],
+          failedLoginStaysOnForm: true,
+          sidebarCollapse: true,
+          roundedControls: { minimum: 16, authFrame: 32 },
+          themeMenuKeyboard: true,
+          radixThemesDialogTrap: 12,
+          radixDialogFocusRecovery: true,
           persistence: true,
           clientAdminSync: true,
           drawerTabTrap: 20,

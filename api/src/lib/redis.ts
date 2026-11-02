@@ -3,9 +3,16 @@ export function redisConnection(value: string, role: 'producer' | 'worker') {
   try {
     const url = new URL(value);
     const index = url.pathname.slice(1);
-    if (!['redis:', 'rediss:'].includes(url.protocol) || !url.hostname || url.port === '0' ||
-      (index && !/^\d+$/.test(index)) || !Number.isSafeInteger(Number(index || 0)) ||
-      url.search || url.hash) throw new Error();
+    if (
+      !['redis:', 'rediss:'].includes(url.protocol) ||
+      !url.hostname ||
+      url.port === '0' ||
+      (index && !/^\d+$/.test(index)) ||
+      !Number.isSafeInteger(Number(index || 0)) ||
+      url.search ||
+      url.hash
+    )
+      throw new Error();
     const host = url.hostname.replace(/^\[|\]$/g, '');
     return {
       host,
@@ -21,6 +28,8 @@ export function redisConnection(value: string, role: 'producer' | 'worker') {
     };
   } catch {
     // Do not echo a URL containing a password in startup/worker logs.
-    throw new Error('REDIS_URL tidak valid; gunakan redis[s]://[user:password@]host:port/db tanpa query.');
+    throw new Error(
+      'Invalid REDIS_URL; use redis[s]://[user:password@]host:port/db without query parameters.',
+    );
   }
 }

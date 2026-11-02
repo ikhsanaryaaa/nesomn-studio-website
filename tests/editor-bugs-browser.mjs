@@ -1,3 +1,4 @@
+import { selectTheme as selectThemeControl } from './lib/theme-control.mjs';
 import { waitChromeReady } from './lib/browser-runtime.mjs';
 import { assertPortAvailable } from '../scripts/release-lab.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
@@ -9,7 +10,9 @@ import { launchChrome } from './lib/browser-runtime.mjs';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
 const dist = resolve('client/dist'),
-  folder = resolve('docs/revision/artifacts/bug-fixes-2026-11-01'),
+  folder = resolve(
+    process.env.NESOMN_EDITOR_ARTIFACTS ?? 'docs/revision/artifacts/bug-fixes-2026-11-01',
+  ),
   downloads = resolve('.cache/bug-fixes/downloads');
 mkdirSync(folder, { recursive: true });
 mkdirSync(downloads, { recursive: true });
@@ -325,10 +328,10 @@ try {
     clickCount: 1,
   });
   await wait(
-    '[...document.querySelectorAll("[role=menuitem]")].some(e=>e.textContent.trim()==="Logout")',
+    '[...document.querySelectorAll("[role=menuitem]")].some(e=>e.textContent.trim()==="Log out")',
   );
   await evaluate(
-    '[...document.querySelectorAll("[role=menuitem]")].find(e=>e.textContent.trim()==="Logout").click()',
+    '[...document.querySelectorAll("[role=menuitem]")].find(e=>e.textContent.trim()==="Log out").click()',
   );
   await sleep(500);
   assert.equal(currentUser, null);
@@ -417,7 +420,7 @@ try {
   );
   assert.ok(
     await evaluate(
-      'document.querySelector(".editor3d-inspector [role=status]")?.textContent.includes("belum tersimpan")',
+      'document.querySelector(".editor3d-inspector [role=status]")?.textContent.includes("unsaved changes")',
     ),
   );
   results.update3d = { preserved: true };
@@ -449,7 +452,9 @@ try {
   await shot('2d-mobile');
   unavailable = true;
   await go('/editor/scene?project=saved-2d');
-  await wait('document.querySelector("[role=alert]")?.textContent.includes("gambar gagal")');
+  await wait(
+    'document.querySelector("[role=alert]")?.textContent.includes("images could not be loaded")',
+  );
   const beforeDownloads = readdirSync(downloads).length;
   const exportBox = await evaluate(
     '(()=>{const r=document.querySelector("#editor-export").getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()',
@@ -474,13 +479,10 @@ try {
   assert.equal(readdirSync(downloads).length, beforeDownloads);
   await shot('2d-image-error-mobile');
   unavailable = false;
-  await click('Coba lagi gambar');
+  await click('Retry images');
   await wait(orangeExpression + '>0');
   results.imageError = { visible: true, exportBlocked: true, retryRecovered: true };
-  await evaluate(
-    '(()=>{const control=document.querySelector(\'[aria-label="Tema tampilan"]\');control.value="dark";control.dispatchEvent(new Event("change",{bubbles:true}));})()',
-  );
-  await wait('document.documentElement.dataset.theme === "dark"');
+  await selectThemeControl(evaluate, wait, 'dark');
   await shot('2d-mobile-dark');
   assert.deepEqual(exceptions, []);
   results.consoleExceptions = exceptions;

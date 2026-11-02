@@ -12,14 +12,14 @@ import { AppError } from '../../middleware/error.ts';
  */
 export const storageRoutes = new Elysia().get('/files/:key', async ({ params, query }) => {
   if ((process.env.STORAGE_DRIVER ?? 'local') !== 'local') {
-    throw new AppError('NOT_FOUND', 'Endpoint file hanya untuk storage lokal.', 404);
+    throw new AppError('NOT_FOUND', 'The file endpoint is only available for local storage.', 404);
   }
 
   const key = params.key;
   const exp = Number((query as Record<string, string | undefined>).exp);
   const token = (query as Record<string, string | undefined>).token ?? '';
   if (!exp || !verifyToken(key, exp, token)) {
-    throw new AppError('FORBIDDEN', 'Token download tidak valid atau kedaluwarsa.', 403);
+    throw new AppError('FORBIDDEN', 'The download token is invalid or has expired.', 403);
   }
 
   try {
@@ -43,6 +43,6 @@ export const storageRoutes = new Elysia().get('/files/:key', async ({ params, qu
       },
     });
   } catch {
-    throw new AppError('NOT_FOUND', 'File tidak ditemukan.', 404);
+    throw new AppError('NOT_FOUND', 'File not found.', 404);
   }
 });

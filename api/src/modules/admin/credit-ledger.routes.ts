@@ -14,7 +14,7 @@ const entryBody = z.object({
   delta: z.coerce
     .number()
     .int()
-    .refine((n) => n !== 0, 'delta tidak boleh 0'),
+    .refine((n) => n !== 0, 'Delta must not be zero.'),
   reason: z.enum(['admin_adjust']).default('admin_adjust'),
 });
 
@@ -49,7 +49,7 @@ export const creditLedgerAdminRoutes = new Elysia({ prefix: '/credit-ledger' })
     const input = entryBody.parse(body);
     const key = request.headers.get('idempotency-key');
     if (!key || !/^[a-zA-Z0-9_.-]{1,128}$/.test(key))
-      throw new AppError('BAD_REQUEST', 'Idempotency-Key wajib untuk penyesuaian credit.', 400);
+      throw new AppError('BAD_REQUEST', 'Idempotency-Key is required for credit adjustments.', 400);
     const balanceAfter = await adjustCredit(
       input.userId,
       input.delta,

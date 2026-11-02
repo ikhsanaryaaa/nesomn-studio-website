@@ -65,8 +65,8 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
     };
     img.onerror = () =>
       toast({
-        title: 'Gagal memuat gambar',
-        description: 'Sumber tidak valid.',
+        title: 'Unable to load image',
+        description: 'Invalid image source.',
         variant: 'danger',
       });
     img.src = src;
@@ -75,16 +75,16 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
   function handleFile(file: File) {
     if (!ACCEPTED.includes(file.type)) {
       toast({
-        title: 'Format tidak didukung',
-        description: 'Gunakan PNG, JPG, WEBP, atau SVG.',
+        title: 'Unsupported format',
+        description: 'Use PNG, JPG, WEBP, or SVG.',
         variant: 'danger',
       });
       return;
     }
     if (file.size > MAX_BYTES) {
       toast({
-        title: 'File terlalu besar',
-        description: 'Maksimal 10MB.',
+        title: 'File too large',
+        description: 'Maximum file size: 10 MB.',
         variant: 'danger',
       });
       return;
@@ -101,11 +101,11 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl">
+      <DialogContent className="editor-import-dialog">
         <DialogHeader>
           <DialogTitle>Add your design</DialogTitle>
           <DialogDescription>
-            Import file dari perangkat atau pilih dari Asset Library Anda.
+            Import a file from your device or choose one from your Asset Library.
           </DialogDescription>
         </DialogHeader>
 
@@ -131,19 +131,17 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
                 const file = e.dataTransfer.files?.[0];
                 if (file) handleFile(file);
               }}
-              className={`flex w-full flex-col items-center gap-3 rounded-xl border-2 border-dashed p-10 text-center transition-colors ${
-                dragOver ? 'border-accent bg-accent/10' : 'border-border hover:border-accent/60'
-              }`}
+              className={`editor-import-dropzone ${dragOver ? 'editor-import-dropzone--over' : ''}`}
             >
-              <UploadCloud className="size-8 text-muted-foreground" />
-              <span className="text-sm font-medium">Tarik file ke sini atau klik untuk pilih</span>
-              <span className="text-xs text-muted-foreground">PNG, JPG, WEBP, SVG - maks 10MB</span>
+              <UploadCloud className="editor-import-icon" />
+              <span className="editor-label">Drop a file here or click to browse</span>
+              <span className="editor-hint">PNG, JPG, WEBP, SVG — up to 10 MB</span>
             </button>
             <input
               ref={inputRef}
               type="file"
               accept={ACCEPTED.join(',')}
-              className="hidden"
+              className="editor-file-input"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) handleFile(file);
@@ -154,9 +152,9 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
 
           <TabsContent value="library">
             {library.isLoading ? (
-              <p className="py-8 text-center text-sm text-muted-foreground">Memuat library...</p>
+              <p className="editor-library-state">Loading your library…</p>
             ) : library.data && library.data.length > 0 ? (
-              <div className="grid max-h-72 grid-cols-3 gap-3 overflow-y-auto">
+              <div className="editor-library-grid">
                 {library.data.map((item) => {
                   const preview = item.previews?.[0];
                   return (
@@ -165,27 +163,23 @@ export function AddDesignDialog({ open, onOpenChange }: Props) {
                       type="button"
                       disabled={!preview}
                       onClick={() => preview && loadIntoCanvas(preview)}
-                      className="group overflow-hidden rounded-lg border border-border bg-surface-3 transition-colors hover:border-accent disabled:opacity-50"
+                      className="editor-library-item"
                     >
                       {preview ? (
-                        <img
-                          src={preview}
-                          alt={item.title}
-                          className="aspect-square w-full object-cover"
-                        />
+                        <img src={preview} alt={item.title} className="editor-library-preview" />
                       ) : (
-                        <span className="flex aspect-square w-full items-center justify-center">
-                          <ImageOff className="size-5 text-muted-foreground" />
+                        <span className="editor-library-placeholder">
+                          <ImageOff className="editor-placeholder-icon" />
                         </span>
                       )}
-                      <span className="block truncate p-1.5 text-xs">{item.title}</span>
+                      <span className="editor-library-title">{item.title}</span>
                     </button>
                   );
                 })}
               </div>
             ) : (
-              <p className="py-8 text-center text-sm text-muted-foreground">
-                Library kosong. Klaim aset gratis di Marketplace dulu.
+              <p className="editor-library-state">
+                Your library is empty. Claim a free asset in the Marketplace to get started.
               </p>
             )}
           </TabsContent>

@@ -21,33 +21,33 @@ export function AssetPreview3D({
     setError('');
     try {
       const asset = await api.editorAsset(slug);
-      if (!asset.modelUrl) throw Error('Model3D belum tersedia untuk aset ini.');
+      if (!asset.modelUrl) throw Error('A 3D model is not available for this asset yet.');
       setUrl(asset.modelUrl);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Preview belum dapat dimuat.');
+      setError(err instanceof Error ? err.message : 'Unable to load the preview.');
     } finally {
       setPending(false);
     }
   }
   return (
-    <section className="mt-6">
-      <h2 className="mb-4 text-lg font-semibold">Preview3D read-only</h2>
+    <section className="asset-model-preview">
+      <h2 className="asset-model-preview-title">Read-only 3D preview</h2>
       {url ? (
-        <Suspense fallback={<p role="status">Memuat viewer…</p>}>
+        <Suspense fallback={<p role="status">Loading viewer…</p>}>
           <ModelViewer url={url} title={title} poster={poster} />
         </Suspense>
       ) : (
         <Button variant="secondary" disabled={pending} onClick={() => void load()}>
-          {pending ? 'Memeriksa akses…' : 'Muat preview3D'}
+          {pending ? 'Checking access…' : 'Load 3D preview'}
         </Button>
       )}
       {error && (
-        <p role="alert" className="mt-3 text-danger">
+        <p role="alert" className="asset-model-preview-error">
           {error}
         </p>
       )}
-      <p className="mt-3 text-sm text-muted-foreground">
-        Memerlukan akses model dari server. Tidak membuat atau mengubah project.
+      <p className="asset-model-preview-hint">
+        Requires model access from the server. This preview does not create or change projects.
       </p>
     </section>
   );

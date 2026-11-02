@@ -10,7 +10,7 @@ import { RenderBoundary } from './render-boundary';
 export function ModelViewer({
   url,
   poster,
-  title = 'Model3D',
+  title = '3D model',
 }: {
   url: string;
   poster?: string;
@@ -48,15 +48,17 @@ export function ModelViewer({
   }, [url]);
   const error =
     model.error ??
-    (unsupported ? 'Browser/perangkat ini tidak mendukung WebGL. Poster tetap tersedia.' : null);
+    (unsupported
+      ? 'This browser or device does not support WebGL. The poster is still available.'
+      : null);
   const fallback = (
     <div className="viewer-fallback" role="alert">
-      <p>Renderer3D tidak dapat dimulai.</p>
-      <Button onClick={() => setRetry((v) => v + 1)}>Coba lagi</Button>
+      <p>The 3D renderer could not start.</p>
+      <Button onClick={() => setRetry((v) => v + 1)}>Try again</Button>
     </div>
   );
   return (
-    <div ref={container} className="model-viewer" aria-label={title + ' preview read-only'}>
+    <div ref={container} className="model-viewer" aria-label={title + ' read-only preview'}>
       <div
         className="viewer-stage"
         data-state={error ? 'error' : model.scene ? 'ready' : 'loading'}
@@ -67,7 +69,7 @@ export function ModelViewer({
         {error ? (
           <div className="viewer-fallback" role="alert">
             <p>{error}</p>
-            {!unsupported && <Button onClick={() => setRetry((v) => v + 1)}>Coba lagi</Button>}
+            {!unsupported && <Button onClick={() => setRetry((v) => v + 1)}>Try again</Button>}
           </div>
         ) : model.scene ? (
           <RenderBoundary key={url + retry} fallback={fallback}>
@@ -98,11 +100,11 @@ export function ModelViewer({
           </RenderBoundary>
         ) : (
           <div className="viewer-fallback" role="status">
-            <p>{model.progress ? 'Memuat model ' + model.progress + '%' : 'Memuat model3D…'}</p>
+            <p>{model.progress ? 'Loading model ' + model.progress + '%' : 'Loading 3D model…'}</p>
           </div>
         )}
       </div>
-      <div className="viewer-toolbar" aria-label="Kontrol preview">
+      <div className="viewer-toolbar" aria-label="Preview controls">
         <Button
           variant="secondary"
           disabled={!model.scene || !!error}
@@ -135,7 +137,7 @@ export function ModelViewer({
           Auto-Rotate {rotate && !reduced ? 'On' : 'Off'}
         </Button>
         <Button variant="secondary" aria-pressed={dark} onClick={() => setDark((v) => !v)}>
-          Latar {dark ? 'gelap' : 'terang'}
+          Background: {dark ? 'dark' : 'light'}
         </Button>
         <Button
           variant="secondary"
@@ -147,9 +149,9 @@ export function ModelViewer({
           Fullscreen
         </Button>
       </div>
-      <p className="text-sm text-muted-foreground">
-        Drag untuk orbit · dua jari/pinch untuk zoom · roda mouse untuk zoom. Preview tidak mengubah
-        project.{reduced ? ' Reduced motion aktif.' : ''}
+      <p className="viewer-gesture-hint">
+        Drag to orbit · pinch or use the mouse wheel to zoom. The preview does not change your
+        project.{reduced ? ' Reduced motion is enabled.' : ''}
       </p>
     </div>
   );

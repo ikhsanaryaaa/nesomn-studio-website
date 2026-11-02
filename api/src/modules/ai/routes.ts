@@ -142,7 +142,7 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
       const job = await db.query.aiJobs.findFirst({
         where: and(eq(aiJobs.id, params.id), eq(aiJobs.userId, u.id)),
       });
-      if (!job) throw new AppError('NOT_FOUND', 'Job tidak ditemukan.', 404);
+      if (!job) throw new AppError('NOT_FOUND', 'Job not found.', 404);
       const provider = await db.query.aiProviders.findFirst({
         where: eq(aiProviders.id, job.providerId),
       });

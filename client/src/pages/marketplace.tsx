@@ -64,44 +64,44 @@ export default function MarketplacePage() {
     <>
       <Seo
         title="Marketplace"
-        description="Jelajahi katalog mockup, aset 3D, font, dan motion pack premium di Nesomn Studio."
+        description="Explore mockups, 3D assets, fonts, and premium motion packs at Nesomn Studio."
       />
       <Topbar title="Marketplace" />
       <div className="page-wrap">
         <div className="page-heading">
-          <h1 className="font-semibold tracking-tight">Full Catalogue</h1>
-          <p className="text-sm text-muted-foreground">
-            Browser-based. No software needed. Temukan aset siap pakai untuk scene dan mockup Anda.
+          <h1 className="catalogue-title">Full Catalogue</h1>
+          <p className="workspace-description">
+            Browser-based. No software needed. Find ready-to-use assets for your scenes and mockups.
           </p>
         </div>
 
-        <div className="mb-4 max-w-md">
+        <div className="catalogue-search">
           <Input
-            label="Cari aset"
-            placeholder="Cari aset (mis. mockup, kaos, poster)..."
+            label="Search assets"
+            placeholder="Search assets (e.g. mockup, T-shirt, poster)…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
           />
         </div>
 
-        <div className="mb-6">
+        <div className="catalogue-filter-row">
           <FilterTabs options={FILTERS} active={filter} onChange={setFilter} />
         </div>
 
         {isError ? (
-          <div role="alert" className="flex flex-col items-start gap-3 py-12">
-            <p>Katalog tidak dapat dimuat. Silakan coba lagi.</p>
+          <div role="alert" className="catalogue-error">
+            <p>Unable to load the catalogue. Please try again.</p>
             <Button variant="secondary" onClick={() => void refetch()}>
-              Coba lagi
+              Try again
             </Button>
           </div>
         ) : isLoading ? (
           <div className="asset-grid">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i} className="overflow-hidden">
-                <Skeleton className="aspect-[4/5] w-full rounded-none" />
-                <CardContent className="p-3">
-                  <Skeleton className="h-3.5 w-24" />
+              <Card key={i} className="catalogue-placeholder">
+                <Skeleton className="catalogue-placeholder-media" />
+                <CardContent className="catalogue-placeholder-caption">
+                  <Skeleton className="catalogue-placeholder-title" />
                 </CardContent>
               </Card>
             ))}
@@ -113,11 +113,9 @@ export default function MarketplacePage() {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-2 py-20 text-center">
-            <p className="text-sm font-medium">Tidak ada aset ditemukan</p>
-            <p className="text-xs text-muted-foreground">
-              Coba ubah filter atau kata kunci pencarian.
-            </p>
+          <div className="catalogue-empty">
+            <p className="catalogue-empty-title">No assets found</p>
+            <p className="workspace-caption">Try changing the filters or search terms.</p>
           </div>
         )}
       </div>

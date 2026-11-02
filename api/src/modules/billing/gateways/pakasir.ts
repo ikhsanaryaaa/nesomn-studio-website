@@ -7,14 +7,14 @@ export class PakasirGateway implements PaymentProvider {
   async createCheckout(): Promise<CreateCheckoutResult> {
     throw new AppError(
       'LEGACY_PAYMENT_DISABLED',
-      'Checkout Pakasir belum diverifikasi; tidak ada fallback.',
+      'Pakasir checkout has not been verified. No fallback is available.',
       503,
     );
   }
   async verifyWebhook(): Promise<WebhookResult> {
     throw new AppError(
       'LEGACY_PAYMENT_DISABLED',
-      'Callback Pakasir memerlukan rekonsiliasi terverifikasi; tidak menerima payload sebagai paid.',
+      'Pakasir callbacks require verified reconciliation. Callback payloads alone cannot mark an order as paid.',
       503,
     );
   }

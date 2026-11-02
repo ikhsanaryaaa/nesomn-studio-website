@@ -53,7 +53,7 @@ export function Scene3DViewport({
   if (!object)
     return (
       <div className="viewer-fallback" role={loaded.error ? 'alert' : 'status'}>
-        {loaded.error ?? 'Memuat model…'}
+        {loaded.error ?? 'Loading model…'}
       </div>
     );
   return (
@@ -67,9 +67,7 @@ export function Scene3DViewport({
       }}
       camera={{ fov: 45 }}
       dpr={[1, 1.5]}
-      fallback={
-        <p role="alert">WebGL tidak tersedia. Gunakan browser/perangkat yang mendukung3D.</p>
-      }
+      fallback={<p role="alert">WebGL is unavailable. Use a browser or device that supports 3D.</p>}
     >
       <color attach="background" args={[background]} />
       <StudioEnvironment />

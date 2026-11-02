@@ -48,7 +48,7 @@ export const authPlugin = new Elysia({ name: 'auth' })
       if (!enabled) return {};
       return {
         beforeHandle({ user }: { user: AuthUser | null }) {
-          if (!user) throw new AppError('UNAUTHORIZED', 'Autentikasi diperlukan.', 401);
+          if (!user) throw new AppError('UNAUTHORIZED', 'Authentication required.', 401);
         },
       };
     },
@@ -56,8 +56,8 @@ export const authPlugin = new Elysia({ name: 'auth' })
       if (!enabled) return {};
       return {
         beforeHandle({ user }: { user: AuthUser | null }) {
-          if (!user) throw new AppError('UNAUTHORIZED', 'Autentikasi diperlukan.', 401);
-          if (user.role !== 'admin') throw new AppError('FORBIDDEN', 'Akses khusus admin.', 403);
+          if (!user) throw new AppError('UNAUTHORIZED', 'Authentication required.', 401);
+          if (user.role !== 'admin') throw new AppError('FORBIDDEN', 'Admin access only.', 403);
         },
       };
     },
