@@ -189,6 +189,7 @@ Jangan mengimpor Compose utama sebagai tambahan aplikasi Litepod per container. 
 
 - Harga, diskon, kode unik Rp1–999 dan jumlah bayar dihitung server. Kode unik ditampilkan terpisah sebelum pembayaran.
 - Order awal pending; hanya receipt/konfirmasi terverifikasi yang dapat memicu paid dan entitlement/credit grant.
+- Worker QRIS mendukung [refresh sesi otomatis](docs/qris-session.md) dari JSON sesi lengkap; token-only tetap mode legacy. Sesi akun mati tetap memerlukan login ulang.
 - QRIS default OFF. Jangan mengaktifkannya sebelum merchant/store/static QR, sesi SDK dan feed diverifikasi. Tidak ada transaksi nyata yang dilakukan oleh tes lokal.
 - Legacy Stripe/Pakasir tidak ditulis ulang sebagai transaksi QRIS; pertahankan konfigurasi rekonsiliasi yang masih diperlukan.
 - AI worker dan QRIS memiliki lifecycle independen; menghentikan app tidak otomatis menghentikan keduanya.
@@ -223,7 +224,7 @@ Bukti yang sudah dijalankan:
 | Area                  | Hasil lokal                                                                                                               |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | Litepod packaging     | Tiga image dibangun, app/worker readiness dengan DB/Redis disposable, migrasi manual DB tes, deep links dan JSON404 lulus |
-| QRIS offline          | Sepuluh tes lulus, tanpa merchant/network eksternal                                                                       |
+| QRIS offline          | 27 tes lulus, termasuk refresh sesi dan spool; tanpa merchant/network eksternal                                           |
 | Worker health         | Dua tes/17 assertions lulus                                                                                               |
 | Deployment regression | 13 tes/99 assertions lulus                                                                                                |
 | Editor regression     | 15 tes/84 assertions lulus; pergantian akun, save3D saat mengedit dan pemulihan gambar diuji                              |

@@ -17,3 +17,9 @@ graphify-out
 **/*.log
 **/*.pem
 **/*.key
+
+# Private merchant session exports and local QRIS state
+**/shopee-session*.json
+**/qris-session*.json
+integrations/qris/.secrets/
+integrations/qris/.state/

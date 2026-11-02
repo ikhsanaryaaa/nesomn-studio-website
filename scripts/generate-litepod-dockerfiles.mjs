@@ -8,8 +8,8 @@ const qris = readFileSync('integrations/qris/Dockerfile', 'utf8')
   .replace('COPY requirements.txt', 'COPY integrations/qris/requirements.txt')
   .replace('COPY --chown=qris:qris vendor', 'COPY --chown=qris:qris integrations/qris/vendor')
   .replace(
-    'COPY --chown=qris:qris worker.py health_http.py test_worker.py vendor-manifest.json',
-    'COPY --chown=qris:qris integrations/qris/worker.py integrations/qris/health_http.py integrations/qris/test_worker.py integrations/qris/vendor-manifest.json',
+    'COPY --chown=qris:qris worker.py health_http.py session_manager.py test_worker.py test_session_manager.py vendor-manifest.json',
+    'COPY --chown=qris:qris integrations/qris/worker.py integrations/qris/health_http.py integrations/qris/session_manager.py integrations/qris/test_worker.py integrations/qris/test_session_manager.py integrations/qris/vendor-manifest.json',
   );
 for (const [file, source] of Object.entries({
   'deploy/litepod/worker.Dockerfile': worker,

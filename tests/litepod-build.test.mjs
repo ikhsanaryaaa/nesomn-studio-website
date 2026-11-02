@@ -16,6 +16,7 @@ test('standalone worker/QRIS Dockerfiles match canonical images with repository 
   assert.match(worker, /worker\/src\/index.ts/);
   const qris = readFileSync('deploy/litepod/qris.Dockerfile', 'utf8');
   assert.match(qris, /integrations\/qris\/health_http.py/);
+  assert.match(qris, /integrations\/qris\/session_manager.py/);
   assert.match(qris, /USER qris/);
 });
 test('Litepod runtime templates do not enable demos or merchant payments', () => {

@@ -1,0 +1,32 @@
+test_disabled_and_invalid_ports (test_worker.TestPrivateHealth.test_disabled_and_invalid_ports) ... ok
+test_login_required_is_unhealthy_even_with_fresh_heartbeat (test_worker.TestPrivateHealth.test_login_required_is_unhealthy_even_with_fresh_heartbeat) ... ok
+test_readiness_uses_durable_delivery_heartbeat_and_redacts_errors (test_worker.TestPrivateHealth.test_readiness_uses_durable_delivery_heartbeat_and_redacts_errors) ... ok
+test_actual_pinned_sdk_refresh_contract_is_offline_and_does_not_request_otp (test_session_manager.TestSessionManager.test_actual_pinned_sdk_refresh_contract_is_offline_and_does_not_request_otp) ... ok
+test_atomic_failure_keeps_old_session_and_removes_temporary_file (test_session_manager.TestSessionManager.test_atomic_failure_keeps_old_session_and_removes_temporary_file) ... ok
+test_bare_token_and_incomplete_session_cannot_enable_renewal (test_session_manager.TestSessionManager.test_bare_token_and_incomplete_session_cannot_enable_renewal) ... ok
+test_captcha_requires_interactive_login (test_session_manager.TestSessionManager.test_captcha_requires_interactive_login) ... ok
+test_dead_account_latches_login_required_without_refresh_storm (test_session_manager.TestSessionManager.test_dead_account_latches_login_required_without_refresh_storm) ... ok
+test_identical_seed_rewrite_does_not_reset_login_required (test_session_manager.TestSessionManager.test_identical_seed_rewrite_does_not_reset_login_required) ... ok
+test_periodic_refresh_uses_own_schedule_not_cookie_expiry (test_session_manager.TestSessionManager.test_periodic_refresh_uses_own_schedule_not_cookie_expiry) ... ok
+test_private_files_and_no_symlinks (test_session_manager.TestSessionManager.test_private_files_and_no_symlinks) ... ok
+test_receipt_delivery_continues_when_session_requires_login (test_session_manager.TestSessionManager.test_receipt_delivery_continues_when_session_requires_login) ... ok
+test_rejected_token_refreshes_once_then_retries_operation (test_session_manager.TestSessionManager.test_rejected_token_refreshes_once_then_retries_operation) ... ok
+test_replacing_authorized_seed_unblocks_login_required (test_session_manager.TestSessionManager.test_replacing_authorized_seed_unblocks_login_required) ... ok
+test_rotated_token_rejection_does_not_loop_refresh (test_session_manager.TestSessionManager.test_rotated_token_rejection_does_not_loop_refresh) ... ok
+test_rotates_persists_and_restart_reuses_new_session (test_session_manager.TestSessionManager.test_rotates_persists_and_restart_reuses_new_session) ... ok
+test_single_writer_lock (test_session_manager.TestSessionManager.test_single_writer_lock) ... ok
+test_transient_refresh_failure_backoff_survives_restart (test_session_manager.TestSessionManager.test_transient_refresh_failure_backoff_survives_restart) ... ok
+test_wrong_seed_or_rotated_scope_cannot_be_used (test_session_manager.TestSessionManager.test_wrong_seed_or_rotated_scope_cannot_be_used) ... ok
+test_delivery_survives_restart_and_only_ack_marks_delivered (test_worker.TestSpool.test_delivery_survives_restart_and_only_ack_marks_delivered) ... ok
+test_failed_first_does_not_block_second (test_worker.TestSpool.test_failed_first_does_not_block_second) ... ok
+test_old_unresolved_enters_review_and_forward_cursor_continues (test_worker.TestSpool.test_old_unresolved_enters_review_and_forward_cursor_continues) ... ok
+test_pending_retains_lookback_until_completed (test_worker.TestSpool.test_pending_retains_lookback_until_completed) ... ok
+test_pinned_sdk_normalizes_completed_whole_rupiah_and_scope (test_worker.TestSpool.test_pinned_sdk_normalizes_completed_whole_rupiah_and_scope) ... ok
+test_provider_outage_does_not_block_persisted_delivery (test_worker.TestSpool.test_provider_outage_does_not_block_persisted_delivery) ... ok
+test_scope_and_changed_replay (test_worker.TestSpool.test_scope_and_changed_replay) ... ok
+test_truncation_requires_complete_time_slices (test_worker.TestSpool.test_truncation_requires_complete_time_slices) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 1.670s
+
+OK

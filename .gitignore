@@ -78,3 +78,9 @@ tmp/
 
 # Reviewed synthetic acceptance logs referenced by revision reports.
 !docs/revision/artifacts/**/*.log
+
+# Private merchant session exports and local QRIS state
+**/shopee-session*.json
+**/qris-session*.json
+integrations/qris/.secrets/
+integrations/qris/.state/

@@ -1,0 +1,12 @@
+bun test v1.4.4 (38afee6c8)
+
+tests\qris\pure.test.ts:
+(pass) QRIS amount is server encoded and CRC/tags/currency verified [28.12ms]
+(pass) unique amount considers every historic payable including cross-base collisions; exhaustion rejects [2.51ms]
+(pass) receipt signature binds raw body, timestamp and key; old/tampered receipt rejects [4.82ms]
+(pass) stream reader rejects oversize payload before authentication/parsing [7.57ms]
+
+ 4 pass
+ 0 fail
+ 12 expect() calls
+Ran 4 tests across 1 file. [181.00ms]

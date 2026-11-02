@@ -1,5 +1,7 @@
 # Deploy Nesomn Studio di Litepod — per container
 
+**Update session refresh:** mode JSON sesi lengkap kini tersedia dengan refresh otomatis, state rotasi persisten dan status login_required. Ikuti [runbook sesi ShopeePay](qris-session.md); petunjuk token teks di bawah adalah mode legacy tanpa silent refresh.
+
 Diperiksa 2 November 2026 terhadap [dokumentasi Litepod](https://docs.litepod.sh/en/deployment-types), [networking](https://docs.litepod.sh/en/servers) dan source [rollout](https://github.com/litepodsh/litepod/blob/f6def8b106b8526a60d7da505033f370c54df0cd/apps/api/src/deployment/rollout.rs) / [Dockerfile build](https://github.com/litepodsh/litepod/blob/f6def8b106b8526a60d7da505033f370c54df0cd/apps/api/src/deployment/git.rs). Source Litepod yang diperiksa: `f6def8b106b8526a60d7da505033f370c54df0cd`; versi instalasi pengguna belum diperiksa. Dokumentasi diambil lewat HTTPS saat web reader gagal mengakses halaman. Tidak ada akses atau perubahan panel/server Litepod.
 
 ## Topologi yang disiapkan
@@ -93,7 +95,7 @@ Jika existing memakai local storage, gunakan `STORAGE_DRIVER=local`, `STORAGE_PA
 Jangan memakai filesystem container ephemeral untuk upload, database, atau spool QRIS. Sebelum cutover, identifikasi lokasi file existing, backup DB dan file bersama, restore ke target yang benar, lalu bandingkan count/hash. Lihat [deployment existing](deployment.md) untuk inspeksi storage lama.
 
 QRIS memerlukan /data persisten, writable UID **10001**, serta dua secret file read-only:
-- /run/secrets/shopee-token: token merchant milik pengguna, mode **0600**, readable UID 10001.
+- /run/secrets/shopee-session.json: JSON sesi lengkap untuk refresh otomatis, mode **0600**, readable UID10001; hasil rotasi disimpan pada /data/shopee-session (writable, persisten). Mode legacy tanpa refresh memakai /run/secrets/shopee-token dan unset SHOPEE_SESSION_FILE.
 - /run/secrets/qris-receipt: nilai sama dengan QRIS_RECEIPT_SECRET app; random terpisah dari JWT/encryption key.
 
 Gunakan fasilitas mount/secrets atau volume files yang tersedia pada versi panel Anda. Jangan mengasumsikan env otomatis menjadi file. Bila panel tidak menyediakan mount file/read-only/mode yang diperlukan, siapkan melalui operator atau deploy image QRIS dengan kontrol Podman yang memenuhi kontrak tersebut; **jangan mengubah worker agar menerima token browser atau membuat secrets world-readable**.

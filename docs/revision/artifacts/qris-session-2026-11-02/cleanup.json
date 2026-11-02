@@ -1,0 +1,14 @@
+{
+  "resources": [
+    {
+      "container": "nesomn-qris-refresh-test",
+      "exit": 0
+    },
+    {
+      "image": "nesomn-qris-refresh:test",
+      "exit": 0
+    }
+  ],
+  "globalPrune": false,
+  "volumesDeleted": false
+}

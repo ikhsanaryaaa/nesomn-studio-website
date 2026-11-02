@@ -90,8 +90,20 @@ def main():
         old=spool.db.execute('SELECT merchant,store FROM scope WHERE id=1').fetchone()
         if old and old!=(merchant,store):raise ValueError('State scope changed; reconcile before cutover')
         spool.db.execute('INSERT OR IGNORE INTO scope VALUES(1,?,?)',(merchant,store))
-    token_path=Path(os.environ['SHOPEE_TOKEN_FILE'])
-    if token_path.stat().st_mode & (stat.S_IRWXG|stat.S_IRWXO):raise ValueError('Token file must be private mode0600')
+    Path('/tmp/qris-health').unlink(missing_ok=True)
+    Path('/tmp/qris-session-status.json').unlink(missing_ok=True)
+    session_manager=None
+    token_path=None
+    if os.environ.get('SHOPEE_SESSION_FILE'):
+        from session_manager import SessionManager
+        session_manager=SessionManager(
+            os.environ['SHOPEE_SESSION_FILE'],
+            os.environ.get('SHOPEE_SESSION_STATE_DIR','/data/shopee-session'),
+            merchant,store,int(os.environ.get('SHOPEE_SESSION_REFRESH_SECONDS','1800')))
+    else:
+        token_path=Path(os.environ['SHOPEE_TOKEN_FILE'])
+        if token_path.stat().st_mode & (stat.S_IRWXG|stat.S_IRWXO):raise ValueError('Token file must be private mode0600')
+
     from health_http import start_health
     health_server=start_health(os.environ.get("QRIS_HEALTH_PORT"))
     stopping=False
@@ -103,27 +115,37 @@ def main():
         with httpx.Client(timeout=10,follow_redirects=False,trust_env=False) as hook:
             while not stopping:
                 try:
+                    def pull_with(sp):
+                        if store not in {str(s['id']) for s in sp.stores.list_stores()}:raise ValueError('Store not in merchant session')
+                        start=spool.start();now=int(time.time())
+                        if now-start>30*86400:raise RuntimeError('Backfill exceeds30days; operator reconciliation required')
+                        while start<now and not stopping:
+                            end=min(now,start+3600)
+                            rows=fetch_complete(sp.transactions,store,merchant,start,end)
+                            spool.save(rows,end,merchant,store);start=end
+                        for lo,hi in spool.unresolved_ranges(now):
+                            spool.save(fetch_complete(sp.transactions,store,merchant,lo,hi),int(spool.db.execute('SELECT value FROM meta WHERE id=1').fetchone()[0]),merchant,store)
+
                     def pull():
+                        if session_manager:
+                            return session_manager.run(pull_with)
                         token=token_path.read_text().strip()
                         if not token.startswith('B:'):raise ValueError('Invalid merchant token')
                         sp=ShopeePayPartner(token=token,timeout=10,max_retries=1)
                         try:
-                            if store not in {str(s['id']) for s in sp.stores.list_stores()}:raise ValueError('Store not in merchant session')
-                            start=spool.start();now=int(time.time())
-                            if now-start>30*86400:raise RuntimeError('Backfill exceeds30days; operator reconciliation required')
-                            while start<now and not stopping:
-                                end=min(now,start+3600)
-                                rows=fetch_complete(sp.transactions,store,merchant,start,end)
-                                spool.save(rows,end,merchant,store);start=end
-                            for lo,hi in spool.unresolved_ranges(now):
-                                spool.save(fetch_complete(sp.transactions,store,merchant,lo,hi),int(spool.db.execute('SELECT value FROM meta WHERE id=1').fetchone()[0]),merchant,store)
-                        finally:sp.close()
+                            return pull_with(sp)
+                        finally:
+                            sp.close()
 
                     if not run_cycle(spool,pull,lambda body,headers:hook.post(url,content=body,headers=headers),secret):raise RuntimeError('Polling or delivery incomplete')
                     Path('/tmp/qris-health').write_text(str(int(time.time())))
                 except Exception:
+                    Path('/tmp/qris-health').unlink(missing_ok=True)
                     # Do not log SDK exception messages/bodies, sessions, URL tokens or credentials.
-                    print('QRIS polling/delivery requires retry or operator reconciliation',flush=True)
+                    if session_manager and session_manager.status == 'login_required':
+                        print('QRIS session login_required; replace the private session seed after authorized login',flush=True)
+                    else:
+                        print('QRIS polling/delivery requires retry or operator reconciliation',flush=True)
                 for _ in range(10):
                     if stopping:break
                     time.sleep(1)
