@@ -1,6 +1,8 @@
+import { waitChromeReady } from './lib/browser-runtime.mjs';
+import { launchChrome } from './lib/browser-runtime.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
 import assert from 'node:assert/strict';
-import { spawn, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { chromeExecutable, fixtureBun } from './lib/browser-runtime.mjs';
@@ -108,16 +110,8 @@ try {
     ],
     { windowsHide: true, stdio: 'ignore' },
   );
-  let version;
-  for (let i = 0; i < 60; i++) {
-    try {
-      version = await (await fetch('http://127.0.0.1:9241/json/version')).json();
-      break;
-    } catch {
-      await sleep(100);
-    }
-  }
-  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
+  const version = await waitChromeReady(chrome, 9241);
+
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {

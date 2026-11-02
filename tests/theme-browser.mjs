@@ -1,3 +1,4 @@
+import { waitChromeReady } from './lib/browser-runtime.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
 import { chromeExecutable, artifactDirectory, cacheDirectory } from './lib/browser-runtime.mjs';
 // Compiled production assets, explicit offline API-failure fixture; never a live backend.
@@ -144,16 +145,8 @@ async function navigation() {
   return result;
 }
 try {
-  let version;
-  for (let i = 0; i < 60; i++) {
-    try {
-      version = await (await fetch('http://127.0.0.1:9236/json/version')).json();
-      break;
-    } catch {
-      await delay(100);
-    }
-  }
-  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
+  const version = await waitChromeReady(chrome, 9236);
+
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (e) => {

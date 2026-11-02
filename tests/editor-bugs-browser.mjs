@@ -1,3 +1,4 @@
+import { waitChromeReady } from './lib/browser-runtime.mjs';
 import { assertPortAvailable } from '../scripts/release-lab.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
 import { chromeExecutable } from './lib/browser-runtime.mjs';
@@ -219,16 +220,8 @@ try {
     ],
     { windowsHide: true, stdio: 'ignore' },
   );
-  let version;
-  for (let i = 0; i < 60; i++) {
-    try {
-      version = await (await fetch('http://127.0.0.1:9250/json/version')).json();
-      break;
-    } catch {
-      await sleep(100);
-    }
-  }
-  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
+  const version = await waitChromeReady(chrome, 9250);
+
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {

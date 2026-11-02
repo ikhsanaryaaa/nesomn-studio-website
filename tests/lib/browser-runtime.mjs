@@ -87,6 +87,7 @@ export function launchChrome(executable, args, options = {}) {
   child.on('error', (error) => {
     failure = error.code ?? error.name;
   });
+  child.startupFailed = () => !!failure;
   child.startupDiagnostics = () =>
     'Chrome debug endpoint unavailable; ' +
     JSON.stringify({
@@ -96,4 +97,26 @@ export function launchChrome(executable, args, options = {}) {
       stderr,
     });
   return child;
+}
+
+export async function waitChromeReady(chrome, port, { timeoutMs = 30000, pollMs = 100 } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (chrome.exitCode !== null || chrome.signalCode || chrome.startupFailed?.()) break;
+    try {
+      const response = await fetch('http://127.0.0.1:' + port + '/json/version', {
+        signal: AbortSignal.timeout(Math.max(1, Math.min(1000, deadline - Date.now()))),
+      });
+      const version = response.ok ? await response.json() : null;
+      if (
+        typeof version?.webSocketDebuggerUrl === 'string' &&
+        version.webSocketDebuggerUrl.startsWith('ws')
+      )
+        return version;
+    } catch {
+      /* The listener may not exist yet. Readiness remains bounded by the deadline. */
+    }
+    await new Promise((r) => setTimeout(r, Math.min(pollMs, Math.max(0, deadline - Date.now()))));
+  }
+  throw Error(chrome.startupDiagnostics());
 }

@@ -1,3 +1,4 @@
+import { waitChromeReady } from './lib/browser-runtime.mjs';
 import { createBrowserDiagnostics } from './lib/browser-runtime.mjs';
 import { chromeExecutable, artifactDirectory, cacheDirectory } from './lib/browser-runtime.mjs';
 // Production-built assets only; offline API fixture explicitly restricted to this test server.
@@ -250,16 +251,8 @@ try {
     ],
     { windowsHide: true, stdio: 'ignore' },
   );
-  let version;
-  for (let i = 0; i < 60; i++) {
-    try {
-      version = await (await fetch('http://127.0.0.1:9239/json/version')).json();
-      break;
-    } catch {
-      await sleep(100);
-    }
-  }
-  assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
+  const version = await waitChromeReady(chrome, 9239);
+
   ws = new WebSocket(version.webSocketDebuggerUrl);
   await new Promise((r) => ws.addEventListener('open', r, { once: true }));
   ws.addEventListener('message', (event) => {

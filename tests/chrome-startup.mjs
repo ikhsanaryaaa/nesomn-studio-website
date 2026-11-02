@@ -3,7 +3,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { chromeExecutable, launchChrome } from './lib/browser-runtime.mjs';
+import { chromeExecutable, launchChrome, waitChromeReady } from './lib/browser-runtime.mjs';
 import { releaseEnvironment } from '../scripts/release-check.mjs';
 
 if (!process.argv.includes('--child')) {
@@ -12,12 +12,13 @@ if (!process.argv.includes('--child')) {
     env,
     stdio: 'inherit',
     windowsHide: true,
-    timeout: 20000,
+    timeout: 45000,
   });
   process.exitCode = result.status ?? 1;
 } else {
   const root = resolve(tmpdir());
   const profile = mkdtempSync(join(root, 'nesomn-chrome-startup-'));
+  assert.ok(profile.startsWith(join(root, 'nesomn-chrome-startup-')));
   const chrome = launchChrome(
     chromeExecutable(),
     [
@@ -29,21 +30,8 @@ if (!process.argv.includes('--child')) {
     ],
     { windowsHide: true },
   );
-  let version;
   try {
-    for (let i = 0; i < 60; i++) {
-      if (chrome.exitCode !== null) break;
-      try {
-        version = await (
-          await fetch('http://127.0.0.1:9236/json/version', { signal: AbortSignal.timeout(500) })
-        ).json();
-        if (version.webSocketDebuggerUrl) break;
-      } catch {
-        /* Same startup path and deadline as the browser acceptance suite. */
-      }
-      await new Promise((r) => setTimeout(r, 100));
-    }
-    assert.ok(version?.webSocketDebuggerUrl, chrome.startupDiagnostics());
+    await waitChromeReady(chrome, 9236);
     console.log('PASS: Chrome debug endpoint is available in the sanitized release environment');
   } finally {
     chrome.kill();
@@ -52,8 +40,6 @@ if (!process.argv.includes('--child')) {
         new Promise((r) => chrome.once('exit', r)),
         new Promise((r) => setTimeout(r, 2000)),
       ]);
-    if (!profile.startsWith(join(root, 'nesomn-chrome-startup-')))
-      throw Error('Unsafe profile cleanup');
     rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
   }
 }

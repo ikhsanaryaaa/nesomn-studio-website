@@ -57,6 +57,7 @@ export function releaseCases(mode, bun) {
         'tests/litepod-build.test.mjs',
         'tests/prerender-exit.test.mjs',
         'tests/browser-bootstrap.test.mjs',
+        'tests/browser-startup.test.mjs',
         'tests/release-runner.test.mjs',
         'tests/design-tokens.test.mjs',
       ],
