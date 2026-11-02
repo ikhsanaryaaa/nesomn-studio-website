@@ -261,6 +261,8 @@ try {
       windowsVirtualKeyCode: 27,
     });
     await wait('!document.querySelector("[role=dialog]")');
+    // Radix restores focus after the portal is removed; DOM absence alone is not readiness.
+    await wait('document.activeElement?.getAttribute("aria-label") === "Buka navigasi"');
     assert.equal(
       await evaluate('document.activeElement.getAttribute("aria-label")'),
       'Buka navigasi',
