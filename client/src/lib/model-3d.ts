@@ -1,3 +1,16 @@
+import sampleModels from '../../public/demo/models/manifest.json';
+import studioKit from '../../public/demo/models/studio-kit.json';
+const catalogModels = new Set<string>();
+/** Only call for a model URL returned by the authenticated catalogue endpoint. */
+export function registerCatalogModelUrl(value: string) {
+  const url = new URL(
+    value,
+    typeof window === 'undefined' ? 'https://local.invalid' : window.location.origin,
+  );
+  if (url.username || url.password || !['https:', 'http:'].includes(url.protocol))
+    throw Error('Invalid catalogue model URL.');
+  catalogModels.add(value);
+}
 export const MAX_MODEL_BYTES = 25 * 1024 * 1024;
 export function frameBounds(size: number[], aspect: number, fov: number) {
   const radius = Math.max(Math.hypot(...size) / 2, 0.01);
@@ -23,6 +36,11 @@ export function validateModelUrl(value: string, origin: string) {
     (url.protocol !== 'https:' && !(url.protocol === 'http:' && url.origin === origin))
   )
     throw Error('Unsupported model URL. Use HTTPS storage or a local application source.');
+  const sample =
+    url.origin === origin &&
+    [...sampleModels, studioKit].some((model) => new URL(model.url, origin).href === url.href);
+  if (!sample && !catalogModels.has(value))
+    throw Error('Choose a registered Nesomn asset or a labelled sample model.');
   return url.href;
 }
 export function inspectModelBytes(bytes: ArrayBuffer) {

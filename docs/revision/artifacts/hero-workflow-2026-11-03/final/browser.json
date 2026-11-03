@@ -1,0 +1,687 @@
+{
+  "browser": "Chrome/156.0.8078.74",
+  "results": [
+    {
+      "theme": "light",
+      "width": 360,
+      "dimensions": {
+        "width": 360,
+        "scroll": 360
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(184, 62, 11)",
+        "height": 52
+      },
+      "preview": {
+        "copy": {
+          "x": 20,
+          "y": 128,
+          "width": 320,
+          "height": 380.75,
+          "top": 128,
+          "right": 340,
+          "bottom": 508.75,
+          "left": 20
+        },
+        "editor": {
+          "x": 20,
+          "y": 548.75,
+          "width": 320,
+          "height": 392.5,
+          "top": 548.75,
+          "right": 340,
+          "bottom": 941.25,
+          "left": 20
+        },
+        "result": {
+          "x": 70,
+          "y": 917.25,
+          "width": 270,
+          "height": 294.5,
+          "top": 917.25,
+          "right": 340,
+          "bottom": 1211.75,
+          "left": 70
+        },
+        "caption": {
+          "x": 20,
+          "y": 1231.75,
+          "width": 320,
+          "height": 44,
+          "top": 1231.75,
+          "right": 340,
+          "bottom": 1275.75,
+          "left": 20
+        },
+        "link": {
+          "x": 268.828125,
+          "y": 1231.75,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1231.75,
+          "right": 336,
+          "bottom": 1275.75,
+          "left": 268.828125
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "dimensions": {
+        "width": 390,
+        "scroll": 390
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(184, 62, 11)",
+        "height": 52
+      },
+      "preview": {
+        "copy": {
+          "x": 20,
+          "y": 128,
+          "width": 350,
+          "height": 380.75,
+          "top": 128,
+          "right": 370,
+          "bottom": 508.75,
+          "left": 20
+        },
+        "editor": {
+          "x": 20,
+          "y": 548.75,
+          "width": 350,
+          "height": 392.5,
+          "top": 548.75,
+          "right": 370,
+          "bottom": 941.25,
+          "left": 20
+        },
+        "result": {
+          "x": 100,
+          "y": 917.25,
+          "width": 270,
+          "height": 294.5,
+          "top": 917.25,
+          "right": 370,
+          "bottom": 1211.75,
+          "left": 100
+        },
+        "caption": {
+          "x": 20,
+          "y": 1231.75,
+          "width": 350,
+          "height": 44,
+          "top": 1231.75,
+          "right": 370,
+          "bottom": 1275.75,
+          "left": 20
+        },
+        "link": {
+          "x": 298.828125,
+          "y": 1231.75,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1231.75,
+          "right": 366,
+          "bottom": 1275.75,
+          "left": 298.828125
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "dimensions": {
+        "width": 768,
+        "scroll": 758
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(184, 62, 11)",
+        "height": 56
+      },
+      "preview": {
+        "copy": {
+          "x": 24,
+          "y": 144,
+          "width": 710,
+          "height": 354.09375,
+          "top": 144,
+          "right": 734,
+          "bottom": 498.09375,
+          "left": 24
+        },
+        "editor": {
+          "x": 39,
+          "y": 554.09375,
+          "width": 664,
+          "height": 455.5,
+          "top": 554.09375,
+          "right": 703,
+          "bottom": 1009.59375,
+          "left": 39
+        },
+        "result": {
+          "x": 487,
+          "y": 777.09375,
+          "width": 232,
+          "height": 288.5,
+          "top": 777.09375,
+          "right": 719,
+          "bottom": 1065.59375,
+          "left": 487
+        },
+        "caption": {
+          "x": 39,
+          "y": 1031.59375,
+          "width": 436,
+          "height": 76.796875,
+          "top": 1031.59375,
+          "right": 475,
+          "bottom": 1108.390625,
+          "left": 39
+        },
+        "link": {
+          "x": 39,
+          "y": 1064.390625,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1064.390625,
+          "right": 106.171875,
+          "bottom": 1108.390625,
+          "left": 39
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "dimensions": {
+        "width": 1024,
+        "scroll": 1014
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(184, 62, 11)",
+        "height": 56
+      },
+      "preview": {
+        "copy": {
+          "x": 32,
+          "y": 160,
+          "width": 950,
+          "height": 391.375,
+          "top": 160,
+          "right": 982,
+          "bottom": 551.375,
+          "left": 32
+        },
+        "editor": {
+          "x": 167,
+          "y": 607.375,
+          "width": 664,
+          "height": 455.5,
+          "top": 607.375,
+          "right": 831,
+          "bottom": 1062.875,
+          "left": 167
+        },
+        "result": {
+          "x": 615,
+          "y": 830.375,
+          "width": 232,
+          "height": 288.5,
+          "top": 830.375,
+          "right": 847,
+          "bottom": 1118.875,
+          "left": 615
+        },
+        "caption": {
+          "x": 167,
+          "y": 1084.875,
+          "width": 436,
+          "height": 76.796875,
+          "top": 1084.875,
+          "right": 603,
+          "bottom": 1161.671875,
+          "left": 167
+        },
+        "link": {
+          "x": 167,
+          "y": 1117.671875,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1117.671875,
+          "right": 234.171875,
+          "bottom": 1161.671875,
+          "left": 167
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "dimensions": {
+        "width": 1440,
+        "scroll": 1430
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(184, 62, 11)",
+        "height": 56
+      },
+      "preview": {
+        "copy": {
+          "x": 75,
+          "y": 226.65625,
+          "width": 550.078125,
+          "height": 472.578125,
+          "top": 226.65625,
+          "right": 625.078125,
+          "bottom": 699.234375,
+          "left": 75
+        },
+        "editor": {
+          "x": 682.671875,
+          "y": 224,
+          "width": 656.328125,
+          "height": 433.890625,
+          "top": 224,
+          "right": 1339,
+          "bottom": 657.890625,
+          "left": 682.671875
+        },
+        "result": {
+          "x": 1131,
+          "y": 425.390625,
+          "width": 232,
+          "height": 288.5,
+          "top": 425.390625,
+          "right": 1363,
+          "bottom": 713.890625,
+          "left": 1131
+        },
+        "caption": {
+          "x": 682.671875,
+          "y": 679.890625,
+          "width": 428.328125,
+          "height": 76.796875,
+          "top": 679.890625,
+          "right": 1111,
+          "bottom": 756.6875,
+          "left": 682.671875
+        },
+        "link": {
+          "x": 682.671875,
+          "y": 712.6875,
+          "width": 67.171875,
+          "height": 44,
+          "top": 712.6875,
+          "right": 749.84375,
+          "bottom": 756.6875,
+          "left": 682.671875
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "dimensions": {
+        "width": 360,
+        "scroll": 360
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(38, 23, 15)",
+        "background": "rgb(255, 149, 96)",
+        "height": 52
+      },
+      "preview": {
+        "copy": {
+          "x": 20,
+          "y": 128,
+          "width": 320,
+          "height": 380.75,
+          "top": 128,
+          "right": 340,
+          "bottom": 508.75,
+          "left": 20
+        },
+        "editor": {
+          "x": 20,
+          "y": 548.75,
+          "width": 320,
+          "height": 392.5,
+          "top": 548.75,
+          "right": 340,
+          "bottom": 941.25,
+          "left": 20
+        },
+        "result": {
+          "x": 70,
+          "y": 917.25,
+          "width": 270,
+          "height": 294.5,
+          "top": 917.25,
+          "right": 340,
+          "bottom": 1211.75,
+          "left": 70
+        },
+        "caption": {
+          "x": 20,
+          "y": 1231.75,
+          "width": 320,
+          "height": 44,
+          "top": 1231.75,
+          "right": 340,
+          "bottom": 1275.75,
+          "left": 20
+        },
+        "link": {
+          "x": 268.828125,
+          "y": 1231.75,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1231.75,
+          "right": 336,
+          "bottom": 1275.75,
+          "left": 268.828125
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "dimensions": {
+        "width": 390,
+        "scroll": 390
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(38, 23, 15)",
+        "background": "rgb(255, 149, 96)",
+        "height": 52
+      },
+      "preview": {
+        "copy": {
+          "x": 20,
+          "y": 128,
+          "width": 350,
+          "height": 380.75,
+          "top": 128,
+          "right": 370,
+          "bottom": 508.75,
+          "left": 20
+        },
+        "editor": {
+          "x": 20,
+          "y": 548.75,
+          "width": 350,
+          "height": 392.5,
+          "top": 548.75,
+          "right": 370,
+          "bottom": 941.25,
+          "left": 20
+        },
+        "result": {
+          "x": 100,
+          "y": 917.25,
+          "width": 270,
+          "height": 294.5,
+          "top": 917.25,
+          "right": 370,
+          "bottom": 1211.75,
+          "left": 100
+        },
+        "caption": {
+          "x": 20,
+          "y": 1231.75,
+          "width": 350,
+          "height": 44,
+          "top": 1231.75,
+          "right": 370,
+          "bottom": 1275.75,
+          "left": 20
+        },
+        "link": {
+          "x": 298.828125,
+          "y": 1231.75,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1231.75,
+          "right": 366,
+          "bottom": 1275.75,
+          "left": 298.828125
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "dimensions": {
+        "width": 768,
+        "scroll": 758
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(38, 23, 15)",
+        "background": "rgb(255, 149, 96)",
+        "height": 56
+      },
+      "preview": {
+        "copy": {
+          "x": 24,
+          "y": 144,
+          "width": 710,
+          "height": 354.09375,
+          "top": 144,
+          "right": 734,
+          "bottom": 498.09375,
+          "left": 24
+        },
+        "editor": {
+          "x": 39,
+          "y": 554.09375,
+          "width": 664,
+          "height": 455.5,
+          "top": 554.09375,
+          "right": 703,
+          "bottom": 1009.59375,
+          "left": 39
+        },
+        "result": {
+          "x": 487,
+          "y": 777.09375,
+          "width": 232,
+          "height": 288.5,
+          "top": 777.09375,
+          "right": 719,
+          "bottom": 1065.59375,
+          "left": 487
+        },
+        "caption": {
+          "x": 39,
+          "y": 1031.59375,
+          "width": 436,
+          "height": 76.796875,
+          "top": 1031.59375,
+          "right": 475,
+          "bottom": 1108.390625,
+          "left": 39
+        },
+        "link": {
+          "x": 39,
+          "y": 1064.390625,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1064.390625,
+          "right": 106.171875,
+          "bottom": 1108.390625,
+          "left": 39
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "dimensions": {
+        "width": 1024,
+        "scroll": 1014
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(38, 23, 15)",
+        "background": "rgb(255, 149, 96)",
+        "height": 56
+      },
+      "preview": {
+        "copy": {
+          "x": 32,
+          "y": 160,
+          "width": 950,
+          "height": 391.375,
+          "top": 160,
+          "right": 982,
+          "bottom": 551.375,
+          "left": 32
+        },
+        "editor": {
+          "x": 167,
+          "y": 607.375,
+          "width": 664,
+          "height": 455.5,
+          "top": 607.375,
+          "right": 831,
+          "bottom": 1062.875,
+          "left": 167
+        },
+        "result": {
+          "x": 615,
+          "y": 830.375,
+          "width": 232,
+          "height": 288.5,
+          "top": 830.375,
+          "right": 847,
+          "bottom": 1118.875,
+          "left": 615
+        },
+        "caption": {
+          "x": 167,
+          "y": 1084.875,
+          "width": 436,
+          "height": 76.796875,
+          "top": 1084.875,
+          "right": 603,
+          "bottom": 1161.671875,
+          "left": 167
+        },
+        "link": {
+          "x": 167,
+          "y": 1117.671875,
+          "width": 67.171875,
+          "height": 44,
+          "top": 1117.671875,
+          "right": 234.171875,
+          "bottom": 1161.671875,
+          "left": 167
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "dimensions": {
+        "width": 1440,
+        "scroll": 1430
+      },
+      "style": {
+        "font": "Poppins, system-ui, -apple-system, sans-serif",
+        "color": "rgb(38, 23, 15)",
+        "background": "rgb(255, 149, 96)",
+        "height": 56
+      },
+      "preview": {
+        "copy": {
+          "x": 75,
+          "y": 226.65625,
+          "width": 550.078125,
+          "height": 472.578125,
+          "top": 226.65625,
+          "right": 625.078125,
+          "bottom": 699.234375,
+          "left": 75
+        },
+        "editor": {
+          "x": 682.671875,
+          "y": 224,
+          "width": 656.328125,
+          "height": 433.890625,
+          "top": 224,
+          "right": 1339,
+          "bottom": 657.890625,
+          "left": 682.671875
+        },
+        "result": {
+          "x": 1131,
+          "y": 425.390625,
+          "width": 232,
+          "height": 288.5,
+          "top": 425.390625,
+          "right": 1363,
+          "bottom": 713.890625,
+          "left": 1131
+        },
+        "caption": {
+          "x": 682.671875,
+          "y": 679.890625,
+          "width": 428.328125,
+          "height": 76.796875,
+          "top": 679.890625,
+          "right": 1111,
+          "bottom": 756.6875,
+          "left": 682.671875
+        },
+        "link": {
+          "x": 682.671875,
+          "y": 712.6875,
+          "width": 67.171875,
+          "height": 44,
+          "top": 712.6875,
+          "right": 749.84375,
+          "bottom": 756.6875,
+          "left": 682.671875
+        },
+        "artworks": 2,
+        "canvases": 0
+      }
+    }
+  ],
+  "exceptions": [],
+  "fixture": "Production assets with explicit offline API failure; no live database or merchant"
+}

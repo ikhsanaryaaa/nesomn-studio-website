@@ -1,4 +1,4 @@
-// Exercise shipped theme controls (Radix client, native admin), never storage shortcuts.
+// Exercise shipped theme controls (Radix client and admin; native fallback for legacy builds), never storage shortcuts.
 export async function selectTheme(evaluate, wait, mode) {
   const radix = await evaluate(`(() => {
     const visible = e => e.getBoundingClientRect().height > 0;

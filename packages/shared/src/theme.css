@@ -1,4 +1,4 @@
-/* Nesomn Creative Editorial. Shared by CSS client and Ant Design admin. */
+/* Nesomn Creative Editorial. Shared by the client and admin. */
 :root {
   --color-background: #f7f6f2;
   --color-surface: #fffefa;
@@ -17,8 +17,8 @@
   --color-warning: #805500;
   --color-danger: #b52b30;
   --color-info: #3c626c;
-  --font-sans: 'Manrope Variable', system-ui, -apple-system, sans-serif;
-  --font-display: 'Bricolage Grotesque Variable', 'Manrope Variable', system-ui, sans-serif;
+  --font-sans: 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Poppins', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --radius-sm: 8px;
   --radius-md: 16px;

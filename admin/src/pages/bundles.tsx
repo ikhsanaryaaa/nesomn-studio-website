@@ -9,9 +9,9 @@ import {
   Show,
   useForm,
   useSelect,
-} from '@refinedev/antd';
+} from '../components/ui';
 import { useShow } from '@refinedev/core';
-import { Table, Space, Tag, Form, Input, Select, Typography } from 'antd';
+import { Table, Space, Tag, Form, Input, Select, Typography } from '../components/ui';
 
 export const BundleList = () => {
   const { tableProps } = useTable({ syncWithLocation: true });
@@ -95,7 +95,11 @@ export const BundleShow = () => {
   const { queryResult } = useShow();
   const record = queryResult?.data?.data;
   return (
-    <Show isLoading={queryResult?.isLoading}>
+    <Show
+      isLoading={queryResult?.isLoading}
+      isError={queryResult?.isError}
+      refetch={queryResult?.refetch}
+    >
       <Typography.Title level={5}>Title</Typography.Title>
       <Typography.Text>{record?.title}</Typography.Text>
       <Typography.Title level={5}>Assets</Typography.Title>

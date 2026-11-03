@@ -15,7 +15,11 @@ COPY packages/shared ./packages/shared
 COPY client ./client
 COPY admin ./admin
 COPY tsconfig.base.json ./
-ENV NODE_ENV=production VITE_API_URL=/api
+ARG VITE_API_URL=/api
+ARG VITE_LANDING_URL=
+ARG VITE_SHOP_URL=
+ARG VITE_ADMIN_URL=
+ENV NODE_ENV=production VITE_API_URL=${VITE_API_URL} VITE_LANDING_URL=${VITE_LANDING_URL} VITE_SHOP_URL=${VITE_SHOP_URL} VITE_ADMIN_URL=${VITE_ADMIN_URL}
 RUN bun run build
 
 FROM manifests AS production-deps

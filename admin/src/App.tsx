@@ -1,77 +1,149 @@
-import enUS from 'antd/locale/en_US';
-import { Refine } from '@refinedev/core';
-import { ThemedLayoutV2, ErrorComponent, useNotificationProvider } from '@refinedev/antd';
-import routerProvider, { NavigateToResource, CatchAllNavigate } from '@refinedev/react-router';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router';
-import { ConfigProvider, App as AntdApp, theme } from 'antd';
-import {
-  DatabaseOutlined,
-  AppstoreOutlined,
-  CreditCardOutlined,
-  GiftOutlined,
-  TeamOutlined,
-  ApiOutlined,
-  ThunderboltOutlined,
-  DesktopOutlined,
-  FileSearchOutlined,
-} from '@ant-design/icons';
-
-import '@refinedev/antd/dist/reset.css';
-
-import { dataProvider } from './providers/dataProvider.ts';
-import { authProvider } from './providers/authProvider.ts';
-import { LoginPage } from './pages/login.tsx';
-import { Authenticated } from './components/authenticated.tsx';
-import { resources } from './resources.tsx';
-import { adminRoutes } from './routes.tsx';
-
+import { Refine, useLogout, useGetIdentity } from '@refinedev/core';
+import routerProvider, {
+  NavigateToResource,
+  CatchAllNavigate,
+  UnsavedChangesNotifier,
+} from '@refinedev/react-router';
+import { BrowserRouter, Routes, Route, Outlet, NavLink, useLocation } from 'react-router';
+import { Button, Dialog, Theme } from '@radix-ui/themes';
+import { ArrowUpRight, LogOut, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { dataProvider } from './providers/dataProvider';
+import { authProvider } from './providers/authProvider';
+import { LoginPage } from './pages/login';
+import { Authenticated } from './components/authenticated';
+import { resources } from './resources';
+import { adminRoutes } from './routes';
 import { useAdminTheme, AdminThemeControl } from './theme';
+import { Notifications, notificationProvider } from './components/ui';
 
+const adminOrigin = import.meta.env.VITE_ADMIN_URL;
+const dedicatedHost = adminOrigin && window.location.hostname === new URL(adminOrigin).hostname;
+const basename = dedicatedHost ? '/' : '/admin';
+const shopUrl = import.meta.env.VITE_SHOP_URL || '/';
+
+function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const dark = useAdminTheme();
+  const logout = useLogout();
+  return (
+    <aside className="admin-sidebar">
+      <a className="admin-brand" href={basename}>
+        <img
+          src={import.meta.env.BASE_URL + 'nesomn-logo-' + (dark ? 'white' : 'black') + '.svg'}
+          alt="Nesomn Studio"
+        />
+        <span>Studio administration</span>
+      </a>
+      <nav aria-label="Admin navigation">
+        {[
+          { key: undefined, title: 'Overview' },
+          { key: 'content', title: 'Website content' },
+          { key: 'catalog', title: 'Catalogue' },
+          { key: 'ai', title: 'AI system' },
+          { key: 'system', title: 'System' },
+        ].map((group) => (
+          <div className="admin-nav-group" key={group.title}>
+            <p>{group.title}</p>
+            {resources
+              .filter((resource) => resource.list && resource.meta?.parent === group.key)
+              .map((resource) => (
+                <NavLink key={resource.name} to={String(resource.list)} onClick={onNavigate}>
+                  {resource.meta?.icon}
+                  <span>{resource.meta?.label ?? resource.name}</span>
+                </NavLink>
+              ))}
+          </div>
+        ))}
+      </nav>
+      <footer className="admin-sidebar-footer">
+        <AdminThemeControl />
+        <a href={shopUrl} target="_blank" rel="noreferrer">
+          Visit store <ArrowUpRight size={16} />
+        </a>
+        <Button variant="soft" color="gray" onClick={() => logout.mutate()}>
+          Sign out <LogOut size={16} />
+        </Button>
+      </footer>
+    </aside>
+  );
+}
+function AdminLayout() {
+  const [open, setOpen] = useState(false);
+  const { data: user } = useGetIdentity<{ name: string; email: string }>();
+  const location = useLocation();
+  const current = resources.find(
+    (resource) => resource.list && location.pathname.startsWith(String(resource.list)),
+  );
+  return (
+    <div className="admin-shell">
+      <div className="admin-desktop-sidebar">
+        <Sidebar />
+      </div>
+      <div className="admin-workspace">
+        <header className="admin-topbar">
+          <Dialog.Root open={open} onOpenChange={setOpen}>
+            <Dialog.Trigger>
+              <Button
+                variant="soft"
+                color="gray"
+                className="admin-mobile-menu"
+                aria-label="Open navigation"
+              >
+                <Menu size={20} />
+              </Button>
+            </Dialog.Trigger>
+            <Dialog.Content className="admin-mobile-drawer" aria-describedby={undefined}>
+              <Dialog.Title className="admin-sr-only">Navigation</Dialog.Title>
+              <Dialog.Close>
+                <Button
+                  variant="ghost"
+                  className="admin-drawer-close"
+                  aria-label="Close navigation"
+                >
+                  <X />
+                </Button>
+              </Dialog.Close>
+              <Sidebar onNavigate={() => setOpen(false)} />
+            </Dialog.Content>
+          </Dialog.Root>
+          <span className="admin-breadcrumb">
+            Nesomn Studio <span>/</span> {current?.meta?.label ?? 'Administration'}
+          </span>
+          <div className="admin-identity">
+            <span className="admin-avatar" aria-hidden="true">
+              {user?.name?.[0] ?? 'A'}
+            </span>
+            <span>
+              {user?.name ?? 'Administrator'}
+              <small>Admin workspace</small>
+            </span>
+          </div>
+        </header>
+        <main id="admin-content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
 export default function App() {
   const dark = useAdminTheme();
-  const css = getComputedStyle(document.documentElement);
-  const token = (name: string) => css.getPropertyValue(name).trim();
-  const studioTheme = {
-    algorithm: dark ? theme.darkAlgorithm : theme.defaultAlgorithm,
-    token: {
-      colorPrimary: token('--color-accent'),
-      colorInfo: token('--color-accent'),
-      colorBgLayout: token('--color-background'),
-      colorBgContainer: token('--color-surface'),
-      colorBgElevated: token('--color-surface-2'),
-      colorText: token('--color-foreground'),
-      colorTextSecondary: token('--color-muted-foreground'),
-      colorTextPlaceholder: token('--color-faint-foreground'),
-      colorPrimaryText: token('--color-accent'),
-      colorError: token('--color-danger'),
-      colorWarning: token('--color-warning'),
-      colorSuccess: token('--color-success'),
-      colorBorder: token('--color-border'),
-      fontFamily: token('--font-sans'),
-      borderRadius: Number.parseFloat(token('--radius-md')),
-      controlHeight: 44,
-    },
-    components: { Button: { primaryColor: token('--color-accent-foreground') } },
-  };
   return (
-    <BrowserRouter basename="/admin">
-      <ConfigProvider locale={enUS} theme={studioTheme}>
-        <AntdApp>
-          <div className="admin-theme-bar">
-            <a href="/" aria-label="Nesomn Studio home">
-              <img
-                className="brand-logo"
-                alt="Nesomn Studio"
-                src={dark ? '/admin/nesomn-logo-white.svg' : '/admin/nesomn-logo-black.svg'}
-              />
-            </a>
-            <AdminThemeControl />
-          </div>
+    <BrowserRouter basename={basename}>
+      <Theme
+        accentColor="orange"
+        grayColor="gray"
+        radius="large"
+        scaling="100%"
+        appearance={dark ? 'dark' : 'light'}
+        className="admin-radix-theme"
+      >
+        <Notifications>
           <Refine
             dataProvider={dataProvider}
             authProvider={authProvider}
             routerProvider={routerProvider}
-            notificationProvider={useNotificationProvider}
+            notificationProvider={notificationProvider}
             resources={resources}
             options={{
               syncWithLocation: true,
@@ -79,64 +151,44 @@ export default function App() {
               disableTelemetry: true,
             }}
           >
+            <UnsavedChangesNotifier />
+            <a className="admin-skip" href="#admin-content">
+              Skip to content
+            </a>
             <Routes>
               <Route
                 element={
-                  <Authenticated key="auth">
-                    <ThemedLayoutV2
-                      initialSiderCollapsed={false}
-                      Title={({ collapsed }) => (
-                        <img
-                          src={
-                            dark ? '/admin/nesomn-logo-white.svg' : '/admin/nesomn-logo-black.svg'
-                          }
-                          alt="Nesomn"
-                          style={{
-                            height: 28,
-                            width: collapsed ? 28 : 'auto',
-                            objectFit: 'contain',
-                          }}
-                        />
-                      )}
-                    >
-                      <Outlet />
-                    </ThemedLayoutV2>
+                  <Authenticated>
+                    <AdminLayout />
                   </Authenticated>
                 }
               >
                 <Route index element={<NavigateToResource resource="assets-scene" />} />
                 {adminRoutes}
-                <Route path="*" element={<ErrorComponent />} />
+                <Route
+                  path="*"
+                  element={
+                    <section className="admin-page">
+                      <h1>Page not found</h1>
+                      <NavLink to="/">Back to administration</NavLink>
+                    </section>
+                  }
+                />
               </Route>
-
               <Route
                 element={
-                  <Authenticated key="anon" fallback={<Outlet />}>
+                  <Authenticated fallback={<Outlet />}>
                     <NavigateToResource resource="assets-scene" />
                   </Authenticated>
                 }
               >
                 <Route path="/login" element={<LoginPage />} />
               </Route>
-
               <Route path="*" element={<CatchAllNavigate to="/login" />} />
             </Routes>
           </Refine>
-        </AntdApp>
-      </ConfigProvider>
+        </Notifications>
+      </Theme>
     </BrowserRouter>
   );
 }
-
-// Ikon di-reekspor agar resources.tsx ringkas (dipakai juga di sana).
-export const icons = {
-  DatabaseOutlined,
-  AppstoreOutlined,
-  CreditCardOutlined,
-  GiftOutlined,
-  TeamOutlined,
-  ApiOutlined,
-  ThunderboltOutlined,
-  DesktopOutlined,
-  FileSearchOutlined,
-};

@@ -52,3 +52,9 @@ Workflow CI memiliki job unit/integration dan job production-browser terpisah ta
 - Chrome viewport/software WebGL bukan pengganti perangkat Android/iOS, Safari, GPU fisik atau audit screen-reader menyeluruh.
 
 Keputusan: LOCAL ACCEPTANCE sesuai hasil final; production tetap NO-GO sampai gate eksternal di atas dibuktikan. [As-built](as-built.md), [deployment](deployment.md), [workers](workers.md), [dependency security](dependency-security.md).
+
+## Landing / Works / About / Studio Kit acceptance — 3 November 2026
+
+See [phase5 report](revision/marketing-phase5-2026-11-03.md). Run node scripts/test-portfolio-lab.mjs --acceptance for disposable legacy0008 migration, repeatable single sample import, production Docker app + real Nginx and extracted-asset browser tests. Lab containers/images are removed in finally. Main deployment Compose remains exactly app/gateway; test dependencies are isolated and not deployment services.
+
+The Windows headless full editor export test still fails on WebM (NS-BUG-007). Preview, save, PNG/JPEG and portfolio acceptance do not close this failure. Resolve/verify on real supported browsers before promising video export. TLS/domain ingress, OAuth, storage CORS/signed renewal, AI/QRIS workers and production backup/restore still need operator verification. No production-ready claim.

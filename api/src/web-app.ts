@@ -5,13 +5,16 @@ import { extname, isAbsolute, relative, resolve } from 'node:path';
 type Options = {
   clientDir: string;
   adminDir: string;
+  domains?: { landing: string; shop: string; admin: string; api: string };
   readiness: () => Promise<{ database: boolean; redis: boolean }>;
 };
 
 const clientRoutes =
-  /^(?:\/(?:demo\/3d|login|register|pricing|marketplace|bundle-builder|library|account|checkout)|\/marketplace\/[^/.]+|\/editor\/(?:projects|(?:scene|3d)(?:\/[^/.]+)?))\/?$/;
+  /^(?:\/(?:demo\/3d|landing|dashboard|login|register|pricing|marketplace|bundle-builder|library|account|checkout)|\/marketplace\/[^/.]+|\/editor\/(?:projects|(?:scene|3d)(?:\/[^/.]+)?))\/?$/;
+const marketingRoutes =
+  /^\/(?:about|works(?:\/[a-z0-9][a-z0-9-]{0,159})?|demo\/works\/nesomn-studio-kit)\/?$/;
 const adminRoutes =
-  /^\/admin\/(?:login|assets|assets-3d|bundles|plans|credit-packs|users|subscriptions|credit-ledger|ai-providers|usage|sessions|audit-logs)(?:\/(?:create|(?:edit|show)\/[^/.]+))?\/?$/;
+  /^\/admin\/(?:login|works|assets|assets-3d|bundles|plans|credit-packs|users|subscriptions|credit-ledger|ai-providers|usage|sessions|audit-logs)(?:\/(?:create|(?:edit|show)\/[^/.]+))?\/?$/;
 
 function notFound() {
   return new Response('Not Found', {
@@ -76,6 +79,58 @@ export function createWebApp(
         }
         if (/[\\\0%]/.test(path) || path.split('/').some((part) => part.startsWith('.')))
           return notFound();
+        const domains = options.domains;
+        const host = new URL(request.url).hostname;
+        const on = (value: string) => new URL(value).hostname === host;
+        const adminHost = !!domains && on(domains.admin);
+        if (domains && on(domains.api)) return notFound();
+        if (domains && on(domains.shop) && marketingRoutes.test(path)) {
+          const target = new URL(domains.landing);
+          target.pathname = path;
+          target.search = new URL(request.url).search;
+          return new Response(null, { status: 308, headers: { location: target.toString() } });
+        }
+        if (
+          domains &&
+          on(domains.landing) &&
+          (clientRoutes.test(path) || path === '/admin' || path.startsWith('/admin/'))
+        ) {
+          const target = path.startsWith('/admin') ? new URL(domains.admin) : new URL(domains.shop);
+          target.pathname = path.startsWith('/admin') ? path.slice(6) || '/' : path;
+          target.search = new URL(request.url).search;
+          return new Response(null, { status: 308, headers: { location: target.toString() } });
+        }
+        if (adminHost && (path === '/admin' || (path.startsWith('/admin/') && !extname(path)))) {
+          const target = new URL(domains!.admin);
+          target.pathname = path.slice(6) || '/';
+          target.search = new URL(request.url).search;
+          return new Response(null, { status: 308, headers: { location: target.toString() } });
+        }
+        if (
+          domains &&
+          on(domains.shop) &&
+          (path === '/admin' || path.startsWith('/admin/')) &&
+          !extname(path)
+        ) {
+          const target = new URL(domains.admin);
+          target.pathname = path.slice(6) || '/';
+          target.search = new URL(request.url).search;
+          return new Response(null, { status: 308, headers: { location: target.toString() } });
+        }
+        if (domains && on(domains.landing) && path === '/') {
+          return (await staticFile(options.clientDir, 'landing/index.html', request)) ?? notFound();
+        }
+        if (adminHost && !path.startsWith('/admin/')) {
+          const asset = await staticFile(
+            options.adminDir,
+            path.slice(1),
+            request,
+            path.startsWith('/assets/'),
+          );
+          if (asset) return asset;
+          if (path !== '/' && !adminRoutes.test('/admin' + path)) return notFound();
+          return (await staticFile(options.adminDir, 'index.html', request)) ?? notFound();
+        }
         if (path === '/admin')
           return new Response(null, { status: 308, headers: { location: '/admin/' } });
         const admin = path.startsWith('/admin/');
@@ -91,7 +146,8 @@ export function createWebApp(
           (path !== '/' &&
             path !== '/admin/' &&
             !clientRoutes.test(path) &&
-            !adminRoutes.test(path))
+            !adminRoutes.test(path) &&
+            !marketingRoutes.test(path))
         )
           return notFound();
         // Prefer actual prerendered HTML over the client shell, preserving SEO metadata.

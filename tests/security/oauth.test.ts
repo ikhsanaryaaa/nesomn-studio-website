@@ -18,8 +18,8 @@ test('OAuth state binds cookie, expires, is consumed once and prevents open redi
   const valid = await beginGoogle('/account');
   expect((await consumeGoogleState(valid.state, valid.cookie)).returnPath).toBe('/account');
   await expect(consumeGoogleState(valid.state, valid.cookie)).rejects.toThrow();
-  expect(safeReturnPath('//evil.test')).toBe('/account');
-  expect(safeReturnPath('/admin/')).toBe('/account');
+  expect(safeReturnPath('//evil.test')).toBe('/dashboard');
+  expect(safeReturnPath('/admin/')).toBe('/dashboard');
 });
 test('Google JWT requires signature, audience, issuer, nonce, verified email and stable sub', async () => {
   const { privateKey, publicKey } = await generateKeyPair('RS256');
@@ -69,5 +69,5 @@ test('OAuth return destinations match the actual production client routes', () =
   ])
     expect(safeReturnPath(route)).toBe(route);
   for (const route of ['/projects', '/store', '/scene-editor', '/editor-3d'])
-    expect(safeReturnPath(route)).toBe('/account');
+    expect(safeReturnPath(route)).toBe('/dashboard');
 });

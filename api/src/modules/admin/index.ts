@@ -1,3 +1,4 @@
+import { worksAdminRoutes } from '../portfolio/routes.ts';
 import { Elysia } from 'elysia';
 import { authPlugin } from '../../middleware/auth.ts';
 import { assets3dAdminRoutes } from './assets-3d.routes.ts';
@@ -35,5 +36,6 @@ export const adminRoutes = new Elysia({ prefix: '/admin' })
       .use(creditLedgerAdminRoutes)
       .use(sessionAdminRoutes)
       .use(auditLogAdminRoutes)
-      .use(uploadAdminRoutes),
+      .use(uploadAdminRoutes)
+      .use(worksAdminRoutes),
   );

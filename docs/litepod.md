@@ -1,3 +1,5 @@
+> Untuk landing/shop/dashboard/API pada subdomain terpisah, ikuti [split-domain deployment](split-domains.md). Instruksi same-origin di bawah adalah mode legacy yang tetap didukung.
+
 # Deploy Nesomn Studio di Litepod — per container
 
 **Update session refresh:** mode JSON sesi lengkap kini tersedia dengan refresh otomatis, state rotasi persisten dan status login_required. Ikuti [runbook sesi ShopeePay](qris-session.md); petunjuk token teks di bawah adalah mode legacy tanpa silent refresh.

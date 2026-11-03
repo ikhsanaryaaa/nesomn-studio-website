@@ -1,3 +1,4 @@
+import { apiMediaUrl } from '@/lib/api-media';
 import { useState } from 'react';
 export function AssetMedia({
   src,
@@ -12,7 +13,7 @@ export function AssetMedia({
   return (
     <div className={'asset-media ' + className}>
       {src && !failed ? (
-        <img src={src} alt={title} loading="lazy" onError={() => setFailed(true)} />
+        <img src={apiMediaUrl(src)} alt={title} loading="lazy" onError={() => setFailed(true)} />
       ) : (
         <span>{failed ? 'Unable to load preview' : 'No preview is available yet'}</span>
       )}

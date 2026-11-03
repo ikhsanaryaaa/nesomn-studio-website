@@ -154,7 +154,6 @@ export async function runLab(parent = process.env) {
       exit: r.status,
       milliseconds: Date.now() - start,
     });
-    writeFileSync(evidence + '/lab-results.json', JSON.stringify(results, null, 2));
     console.log(results.at(-1).status + ': ' + name);
     if (r.status !== 0)
       throw Error(name + ' failed: ' + ((r.stdout ?? '') + (r.stderr ?? '')).slice(-2500));
@@ -365,6 +364,7 @@ if(result.uid===0||forbidden.length||tooling.length||result.bun!=='1.4.4'||resul
       ...env,
       NESOMN_DISPOSABLE_TESTS: '1',
       NESOMN_RELEASE_LAB: '1',
+      NESOMN_ARTIFACT_ROOT: evidence + '/browser-' + Date.now(),
       NESOMN_CLIENT_DIST: client,
       NESOMN_VIEWER_DIST: client,
       NESOMN_UI_DIST: client,
@@ -373,7 +373,17 @@ if(result.uid===0||forbidden.length||tooling.length||result.bun!=='1.4.4'||resul
     step('linux-bootstrap', 'node', ['--test', 'tests/browser-bootstrap.test.mjs'], {
       env: browserEnv,
     });
-    for (const test of ['theme', 'public', 'editor-gateway', 'editor-admin', 'viewer', 'admin'])
+    for (const test of [
+      'theme',
+      'public',
+      'editor-gateway',
+      'editor-admin',
+      'admin',
+      'domains-ui',
+      'works-public',
+      'studio-kit-viewer',
+      'viewer',
+    ])
       step('browser-' + test, 'node', ['tests/' + test + '-browser.mjs'], { env: browserEnv });
     const http = [];
     for (const [path, status, type] of [
@@ -426,6 +436,7 @@ if(result.uid===0||forbidden.length||tooling.length||result.bun!=='1.4.4'||resul
     } catch (error) {
       failure ??= error;
     }
+    writeFileSync(evidence + '/lab-results.json', JSON.stringify(results, null, 2));
     writeFileSync(
       evidence + '/lab-summary.json',
       JSON.stringify(

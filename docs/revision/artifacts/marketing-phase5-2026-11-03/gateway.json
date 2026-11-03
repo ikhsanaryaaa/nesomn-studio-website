@@ -1,0 +1,77 @@
+[
+  {
+    "path": "/health/live",
+    "status": 200,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/health/ready",
+    "status": 200,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/landing",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/works",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/works/nesomn-studio-kit",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/about",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/demo/works/nesomn-studio-kit",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/demo/3d?model=nesomn-studio-kit",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/admin/works",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/admin/works/create",
+    "status": 200,
+    "type": "text/html;charset=utf-8"
+  },
+  {
+    "path": "/api/works",
+    "status": 200,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/api/admin/works",
+    "status": 401,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/api/no-such-route",
+    "status": 404,
+    "type": "application/json;charset=utf-8"
+  },
+  {
+    "path": "/assets/missing.js",
+    "status": 404,
+    "type": "text/plain; charset=utf-8"
+  },
+  {
+    "path": "/admin/assets/missing.js",
+    "status": 404,
+    "type": "text/plain; charset=utf-8"
+  }
+]

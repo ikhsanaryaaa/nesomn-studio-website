@@ -228,9 +228,9 @@ export function Sidebar({ mobile = false }: { mobile?: boolean }) {
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/account">
+                  <Link to="/dashboard">
                     <User />
-                    Account
+                    Dashboard
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem

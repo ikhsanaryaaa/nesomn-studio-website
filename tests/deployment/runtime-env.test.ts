@@ -133,3 +133,20 @@ describe('Redis URL compatibility', () => {
     }
   });
 });
+
+test('split origins require an explicit HTTPS same-site four-domain configuration', () => {
+  const split = {
+    ...valid,
+    LANDING_URL: 'https://nesomn.studio',
+    CLIENT_URL: 'https://shop.nesomn.studio',
+    ADMIN_URL: 'https://dashboard.nesomn.studio',
+    API_URL: 'https://api.nesomn.studio',
+  };
+  expect(readRuntimeEnv(split, 'app').domains?.api).toBe(split.API_URL);
+  for (const patch of [
+    { API_URL: undefined },
+    { ADMIN_URL: split.CLIENT_URL },
+    { CLIENT_URL: 'https://evil.test' },
+  ])
+    expect(() => readRuntimeEnv({ ...split, ...patch }, 'app')).toThrow();
+});

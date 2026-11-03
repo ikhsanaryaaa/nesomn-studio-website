@@ -1,4 +1,5 @@
 import { SubscriptionList, CreditLedgerList } from './pages/billing-records';
+import { WorkList, WorkCreate, WorkEdit } from './pages/works';
 import { Route } from 'react-router';
 
 import { Asset3dList, Asset3dCreate, Asset3dEdit, Asset3dShow } from './pages/assets-3d.tsx';
@@ -23,6 +24,11 @@ import { AuditLogList } from './pages/audit-logs.tsx';
  */
 export const adminRoutes = (
   <>
+    <Route path="/works">
+      <Route index element={<WorkList />} />
+      <Route path="create" element={<WorkCreate />} />
+      <Route path="edit/:id" element={<WorkEdit />} />
+    </Route>
     <Route path="/subscriptions" element={<SubscriptionList />} />
     <Route path="/credit-ledger" element={<CreditLedgerList />} />
     {/* Assets 3D (product_3d_editor): resource & CRUD terpisah. */}

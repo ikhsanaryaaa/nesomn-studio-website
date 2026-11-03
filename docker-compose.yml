@@ -6,11 +6,16 @@ services:
       context: .
       dockerfile: Dockerfile
       target: app
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
+        VITE_LANDING_URL: ${VITE_LANDING_URL:-}
+        VITE_SHOP_URL: ${VITE_SHOP_URL:-}
+        VITE_ADMIN_URL: ${VITE_ADMIN_URL:-}
     env_file:
       - ${APP_ENV_FILE:-.env}
     environment:
       NODE_ENV: production
-      TRUST_PROXY: "1"
+      TRUST_PROXY: '1'
       PORT: 3000
       STORAGE_PATH: /data/storage
     expose: ['3000']

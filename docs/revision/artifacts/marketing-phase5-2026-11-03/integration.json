@@ -1,0 +1,143 @@
+{
+  "results": [
+    {
+      "label": "test-services",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "previous-migrations",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "legacy-fixture",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "migration",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "migration-rerun",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "legacy-preserved",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "portfolio-integration",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-admin",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-import",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-import-repeat",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-single-record",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "docker-build",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "app-start",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "app-smoke",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "gateway-start",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "extract-client",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "extract-admin",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "browser-domains-ui",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "browser-works-public",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "browser-studio-kit-viewer",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "browser-admin",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-gateway",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-app",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-services",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-image-nesomn-app-works-phase1-1793718500436",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-image-redis-7-alpine",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-image-nginx-1-30-6-alpine-sha256-0e52bd054126cdc040b1276c0af347aeb02a41b9cfe305d6094767ac30e97949",
+      "status": "PASS",
+      "exit": 0
+    }
+  ],
+  "productionDatabase": false,
+  "merchantTransactions": false,
+  "volumesDeleted": false,
+  "globalPrune": false
+}

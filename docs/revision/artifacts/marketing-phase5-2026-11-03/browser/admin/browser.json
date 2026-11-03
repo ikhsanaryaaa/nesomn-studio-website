@@ -1,0 +1,77 @@
+{
+  "browser": "Chrome/156.0.8078.74",
+  "realDockerApi": true,
+  "defaultRedirect": true,
+  "creditPackCreateEdit": true,
+  "bundleMembershipCreateEdit": true,
+  "resourceLists": true,
+  "portfolioCreatePublishMixedMedia": true,
+  "shots": [
+    {
+      "theme": "light",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "theme": "light",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "scroll": 360
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "theme": "dark",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440
+    }
+  ],
+  "diagnostics": {
+    "consoleErrors": 0,
+    "consoleWarnings": 0,
+    "failedRequests": [
+      {
+        "path": "http://127.0.0.1:18092/files/portfolio%2F032afd1a-6dbe-44e6-8072-ae644498cb9b.mp4",
+        "error": "net::ERR_ABORTED"
+      },
+      {
+        "path": "http://127.0.0.1:18092/files/portfolio%2F032afd1a-6dbe-44e6-8072-ae644498cb9b.mp4",
+        "error": "net::ERR_ABORTED"
+      }
+    ],
+    "httpErrors": []
+  },
+  "exceptions": []
+}

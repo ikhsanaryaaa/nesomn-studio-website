@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Select } from '@radix-ui/themes';
 import {
   readThemePreference,
   setThemePreference,
@@ -17,19 +18,31 @@ export function AdminThemeControl() {
   const [mode, setMode] = useState(readThemePreference);
   useEffect(() => subscribeTheme(() => setMode(readThemePreference())), []);
   return (
-    <select
-      className="theme-select"
-      aria-label="Admin appearance"
+    <Select.Root
+      size="3"
       value={mode}
-      onChange={(e) => {
-        const value = e.target.value as ThemePreference;
+      onValueChange={(next) => {
+        const value = next as ThemePreference;
         setMode(value);
         setThemePreference(value);
       }}
     >
-      <option value="system">System theme</option>
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-    </select>
+      <Select.Trigger
+        data-theme-control
+        aria-label="Admin appearance"
+        className="admin-theme-select"
+      />
+      <Select.Content position="popper" className="admin-select-content">
+        <Select.Item data-theme-option="system" value="system">
+          System theme
+        </Select.Item>
+        <Select.Item data-theme-option="light" value="light">
+          Light
+        </Select.Item>
+        <Select.Item data-theme-option="dark" value="dark">
+          Dark
+        </Select.Item>
+      </Select.Content>
+    </Select.Root>
   );
 }

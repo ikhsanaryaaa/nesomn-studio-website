@@ -1,0 +1,9 @@
+bun test v1.4.4 (38afee6c8)
+
+tests\security\portfolio.test.ts:
+(pass) portfolio role guards, publication/media isolation, ordered mixed gallery and concurrency [489.55ms]
+
+ 1 pass
+ 0 fail
+ 34 expect() calls
+Ran 1 test across 1 file. [1064.00ms]

@@ -19,12 +19,13 @@ try {
     import('./modules/ai/queue.ts'),
   ]);
   const app = createWebApp(api.fetch, {
+    domains: config.domains,
     clientDir,
     adminDir,
     readiness: () =>
       checkReadiness({
         database: () =>
-          sql`SELECT users.disabled_at, ai_jobs.lease_token, ai_jobs.provider_ref, order_items.benefit_snapshot, subscriptions.benefits, credit_ledger.operation_key FROM users, ai_jobs, order_items, subscriptions, credit_ledger, credit_accounts, credit_lots, credit_allocations, ai_outbox, order_fulfillments, payment_events, payment_receipts, oauth_states, qris_invoices, qris_receipts, qris_reservations WHERE false`,
+          sql`SELECT portfolio_works.revision, users.disabled_at, ai_jobs.lease_token, ai_jobs.provider_ref, order_items.benefit_snapshot, subscriptions.benefits, credit_ledger.operation_key FROM portfolio_works, portfolio_gallery, portfolio_uploads, users, ai_jobs, order_items, subscriptions, credit_ledger, credit_accounts, credit_lots, credit_allocations, ai_outbox, order_fulfillments, payment_events, payment_receipts, oauth_states, qris_invoices, qris_receipts, qris_reservations WHERE false`,
         redis: () => aiQueue.getWaitingCount(),
       }),
   }).listen({ hostname: '0.0.0.0', port: config.port, maxRequestBodySize: 110 * 1024 * 1024 });

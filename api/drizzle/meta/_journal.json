@@ -57,6 +57,13 @@
       "when": 1793404800003,
       "tag": "0007_qris_invoices",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1793404800004,
+      "tag": "0008_portfolio",
+      "breakpoints": true
     }
   ]
 }

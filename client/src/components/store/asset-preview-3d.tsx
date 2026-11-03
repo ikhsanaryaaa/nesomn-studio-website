@@ -41,6 +41,11 @@ export function AssetPreview3D({
           {pending ? 'Checking access…' : 'Load 3D preview'}
         </Button>
       )}
+      {url && (
+        <Button variant="secondary" disabled={pending} onClick={() => void load()}>
+          {pending ? 'Refreshing access…' : 'Refresh asset access'}
+        </Button>
+      )}
       {error && (
         <p role="alert" className="asset-model-preview-error">
           {error}

@@ -1,5 +1,9 @@
 # Nesomn Studio Revision Plan
 
+## Update 3 November 2026 — landing / portfolio, five phases
+
+This is the subsequent five-phase scope, separate from the original ten modernization phases below. Phase1 portfolio schema/admin; phase2 public Works/sample; phase3 About/navigation/footer; phase4 Studio Kit hero/registered 3D sources; phase5 final local acceptance and deployment documentation have been implemented. Local production-image browser/API tests pass, including two navigation fixes. WebM export on Windows headless remains OPEN (NS-BUG-007); live integrations/physical devices remain unverified. No push/deploy or production database change. [Phase5 evidence and runbook](docs/revision/marketing-phase5-2026-11-03.md).
+
 > Untuk pelaksana: baca dokumen ini bersama source dan issue fase terkait. Gunakan workflow `superpowers:executing-plans` atau `superpowers:subagent-driven-development` sesuai metode eksekusi yang dipilih pengguna. Checklist menunjukkan pekerjaan yang harus dibuktikan, bukan klaim bahwa pekerjaan sudah selesai.
 
 **Goal:** Memodernisasi Nesomn Studio sebagai creative studio platform dengan deployment dua service, pembayaran QRIS ShopeePay, UI monokrom + orange, dan editor yang tetap kompatibel dengan data existing.

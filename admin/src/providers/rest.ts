@@ -1,7 +1,8 @@
 import type { DataProvider, GetListParams } from '@refinedev/core';
 import type { AxiosInstance, Method, AxiosRequestConfig } from 'axios';
 
-const API = '/api/admin';
+const API =
+  ((import.meta.env?.VITE_API_URL as string | undefined) || '/api').replace(/\/$/, '') + '/admin';
 function resourcePath(resource: string, id?: string | number) {
   if (!/^[a-z][a-z0-9-]*$/.test(resource)) throw Error('Invalid admin resource.');
   return API + '/' + resource + (id === undefined ? '' : '/' + encodeURIComponent(id));
@@ -34,6 +35,8 @@ export function createRestProvider(http: AxiosInstance): DataProvider {
     data?: unknown,
     headers?: AxiosRequestConfig['headers'],
   ) {
+    if (API !== '/api/admin' && url.startsWith('/api/admin/'))
+      url = API + url.slice('/api/admin'.length);
     if (
       !url.startsWith(API + '/') ||
       url.includes('\\') ||

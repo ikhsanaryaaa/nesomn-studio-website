@@ -1,0 +1,140 @@
+[
+  {
+    "name": "compose-services",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 420
+  },
+  {
+    "name": "test-services",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 13373
+  },
+  {
+    "name": "migration",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 332
+  },
+  {
+    "name": "fixture",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 238
+  },
+  {
+    "name": "build-app",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 8384
+  },
+  {
+    "name": "build-worker",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 3213
+  },
+  {
+    "name": "build-qris",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 2049
+  },
+  {
+    "name": "qris-offline",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 4597
+  },
+  {
+    "name": "connect-db",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 496
+  },
+  {
+    "name": "private-redis",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 815
+  },
+  {
+    "name": "compose-up",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 24652
+  },
+  {
+    "name": "worker-up",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 645
+  },
+  {
+    "name": "image-hygiene",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 373
+  },
+  {
+    "name": "client-assets",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 421
+  },
+  {
+    "name": "admin-assets",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 358
+  },
+  {
+    "name": "linux-bootstrap",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 584
+  },
+  {
+    "name": "browser-theme",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 35698
+  },
+  {
+    "name": "browser-public",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 27138
+  },
+  {
+    "name": "browser-editor-gateway",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 7031
+  },
+  {
+    "name": "browser-editor-admin",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 26709
+  },
+  {
+    "name": "browser-admin",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 17694
+  },
+  {
+    "name": "browser-domains-ui",
+    "status": "PASS",
+    "exit": 0,
+    "milliseconds": 33017
+  },
+  {
+    "name": "browser-viewer",
+    "status": "FAIL",
+    "exit": 1,
+    "milliseconds": 57877
+  }
+]

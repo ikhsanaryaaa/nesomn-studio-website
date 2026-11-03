@@ -1,6 +1,6 @@
 import { useIsAuthenticated, useGo } from '@refinedev/core';
 import { useEffect, type ReactNode } from 'react';
-import { Spin } from 'antd';
+import { Spinner } from '@radix-ui/themes';
 
 /**
  * Penjaga rute: cek sesi via authProvider.check().
@@ -29,7 +29,7 @@ export function Authenticated({
   if (isLoading) {
     return (
       <div style={{ display: 'grid', placeItems: 'center', minHeight: '100vh' }}>
-        <Spin size="large" />
+        <Spinner size="3" />
       </div>
     );
   }

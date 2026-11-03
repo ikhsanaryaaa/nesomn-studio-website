@@ -1,5 +1,5 @@
-import { List, useTable } from '@refinedev/antd';
-import { Alert, Button, Table, Tag } from 'antd';
+import { List, useTable } from '../components/ui';
+import { Alert, Button, Table, Tag } from '../components/ui';
 
 /** Read-only operational records. Financial mutations remain in audited API workflows. */
 export function SubscriptionList() {

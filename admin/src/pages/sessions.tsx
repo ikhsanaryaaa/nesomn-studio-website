@@ -1,5 +1,5 @@
-import { List, useTable, DeleteButton } from '@refinedev/antd';
-import { Table, Space } from 'antd';
+import { List, useTable, DeleteButton } from '../components/ui';
+import { Table, Space } from '../components/ui';
 
 /**
  * Session viewer untuk admin: daftar sesi aktif (device, IP, waktu) + revoke.

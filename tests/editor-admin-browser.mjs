@@ -432,7 +432,7 @@ try {
   await wait('location.pathname==="/admin/assets"');
   for (const route of ['subscriptions', 'credit-ledger']) {
     await go('/admin/' + route);
-    await wait('document.querySelector(".ant-table-row")');
+    await wait('document.querySelector(".rt-TableBody .rt-TableRow")');
     for (const width of [390, 1440])
       for (const theme of ['light', 'dark']) {
         await evaluate(

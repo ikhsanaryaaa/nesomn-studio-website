@@ -1,0 +1,27 @@
+{
+  "separateReviewer": true,
+  "calibration": {
+    "isolatedCSSCopy": true,
+    "plantedFontWeightDetected": true,
+    "onlyTypographyPlantTested": true
+  },
+  "findings": [
+    {
+      "id": "NS-BUG-005",
+      "finding": "Duplicate Works link",
+      "status": "fixed and independently source-rechecked"
+    },
+    {
+      "id": "NS-BUG-006",
+      "finding": "Missing mobile Log in",
+      "status": "fixed and independently source-rechecked; shared700/landing800"
+    }
+  ],
+  "estimatedFilesOpened": 24,
+  "estimatedSearches": 9,
+  "screenshotsInspected": 7,
+  "limits": [
+    "not an exhaustive accessibility/contrast audit",
+    "reviewer did not independently run browser interactions"
+  ]
+}

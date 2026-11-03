@@ -10,7 +10,13 @@ export default defineConfig({
       renderTarget: '#root',
       // Prerender halaman publik untuk SEO. Link lain ditemukan otomatis
       // saat crawling dari '/'.
-      additionalPrerenderRoutes: ['/pricing', '/marketplace'],
+      additionalPrerenderRoutes: [
+        '/pricing',
+        '/marketplace',
+        '/landing',
+        '/works', '/about',
+        '/demo/works/nesomn-studio-kit',
+      ],
     }),
   ],
   resolve: {
@@ -23,7 +29,7 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_URL || 'http://localhost:3000',
+        target: process.env.API_DEV_TARGET || 'http://localhost:3000',
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/api/, ''),
       },

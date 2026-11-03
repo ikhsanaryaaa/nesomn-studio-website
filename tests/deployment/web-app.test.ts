@@ -11,10 +11,12 @@ const clientDir = join(fixture, 'client');
 const adminDir = join(fixture, 'admin');
 await Promise.all([
   mkdir(join(clientDir, 'assets'), { recursive: true }),
+  mkdir(join(clientDir, 'landing'), { recursive: true }),
   mkdir(join(clientDir, 'pricing'), { recursive: true }),
   mkdir(join(adminDir, 'assets'), { recursive: true }),
 ]);
 for (const [file, body] of [
+  [join(clientDir, 'landing/index.html'), '<!doctype html><title>landing-shell</title>'],
   [join(clientDir, 'index.html'), '<!doctype html><title>client-shell</title>'],
   [join(clientDir, 'pricing/index.html'), '<!doctype html><title>pricing-prerender</title>'],
   [join(clientDir, 'assets/app-abc123.js'), 'export const client = true;'],
@@ -144,4 +146,99 @@ describe('single app production routing', () => {
     ready = true;
     expect((await request('/health/ready')).status).toBe(200);
   });
+});
+
+describe('split domain routing', () => {
+  const domains = {
+    landing: 'https://nesomn.studio',
+    shop: 'https://shop.nesomn.studio',
+    admin: 'https://dashboard.nesomn.studio',
+    api: 'https://api.nesomn.studio',
+  };
+  const split = createWebApp(api.fetch, {
+    clientDir,
+    adminDir,
+    domains,
+    readiness: async () => ({ database: true, redis: true }),
+  });
+  const visit = (origin: string, path: string) => split.handle(new Request(origin + path));
+  test('serves landing, shop dashboard and admin root/deep links', async () => {
+    expect(await (await visit(domains.landing, '/')).text()).toContain('landing-shell');
+    expect(await (await visit(domains.shop, '/dashboard')).text()).toContain('client-shell');
+    for (const path of ['/', '/login', '/users', '/assets-3d/edit/legacy'])
+      expect(await (await visit(domains.admin, path)).text()).toContain('admin-shell');
+    expect(await (await visit(domains.admin, '/admin/assets/app-def456.js')).text()).toContain(
+      'export const admin',
+    );
+  });
+  test('redirects legacy links to fixed configured origins preserving queries', async () => {
+    expect((await visit(domains.landing, '/marketplace?type=font')).headers.get('location')).toBe(
+      domains.shop + '/marketplace?type=font',
+    );
+    expect((await visit(domains.landing, '/admin/users')).headers.get('location')).toBe(
+      domains.admin + '/users',
+    );
+    expect((await visit(domains.admin, '/admin/users')).headers.get('location')).toBe(
+      domains.admin + '/users',
+    );
+    expect((await visit(domains.shop, '/admin/login')).headers.get('location')).toBe(
+      domains.admin + '/login',
+    );
+  });
+  test('API host never falls through to an SPA and admin missing assets remain 404', async () => {
+    expect((await visit(domains.api, '/')).status).toBe(404);
+    expect(await (await visit(domains.api, '/api/health')).json()).toEqual({ status: 'ok' });
+    expect((await visit(domains.admin, '/missing.js')).status).toBe(404);
+    expect((await visit(domains.api, '/api/missing')).headers.get('content-type')).toContain(
+      'application/json',
+    );
+  });
+});
+
+test('legacy redirect cannot replace the configured destination hostname', async () => {
+  const domains = {
+    landing: 'https://nesomn.studio',
+    shop: 'https://shop.nesomn.studio',
+    admin: 'https://dashboard.nesomn.studio',
+    api: 'https://api.nesomn.studio',
+  };
+  const split = createWebApp(api.fetch, {
+    clientDir,
+    adminDir,
+    domains,
+    readiness: async () => ({ database: true, redis: true }),
+  });
+  for (const host of [domains.landing, domains.shop, domains.admin]) {
+    const response = await split.handle(new Request(host + '/admin//evil'));
+    expect(new URL(response.headers.get('location')!).origin).toBe(domains.admin);
+  }
+});
+
+test('marketing Works deep links remain on landing and shop routes canonicalize', async () => {
+  const domains = {
+    landing: 'https://nesomn.studio',
+    shop: 'https://shop.nesomn.studio',
+    admin: 'https://dashboard.nesomn.studio',
+    api: 'https://api.nesomn.studio',
+  };
+  const split = createWebApp(api.fetch, {
+    clientDir,
+    adminDir,
+    domains,
+    readiness: async () => ({ database: true, redis: true }),
+  });
+  for (const path of ['/works', '/works/nesomn-studio-kit', '/demo/works/nesomn-studio-kit']) {
+    const r = await split.handle(new Request(domains.landing + path));
+    expect(r.status).toBe(200);
+    expect(await r.text()).toContain('client-shell');
+    const moved = await split.handle(new Request(domains.shop + path));
+    expect(moved.headers.get('location')).toBe(domains.landing + path);
+  }
+});
+
+test('About is a marketing deep link on landing',async()=>{
+ const domains={landing:'https://nesomn.studio',shop:'https://shop.nesomn.studio',admin:'https://dashboard.nesomn.studio',api:'https://api.nesomn.studio'};
+ const split=createWebApp(api.fetch,{clientDir,adminDir,domains,readiness:async()=>({database:true,redis:true})});
+ expect((await split.handle(new Request(domains.landing+'/about'))).status).toBe(200);
+ expect((await split.handle(new Request(domains.shop+'/about'))).headers.get('location')).toBe(domains.landing+'/about');
 });

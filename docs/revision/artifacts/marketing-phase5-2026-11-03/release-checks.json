@@ -1,0 +1,202 @@
+{
+  "bun": "1.4.4",
+  "mode": "unit",
+  "results": [
+    {
+      "name": "frozen",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "install",
+        "--no-env-file",
+        "--frozen-lockfile"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 993
+    },
+    {
+      "name": "dependency-audit",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "--no-env-file",
+        "audit"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 397
+    },
+    {
+      "name": "typecheck",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 18049
+    },
+    {
+      "name": "lint",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "run",
+        "lint"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 8172
+    },
+    {
+      "name": "build",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "run",
+        "build"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 21284
+    },
+    {
+      "name": "node-guards",
+      "command": "node",
+      "args": [
+        "--test",
+        "tests/baseline-runner.test.mjs",
+        "tests/runtime-pin.test.mjs",
+        "tests/litepod-build.test.mjs",
+        "tests/prerender-exit.test.mjs",
+        "tests/browser-bootstrap.test.mjs",
+        "tests/browser-startup.test.mjs",
+        "tests/release-runner.test.mjs",
+        "tests/design-tokens.test.mjs",
+        "tests/no-tailwind.test.mjs",
+        "tests/english-ui.test.mjs"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 8761
+    },
+    {
+      "name": "ui-components",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "run",
+        "--cwd",
+        "client",
+        "test:ui"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 662
+    },
+    {
+      "name": "baseline",
+      "command": "node",
+      "args": [
+        "scripts/test-baseline.mjs",
+        "unit"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 765
+    },
+    {
+      "name": "deployment",
+      "command": "node",
+      "args": [
+        "scripts/test-deployment.mjs"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 629
+    },
+    {
+      "name": "compose",
+      "command": "node",
+      "args": [
+        "scripts/check-deployment.mjs"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 571
+    },
+    {
+      "name": "security",
+      "command": "node",
+      "args": [
+        "scripts/test-security.mjs",
+        "unit"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 407
+    },
+    {
+      "name": "qris",
+      "command": "node",
+      "args": [
+        "scripts/test-qris.mjs",
+        "unit"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 138
+    },
+    {
+      "name": "viewer",
+      "command": "node",
+      "args": [
+        "scripts/test-viewer.mjs",
+        "unit"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 264
+    },
+    {
+      "name": "glb",
+      "command": "node",
+      "args": [
+        "scripts/validate-demo-models.mjs"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 110
+    },
+    {
+      "name": "scene",
+      "command": "node",
+      "args": [
+        "scripts/test-phase9.mjs",
+        "unit"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 268
+    },
+    {
+      "name": "theme-navigation",
+      "command": "C:\\Users\\ikhsan\\Desktop\\nesomn-studio-website\\.cache\\runtime\\bun-1.4.4\\bun-windows-x64\\bun.exe",
+      "args": [
+        "--no-env-file",
+        "--no-install",
+        "test",
+        "tests/theme.test.ts",
+        "tests/litepod.test.ts",
+        "tests/navigation.test.ts",
+        "tests/public-flow.test.ts",
+        "tests/release-ci.test.ts",
+        "tests/patch-validation.test.ts",
+        "tests/admin-rest.test.ts",
+        "tests/portfolio.test.ts",
+        "tests/public-portfolio.test.ts",
+        "admin/tests/works-api.test.ts"
+      ],
+      "status": "PASS",
+      "exit": 0,
+      "milliseconds": 621
+    }
+  ]
+}

@@ -7,7 +7,7 @@ import type { AuthProvider } from '@refinedev/core';
  * - check  -> GET  /api/me (tolak bila role bukan admin: RBAC)
  * Sesi disimpan via cookie httpOnly, jadi tidak ada token di localStorage.
  */
-const API = '/api';
+const API = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
 
 async function call(path: string, options: RequestInit = {}) {
   return fetch(`${API}${path}`, {
