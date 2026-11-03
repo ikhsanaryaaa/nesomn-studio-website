@@ -1,0 +1,47 @@
+{
+  "tag": "nesomn-app:domains-final-1793682074815",
+  "name": "nesomn-domains-final-check-1793682074815",
+  "checks": [
+    {
+      "host": "nesomn.studio",
+      "path": "/",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "host": "shop.nesomn.studio",
+      "path": "/dashboard",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "host": "dashboard.nesomn.studio",
+      "path": "/users",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "host": "api.nesomn.studio",
+      "path": "/api/health",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "host": "api.nesomn.studio",
+      "path": "/api/unknown",
+      "status": 404,
+      "ok": true
+    },
+    {
+      "host": "api.nesomn.studio",
+      "path": "/",
+      "status": 404,
+      "ok": true
+    }
+  ],
+  "cleanup": {
+    "container": true,
+    "image": true
+  },
+  "status": "PASS"
+}

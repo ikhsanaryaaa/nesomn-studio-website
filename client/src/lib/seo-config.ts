@@ -20,6 +20,15 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     title: SITE_NAME,
     description: DEFAULT_DESCRIPTION,
   },
+  '/works': {
+    title: 'Works',
+    description: 'Selected creative work and original concepts from Nesomn Studio.',
+  },
+  '/demo/works/nesomn-studio-kit': {
+    title: 'Nesomn Studio Kit — Demo / Sample',
+    description:
+      'An original internal concept exploring the Nesomn identity. Demo / Sample, not a client commission.',
+  },
   '/pricing': {
     title: 'Pricing',
     description:

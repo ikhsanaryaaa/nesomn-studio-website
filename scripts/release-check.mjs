@@ -37,6 +37,7 @@ export function releaseCases(mode, bun) {
           'tests/security/editor-images.test.ts',
           'tests/security/admin-workflows.test.ts',
           'tests/security/bundle-integrity.test.ts',
+          'tests/security/portfolio.test.ts',
         ],
       ],
     ];
@@ -87,6 +88,9 @@ export function releaseCases(mode, bun) {
         'tests/release-ci.test.ts',
         'tests/patch-validation.test.ts',
         'tests/admin-rest.test.ts',
+        'tests/portfolio.test.ts',
+        'tests/public-portfolio.test.ts',
+        'admin/tests/works-api.test.ts',
       ],
     ],
   ];

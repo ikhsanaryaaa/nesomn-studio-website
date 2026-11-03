@@ -17,7 +17,7 @@ export function chromeExecutable() {
 }
 export function artifactDirectory(surface, historical) {
   if (!/^[a-z0-9-]+$/.test(surface)) throw Error('Invalid browser surface');
-  const folder = release ? 'docs/revision/artifacts/phase-10/' + surface : historical;
+  const folder = release ? (process.env.NESOMN_ARTIFACT_ROOT || 'docs/revision/artifacts/phase-10') + '/' + surface : historical;
   mkdirSync(folder, { recursive: true });
   return folder;
 }

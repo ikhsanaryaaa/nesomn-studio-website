@@ -92,7 +92,36 @@ export function readRuntimeEnv(env: Record<string, string | undefined>, role: 'a
       throw new Error('Invalid QRIS environment: check merchant/store/payload/hash/name/secret.');
     }
   }
+  let domains: { landing: string; shop: string; admin: string; api: string } | undefined;
+  if (role === 'app' && (env.LANDING_URL || env.API_URL)) {
+    const split = z
+      .object({ LANDING_URL: origin, API_URL: origin, CLIENT_URL: origin, ADMIN_URL: origin })
+      .safeParse(env);
+    if (!split.success || new Set(split.success ? Object.values(split.data) : []).size !== 4)
+      throw new Error(
+        'Invalid environment: split domains require four distinct LANDING_URL, CLIENT_URL, ADMIN_URL, API_URL origins.',
+      );
+    const sites = Object.values(split.data).map((value) => new URL(value));
+    if (
+      sites.some((site) => site.protocol !== 'https:') ||
+      sites.some(
+        (site) =>
+          site.hostname !== new URL(split.data.LANDING_URL).hostname &&
+          !site.hostname.endsWith('.' + new URL(split.data.LANDING_URL).hostname),
+      )
+    )
+      throw new Error(
+        'Invalid environment: split domains must use HTTPS on the same site for secure session cookies.',
+      );
+    domains = {
+      landing: split.data.LANDING_URL,
+      shop: split.data.CLIENT_URL,
+      admin: split.data.ADMIN_URL,
+      api: split.data.API_URL,
+    };
+  }
   return {
+    domains,
     port: parsed.data.PORT,
     storageDriver: parsed.data.STORAGE_DRIVER,
     storagePath: parsed.data.STORAGE_PATH,

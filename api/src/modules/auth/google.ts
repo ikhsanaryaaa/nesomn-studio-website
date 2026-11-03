@@ -12,6 +12,7 @@ const googleKeys = createRemoteJWKSet(new URL('https://www.googleapis.com/oauth2
 });
 export function safeReturnPath(value?: string) {
   return [
+    '/dashboard',
     '/account',
     '/library',
     '/editor/projects',
@@ -21,7 +22,7 @@ export function safeReturnPath(value?: string) {
     '/editor/3d',
   ].includes(value ?? '')
     ? value!
-    : '/account';
+    : '/dashboard';
 }
 function configuration() {
   const clientId = process.env.GOOGLE_CLIENT_ID,

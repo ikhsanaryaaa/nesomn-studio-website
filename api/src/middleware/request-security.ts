@@ -38,3 +38,15 @@ export const requestSecurity = new Elysia({ name: 'request-security' }).onBefore
   { as: 'global' },
   ({ request }) => assertRequestOrigin(request),
 );
+
+/** Marketing may read public catalogue and published portfolio, never account/admin responses. */
+export function isLandingCatalogRequest(request: Request): boolean {
+  return (
+    !!process.env.LANDING_URL &&
+    request.headers.get('origin') === process.env.LANDING_URL &&
+    request.method === 'GET' &&
+    /^\/(?:api\/)?(?:catalog\/assets|works(?:\/(?:[a-z0-9-]+|media\/[a-f0-9-]+))?)\/?$/.test(
+      new URL(request.url).pathname,
+    )
+  );
+}

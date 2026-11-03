@@ -1,0 +1,13 @@
+{
+  "studioKitRendered": true,
+  "modelSwitches": 10,
+  "reset": true,
+  "heroWidths": [
+    360,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "exceptions": []
+}

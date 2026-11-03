@@ -28,7 +28,7 @@ Deployment aktual di Litepod, TLS/domain, restore data existing, OAuth, storage 
 
 QRIS ShopeePay **disabled secara default** sampai konfigurasi merchant diverifikasi. Stripe/Pakasir tetap menjadi bagian histori dan rekonsiliasi legacy; keduanya bukan gateway checkout baru. Browser tidak dapat menetapkan transaksi menjadi paid.
 
-UI memakai monokrom + orange, Bricolage Grotesque/Manrope, logo asli, tema light/dark/system, serta layout editor yang mengutamakan canvas. Empat model lokal orisinal tersedia pada **`/demo/3d`**, berlabel **Demo / Sample** dan tidak dimasukkan sebagai produk jualan.
+UI memakai monokrom + orange, Bricolage Grotesque/Poppins, logo asli, tema light/dark/system, serta layout editor yang mengutamakan canvas. Empat model lokal orisinal tersedia pada **`/demo/3d`**, berlabel **Demo / Sample** dan tidak dimasukkan sebagai produk jualan.
 
 ## Stack dan struktur
 
@@ -38,7 +38,7 @@ UI memakai monokrom + orange, Bricolage Grotesque/Manrope, logo asli, tema light
 | Client         | React 19, Vite, React Router, Radix Themes 3.3.0, CSS semantik         |
 | State          | Zustand dan TanStack Query                                             |
 | Editor         | Konva, Three.js, React Three Fiber/Drei                                |
-| Admin          | Refine, Ant Design                                                     |
+| Admin          | Refine core, Radix Themes 3.3.0                                                     |
 | Data           | PostgreSQL dan Drizzle ORM                                             |
 | Queue          | BullMQ dan Redis                                                       |
 | Storage        | Local private storage atau Cloudflare R2                               |
@@ -50,7 +50,7 @@ Versi tersebut adalah **pin repository**, bukan klaim versi terbaru upstream. No
 ```text
 nesomn-studio-website/
 ├── client/                 # Public/store/account dan editor React
-├── admin/                  # Admin SPA, base /admin/
+├── admin/                  # Admin SPA; /admin/ legacy or dedicated dashboard host
 ├── api/                    # Elysia, auth, billing, storage, Drizzle/migrations
 ├── worker/                 # AI consumer dan recovery BullMQ
 ├── packages/shared/        # Tipe, kontrak dan theme tokens bersama
@@ -135,7 +135,7 @@ Template runtime:
 - [AI worker](deploy/litepod/worker.env.example)
 - [QRIS worker](deploy/litepod/qris.env.example)
 
-App dan AI worker memakai DATABASE_URL, REDIS_URL dan ENCRYPTION_KEY yang sama. Pertahankan ENCRYPTION_KEY existing agar kredensial provider terenkripsi tetap terbaca. `CLIENT_URL` dan `ADMIN_URL` adalah origin yang sama, misalnya `https://studio.example.com`, tanpa path `/admin`.
+App dan AI worker memakai DATABASE_URL, REDIS_URL dan ENCRYPTION_KEY yang sama. Pertahankan ENCRYPTION_KEY existing agar kredensial provider terenkripsi tetap terbaca. Pada mode legacy, `CLIENT_URL` dan `ADMIN_URL` adalah origin yang sama, misalnya `https://studio.example.com`, tanpa path `/admin`. Untuk subdomain terpisah gunakan [konfigurasi split-domain](docs/split-domains.md).
 
 Gunakan R2 private atau mount upload volume persisten di `/data/storage` untuk local storage. QRIS membutuhkan volume spool persisten dan secret files read-only; env tidak otomatis menjadi file. Jangan memasukkan secrets ke Git, build variables atau bundle frontend.
 
@@ -250,7 +250,24 @@ Lihat [laporan Litepod](docs/revision/litepod-2026-11-02.md), [perbaikan bug](do
 
 Proprietary — © 2026 Nesomn Studio. All rights reserved. Komponen pihak ketiga tetap mengikuti lisensi masing-masing, termasuk SDK vendored pada `integrations/qris/`.
 
-
 ## Interface language
 
 The client and admin interface use English. Existing user-authored names, asset descriptions and stored records are preserved. Prices remain in IDR. See [English UI revision](docs/revision/english-ui-2026-11-03.md) for verification and limits.
+
+## Landing, shop, dashboard and API domains
+
+See [split-domain deployment](docs/split-domains.md) for build arguments, Litepod origins/TLS/network, OAuth/storage cutover and rollback. The landing preview is available at /landing. Body/UI typography now uses Poppins; display headings retain Bricolage Grotesque.
+
+Implementation and test evidence: [landing, domains and Radix admin revision](docs/revision/landing-domains-admin-2026-11-03.md).
+
+Portfolio foundation and migration: [Works management](docs/portfolio.md). Public Works pages and the single labelled sample are implemented in phase2.
+
+Phase1 evidence: [Works foundation and management](docs/revision/works-phase1-2026-11-03.md).
+
+Public portfolio: /works, /works/:slug; labelled concept preview: /demo/works/nesomn-studio-kit. [Phase2 report](docs/revision/works-phase2-2026-11-03.md).
+
+About/contact and final marketing navigation/footer: [phase3](docs/revision/phase3-2026-11-03.md).
+
+Hero Studio Kit, registered 3D sources and the textured GLB sample: [phase4 report](docs/revision/phase4-2026-11-03.md).
+
+Final landing/portfolio acceptance: [phase5 report](docs/revision/marketing-phase5-2026-11-03.md). Re-run with node scripts/release-check.mjs unit and node scripts/test-portfolio-lab.mjs --acceptance. This uses disposable services and removes its test containers/images. WebM export remains an open Windows-headless acceptance issue (NS-BUG-007); production TLS, providers and physical devices still require operator verification.

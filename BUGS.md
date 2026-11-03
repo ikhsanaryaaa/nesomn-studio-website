@@ -143,3 +143,15 @@ Ketiga bug awal telah diperbaiki di source dan lulus regresi lokal. **FIXED LOCA
 ## Aturan status
 
 OPEN berarti belum diperbaiki. FIXED LOCAL berarti perbaikan source dan regresi lokal sudah dijalankan; checklist yang belum terverifikasi dan pengujian SKIPPED tetap dicatat. Jangan mengubahnya menjadi verifikasi production sebelum pengujian integrasi dan deployment terkait benar-benar lulus.
+
+## Acceptance portfolio/landing — 3 November 2026
+
+| ID | Priority | Finding | Status |
+| --- | --- | --- | --- |
+| NS-BUG-005 | P2 | Landing navigation contains Works twice | FIXED LOCAL — exact Home/Works/About Us browser assertion |
+| NS-BUG-006 | P2 | Log in disappears from mobile marketing navigation | FIXED LOCAL — mobile menu link restored; shared breakpoint700px / landing800px; 44px and Escape/focus checks |
+| NS-BUG-007 | P2 | WebM export fails under Windows headless Chrome software rendering | OPEN — reproduced during final acceptance; PNG/JPEG/save and model preview pass before the WebM assertion |
+
+NS-BUG-007 reproduction: build client, then node tests/viewer-browser.mjs with NESOMN_VIEWER_ARTIFACTS pointing to a fresh test folder. The editor reports Recording failed; assertion missing webm fails. A separate headless 2D capture probe returned zero bytes with VP8 and VP9, so failure is not isolated to the new Studio Kit model. This is evidence of an automated capture limitation; physical-browser impact is not yet established. Do not claim WebM acceptance or silently remove its assertion. Verify visible Chrome/Firefox on a real GPU, then resolve the capture pipeline if reproducible there. No export implementation was changed during this phase.
+
+See docs/revision/marketing-phase5-2026-11-03.md for current test results and limits. Historical Docker/DB unavailability above describes earlier revisions only.

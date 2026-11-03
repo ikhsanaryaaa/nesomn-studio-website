@@ -12,3 +12,4 @@ export * from './media.ts';
 export * from './audit.ts';
 export * from './integrity.ts';
 export * from './qris.ts';
+export * from './portfolio.ts';

@@ -1,3 +1,4 @@
+import { registerCatalogModelUrl } from './model-3d';
 import { editorEpoch } from './editor-session';
 import type {
   UserDTO,
@@ -34,7 +35,7 @@ import type {
  * proxy Vite (lihat vite.config.ts).
  */
 
-const BASE_URL = '/api';
+import { API_BASE as BASE_URL } from './site-config';
 
 export class ApiRequestError extends Error {
   code: string;
@@ -140,7 +141,11 @@ export const api = {
       type: string;
       previews: string[];
       modelUrl: string | null;
-    }>(`/catalog/editor-asset/${slug}`),
+    }>(`/catalog/editor-asset/${encodeURIComponent(slug)}`).then((asset) => {
+      if (['mockup3d', 'asset3d'].includes(asset.type) && asset.modelUrl)
+        registerCatalogModelUrl(asset.modelUrl);
+      return asset;
+    }),
 
   resolveEditorImage: (src: string) =>
     request<{ url: string }>('/catalog/resolve-editor-image', {

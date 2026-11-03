@@ -1,5 +1,10 @@
 import { expect, test } from 'bun:test';
-import { frameBounds, validateModelUrl, inspectModelBytes } from '../client/src/lib/model-3d.ts';
+import {
+  frameBounds,
+  validateModelUrl,
+  inspectModelBytes,
+  registerCatalogModelUrl,
+} from '../client/src/lib/model-3d.ts';
 import * as THREE from '../client/node_modules/three';
 import { meshTargets, targetMesh } from '../client/src/lib/mesh-target.ts';
 import { GLTFLoader } from '../client/node_modules/three/examples/jsm/loaders/GLTFLoader.js';
@@ -79,7 +84,15 @@ test('model sources reject unsafe URL and bad/oversize/externally-dependent file
   expect(() => validateModelUrl('javascript:alert(1)', 'https://studio.test')).toThrow();
   expect(() =>
     validateModelUrl('https://x.test/model.glb?token=secret', 'https://studio.test'),
+  ).toThrow();
+  registerCatalogModelUrl('https://storage.test/registered.glb?signature=sample');
+  expect(() =>
+    validateModelUrl('https://storage.test/registered.glb?signature=sample', 'https://studio.test'),
   ).not.toThrow();
+  expect(() =>
+    validateModelUrl('/demo/models/nesomn-product-box.glb', 'https://studio.test'),
+  ).not.toThrow();
+  expect(() => validateModelUrl('/uploads/unregistered.glb', 'https://studio.test')).toThrow();
   expect(() => inspectModelBytes(new Uint8Array([1, 2, 3]).buffer)).toThrow();
   expect(() =>
     inspectModelBytes(
@@ -88,4 +101,16 @@ test('model sources reject unsafe URL and bad/oversize/externally-dependent file
       ).buffer,
     ),
   ).toThrow();
+});
+
+test('Studio Kit has an embedded texture and valid bounded GLB', () => {
+  const bytes = readFileSync('client/public/demo/models/nesomn-studio-kit.glb');
+  const doc = inspectModelBytes(
+    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer,
+  );
+  expect(doc.images).toHaveLength(1);
+  expect(JSON.stringify(doc)).not.toContain('https://');
+  expect(() =>
+    validateModelUrl('/demo/models/nesomn-studio-kit.glb', 'https://studio.test'),
+  ).not.toThrow();
 });

@@ -1,0 +1,98 @@
+{
+  "results": [
+    {
+      "label": "test-services",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "previous-migrations",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "legacy-fixture",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "migration",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "migration-rerun",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "legacy-preserved",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "portfolio-integration",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-admin",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-import",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-import-repeat",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "sample-single-record",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "docker-build",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "app-start",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "app-smoke",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-app",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-services",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-image-nesomn-app-works-phase1-1793716053435",
+      "status": "PASS",
+      "exit": 0
+    },
+    {
+      "label": "cleanup-image-redis-7-alpine",
+      "status": "PASS",
+      "exit": 0
+    }
+  ],
+  "productionDatabase": false,
+  "merchantTransactions": false,
+  "volumesDeleted": false,
+  "globalPrune": false
+}

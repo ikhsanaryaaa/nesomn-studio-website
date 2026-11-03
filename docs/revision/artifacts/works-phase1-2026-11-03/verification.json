@@ -1,0 +1,195 @@
+{
+  "repository": "ikhsanaryaaa/nesomn-studio-website",
+  "branch": "codex/radix-english-rounded-ui",
+  "baseCommit": "3e51b30",
+  "uncommitted": true,
+  "runtime": "Bun1.4.4 / Elysia1.4.30 unchanged",
+  "unit": {
+    "command": "node scripts/release-check.mjs unit",
+    "status": "PASS",
+    "gates": 16
+  },
+  "portfolioUnit": {
+    "command": "bun test tests/portfolio.test.ts admin/tests/works-api.test.ts",
+    "status": "PASS",
+    "tests": 5,
+    "assertions": 27
+  },
+  "lab": {
+    "command": "node scripts/test-portfolio-lab.mjs",
+    "results": [
+      {
+        "label": "test-services",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "previous-migrations",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "legacy-fixture",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "migration",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "migration-rerun",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "legacy-preserved",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "portfolio-integration",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "docker-build",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "app-start",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "app-smoke",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "cleanup-app",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "cleanup-services",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "cleanup-image-nesomn-app-works-phase1-1793699618796",
+        "status": "PASS",
+        "exit": 0
+      },
+      {
+        "label": "cleanup-image-redis-7-alpine",
+        "status": "PASS",
+        "exit": 0
+      }
+    ],
+    "productionDatabase": false,
+    "merchantTransactions": false,
+    "volumesDeleted": false,
+    "globalPrune": false
+  },
+  "browser": {
+    "command": "node admin/tests/works-browser.mjs",
+    "fixture": "Explicit offline admin API/media fixture; no database, real user or merchant",
+    "browser": "Chrome/156.0.8078.74",
+    "create": true,
+    "duplicateSlugRecoverable": true,
+    "upload": true,
+    "mixedGallery": [
+      "image/png",
+      "video/mp4",
+      "image/png",
+      "video/webm"
+    ],
+    "playback": [
+      {
+        "duration": 0.4,
+        "time": 0.4,
+        "ended": true,
+        "poster": true
+      },
+      {
+        "duration": 0.4,
+        "time": 0.4,
+        "ended": true,
+        "poster": true
+      }
+    ],
+    "rangeRequests": 2,
+    "reorder": true,
+    "repeatedSave": true,
+    "conflictRetainsDraft": true,
+    "confirmedReload": true,
+    "uploadErrorRetainsCover": true,
+    "shots": [
+      {
+        "theme": "light",
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "theme": "light",
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "theme": "light",
+        "width": 768,
+        "scroll": 753
+      },
+      {
+        "theme": "light",
+        "width": 1024,
+        "scroll": 1009
+      },
+      {
+        "theme": "light",
+        "width": 1440,
+        "scroll": 1425
+      },
+      {
+        "theme": "dark",
+        "width": 360,
+        "scroll": 360
+      },
+      {
+        "theme": "dark",
+        "width": 390,
+        "scroll": 390
+      },
+      {
+        "theme": "dark",
+        "width": 768,
+        "scroll": 753
+      },
+      {
+        "theme": "dark",
+        "width": 1024,
+        "scroll": 1009
+      },
+      {
+        "theme": "dark",
+        "width": 1440,
+        "scroll": 1425
+      }
+    ],
+    "exceptions": []
+  },
+  "cleanup": {
+    "remainingOwnContainers": [],
+    "remainingOwnImageTags": [],
+    "volumesDeleted": false,
+    "globalPrune": false
+  },
+  "skipped": [
+    "Production migration/deployment",
+    "Live TLS/OAuth/merchant",
+    "3D canvas WebM export regression outside this phase"
+  ]
+}

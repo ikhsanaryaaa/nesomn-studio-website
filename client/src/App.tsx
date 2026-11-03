@@ -4,6 +4,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { AppLayout } from '@/components/shell/app-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { queryClient } from '@/lib/query';
+import AboutPage from '@/pages/about';
+import WorksPage from '@/pages/works';
+import WorkDetailPage from '@/pages/work-detail';
+import LandingPage from '@/pages/landing';
+import { isLandingHost } from '@/lib/site-config';
 import HomePage from '@/pages/home';
 import PricingPage from '@/pages/pricing';
 import MarketplacePage from '@/pages/marketplace';
@@ -37,6 +42,12 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/works" element={<WorksPage />} />
+        <Route path="/works/:slug" element={<WorkDetailPage />} />
+        <Route path="/demo/works/nesomn-studio-kit" element={<WorkDetailPage sample />} />
+        {isLandingHost() && <Route index element={<LandingPage />} />}
         <Route element={<AppLayout />}>
           <Route
             path="demo/3d"
@@ -94,6 +105,7 @@ export default function App() {
               </Suspense>
             }
           />
+          <Route path="dashboard" element={<AccountPage />} />
           <Route path="account" element={<AccountPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
           <Route path="*" element={<NotFoundPage />} />

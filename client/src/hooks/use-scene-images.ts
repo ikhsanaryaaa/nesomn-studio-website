@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { API_BASE } from '../lib/site-config';
+import { apiMediaUrl, editorImageSlug } from '../lib/api-media';
 import { api } from '../lib/api';
 import { editorEpoch } from '../lib/editor-session';
 import type { SceneObject } from '@nesomn/shared';
@@ -37,17 +39,26 @@ export function useSceneImages(objects: SceneObject[]) {
         image.src = src;
       });
     }
+    async function loadSource(src: string) {
+      const slug = API_BASE.startsWith('https://') ? editorImageSlug(src) : null;
+      if (slug) {
+        const asset = await api.editorAsset(slug);
+        if (!valid() || !asset.modelUrl) throw new Error('Image unavailable');
+        return load(asset.modelUrl);
+      }
+      return load(apiMediaUrl(src));
+    }
     void Promise.all(
       (JSON.parse(sources) as string[]).map(async (src) => {
         try {
           let image: HTMLImageElement;
           try {
-            image = await load(src);
+            image = await loadSource(src);
           } catch {
             if (!valid()) return;
             const resolved = await api.resolveEditorImage(src);
             if (!valid()) return;
-            image = await load(resolved.url);
+            image = await loadSource(resolved.url);
           }
           if (valid()) images.set(src, image);
         } catch {

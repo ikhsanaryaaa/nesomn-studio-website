@@ -13,5 +13,5 @@ test('return redirect accepts only app paths and rejects external, auth loops, c
     '/admin/',
     '/x\n',
   ])
-    expect(safeReturnTo(path)).toBe('/account');
+    expect(safeReturnTo(path)).toBe('/dashboard');
 });

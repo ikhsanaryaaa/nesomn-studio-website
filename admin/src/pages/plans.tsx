@@ -1,5 +1,5 @@
-import { List, useTable, EditButton, DeleteButton, Create, Edit, useForm } from '@refinedev/antd';
-import { Table, Space, Tag, Form, Input, Select, InputNumber, Switch } from 'antd';
+import { List, useTable, EditButton, DeleteButton, Create, Edit, useForm } from '../components/ui';
+import { Table, Space, Tag, Form, Input, Select, InputNumber, Switch } from '../components/ui';
 
 export const PlanList = () => {
   const { tableProps } = useTable({ syncWithLocation: true });

@@ -10,8 +10,11 @@ export function legacyEditorImageKey(
     const url = new URL(src, 'http://local.invalid');
     let key: string;
     if (
-      src.startsWith('/files/') &&
-      url.origin === 'http://local.invalid' &&
+      url.pathname.startsWith('/files/') &&
+      !url.username &&
+      !url.password &&
+      ((src.startsWith('/files/') && url.origin === 'http://local.invalid') ||
+        (!!process.env.API_URL && url.origin === new URL(process.env.API_URL).origin)) &&
       url.searchParams.has('token') &&
       url.searchParams.has('exp')
     ) {

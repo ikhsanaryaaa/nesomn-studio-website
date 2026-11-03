@@ -1,0 +1,36 @@
+bun test v1.4.4 (38afee6c8)
+
+tests\public-flow.test.ts:
+(pass) return redirect accepts only app paths and rejects external, auth loops, controls and encoded bypass [1.25ms]
+
+tests\deployment\api-media.test.ts:
+(pass) absolute local signed identity accepts configured API only; authorization remains server-side [0.38ms]
+
+tests\deployment\domain-origin.test.ts:
+(pass) marketing may read catalogue only, shop/admin may mutate with explicit Origin [0.51ms]
+
+tests\deployment\runtime-env.test.ts:
+(pass) production startup config > accepts external private DNS and explicit local storage [3.64ms]
+(pass) production startup config > rejects missing secrets, malformed services and unsafe origins without logging values [6.43ms]
+(pass) production startup config > R2 credentials required only when configured; worker needs no JWT or public origin [2.55ms]
+(pass) production startup config > production app requires explicit driver and local path instead of divergent runtime defaults [0.65ms]
+(pass) Redis URL compatibility > preserves auth, database index and verified TLS on API and worker [0.09ms]
+(pass) Redis URL compatibility > rejects bad scheme/index/query without reflecting credentials [0.08ms]
+(pass) split origins require an explicit HTTPS same-site four-domain configuration [2.54ms]
+
+tests\deployment\web-app.test.ts:
+(pass) single app production routing > preserves API prefix, query, body, cookie and legacy signed-file namespace [9.40ms]
+(pass) single app production routing > unknown API returns JSON404 for navigation, POST and exact /api [0.54ms]
+(pass) single app production routing > known client/admin deep links and prerendered route serve correct HTML [12.76ms]
+(pass) single app production routing > static files have types/cache/HEAD; root admin logo remains available [2.58ms]
+(pass) single app production routing > missing assets, unknown pages, private paths and traversal never return SPA [1.27ms]
+(pass) single app production routing > liveness stays up while readiness reports dependency outage without secrets [1.00ms]
+(pass) split domain routing > serves landing, shop dashboard and admin root/deep links [6.96ms]
+(pass) split domain routing > redirects legacy links to fixed configured origins preserving queries [0.24ms]
+(pass) split domain routing > API host never falls through to an SPA and admin missing assets remain 404 [0.46ms]
+(pass) legacy redirect cannot replace the configured destination hostname [2.10ms]
+
+ 20 pass
+ 0 fail
+ 140 expect() calls
+Ran 20 tests across 5 files. [323.00ms]

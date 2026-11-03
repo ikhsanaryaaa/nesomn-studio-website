@@ -1,6 +1,16 @@
-import { List, useTable, EditButton, DeleteButton, Create, Edit, useForm } from '@refinedev/antd';
+import { List, useTable, EditButton, DeleteButton, Create, Edit, useForm } from '../components/ui';
 import { useCustomMutation, useNotification } from '@refinedev/core';
-import { Table, Space, Tag, Form, Input, Select, InputNumber, Switch, Button } from 'antd';
+import {
+  Table,
+  Space,
+  Tag,
+  Form,
+  Input,
+  Select,
+  InputNumber,
+  Switch,
+  Button,
+} from '../components/ui';
 
 const KINDS = [
   { value: 'image', label: 'image' },

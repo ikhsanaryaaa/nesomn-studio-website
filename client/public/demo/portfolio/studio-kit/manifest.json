@@ -1,0 +1,70 @@
+{
+  "id": "00000000-0000-4000-8000-000000000001",
+  "slug": "nesomn-studio-kit",
+  "title": "Nesomn Studio Kit",
+  "description": "An internal concept project exploring the Nesomn identity across editorial artwork and a studio kit. Bold typography, warm paper and orange geometry connect the flat design with its packaging application.\n\nCreated as a demonstration of this portfolio. This is not a client commission or a product for sale.",
+  "projectDate": "2026-11-03",
+  "client": null,
+  "isSample": true,
+  "cover": {
+    "id": "sample-cover",
+    "name": "Studio kit cover",
+    "url": "/demo/portfolio/studio-kit/cover.png",
+    "mimeType": "image/png",
+    "width": 1600,
+    "height": 1000
+  },
+  "gallery": [
+    {
+      "mediaId": "sample-editorial",
+      "alt": "Nesomn Studio Kit typography and orange orbital artwork on warm paper",
+      "posterMediaId": null,
+      "media": {
+        "id": "sample-editorial",
+        "name": "Editorial artwork",
+        "url": "/demo/portfolio/studio-kit/artwork.png",
+        "mimeType": "image/png",
+        "width": 1600,
+        "height": 1000
+      },
+      "poster": null
+    },
+    {
+      "mediaId": "sample-box",
+      "alt": "Nesomn Studio Kit packaging concept shown in perspective",
+      "posterMediaId": null,
+      "media": {
+        "id": "sample-box",
+        "name": "Packaging concept",
+        "url": "/demo/portfolio/studio-kit/packaging.png",
+        "mimeType": "image/png",
+        "width": 1600,
+        "height": 1000
+      },
+      "poster": null
+    },
+    {
+      "mediaId": "sample-motion",
+      "alt": "A slow moving presentation of the original Nesomn Studio Kit artwork",
+      "posterMediaId": "sample-editorial",
+      "media": {
+        "id": "sample-motion",
+        "name": "Studio Kit motion study",
+        "url": "/demo/portfolio/studio-kit/motion.mp4",
+        "mimeType": "video/mp4",
+        "width": 1600,
+        "height": 1000
+      },
+      "poster": {
+        "id": "sample-editorial",
+        "name": "Motion poster",
+        "url": "/demo/portfolio/studio-kit/artwork.png",
+        "mimeType": "image/png",
+        "width": 1600,
+        "height": 1000
+      }
+    }
+  ],
+  "linkLabel": "Explore the 3D demo",
+  "linkUrl": "https://shop.nesomn.studio/demo/3d?model=nesomn-studio-kit"
+}

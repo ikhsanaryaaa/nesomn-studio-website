@@ -1,0 +1,7 @@
+{
+  "testContainersRemaining": [],
+  "testAppImagesRemaining": [],
+  "deletedVolumes": false,
+  "globalPrune": false,
+  "unrelatedResourcesPreserved": true
+}

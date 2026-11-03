@@ -217,7 +217,7 @@ try {
     assert.equal(await evaluate('document.documentElement.dataset.theme'), 'dark');
     await evaluate('document.fonts.ready.then(()=>true)');
     const fonts = await evaluate(
-      '({body:getComputedStyle(document.body).fontFamily,heading:getComputedStyle(document.querySelector("h1")).fontFamily,loaded:document.fonts.check("14px Manrope Variable"),displayLoaded:document.fonts.check("32px Bricolage Grotesque Variable")})',
+      '({body:getComputedStyle(document.body).fontFamily,heading:getComputedStyle(document.querySelector("h1")).fontFamily,loaded:document.fonts.check("14px Poppins"),displayLoaded:document.fonts.check("32px Bricolage Grotesque Variable")})',
     );
     assert.match(fonts.heading, /Bricolage/);
     assert.equal(fonts.displayLoaded, true);
@@ -389,7 +389,7 @@ try {
     await wait('!document.querySelector("[role=dialog]")');
     await wait('document.activeElement?.id === "add-design"');
 
-    assert.match(fonts.body, /Manrope/);
+    assert.match(fonts.body, /Poppins/);
     assert.equal(fonts.loaded, true);
     assert.deepEqual(errors, []);
     writeFileSync(

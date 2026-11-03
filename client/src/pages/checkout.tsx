@@ -1,3 +1,4 @@
+import { apiUrl } from '@/lib/site-config';
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -113,7 +114,7 @@ function InvoiceContent() {
                     <>
                       <img
                         className="checkout-qr-image"
-                        src={`/api/billing/orders/${encodeURIComponent(id)}/qr`}
+                        src={apiUrl(`/billing/orders/${encodeURIComponent(id)}/qr`)}
                         alt={`QRIS order ${id}, amount due ${rp(value.payableIdr)}`}
                         onError={() => {
                           setQrError(true);

@@ -1,4 +1,4 @@
-import { List, useTable, ShowButton } from '@refinedev/antd';
+import { List, useTable, ShowButton, Show } from '../components/ui';
 import { useShow, useCreate, useList, useNotification } from '@refinedev/core';
 import {
   Table,
@@ -11,7 +11,7 @@ import {
   Select,
   InputNumber,
   Button,
-} from 'antd';
+} from '../components/ui';
 import { useParams } from 'react-router';
 
 export const UserList = () => {
@@ -127,7 +127,11 @@ export const UserShow = () => {
   const record = queryResult?.data?.data;
 
   return (
-    <div>
+    <Show
+      isLoading={queryResult?.isLoading}
+      isError={queryResult?.isError}
+      refetch={queryResult?.refetch}
+    >
       <Card loading={queryResult?.isLoading} title="User">
         <Descriptions column={1}>
           <Descriptions.Item label="Email">{record?.email}</Descriptions.Item>
@@ -143,6 +147,6 @@ export const UserShow = () => {
       </Card>
       {id && <AttachSubscription userId={id} />}
       {id && <AddCredit userId={id} />}
-    </div>
+    </Show>
   );
 };

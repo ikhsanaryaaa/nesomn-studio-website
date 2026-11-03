@@ -5,11 +5,11 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { chromeExecutable, fixtureBun } from './lib/browser-runtime.mjs';
+import { chromeExecutable, fixtureBun, artifactDirectory } from './lib/browser-runtime.mjs';
 if (process.env.NESOMN_DISPOSABLE_TESTS !== '1' || process.env.NESOMN_RELEASE_LAB !== '1')
   throw Error('Disposable release lab required');
 const base = 'http://127.0.0.1:18092',
-  folder = 'docs/revision/artifacts/phase-10/admin',
+  folder = artifactDirectory('admin', 'docs/revision/artifacts/phase-10/admin'),
   downloads = resolve('.cache/revision-phase-10/admin/downloads');
 mkdirSync(folder, { recursive: true });
 mkdirSync(downloads, { recursive: true });
@@ -36,7 +36,7 @@ function fixture(action) {
 }
 fixture('promote');
 const diagnostics = createBrowserDiagnostics();
-let packId, bundleId, assetId;
+let packId, bundleId, assetId, workId;
 async function api(path, method = 'GET', body) {
   return fetch(base + '/api' + path, {
     method,
@@ -156,7 +156,7 @@ try {
     await evaluate(
       '(()=>{const e=document.getElementById(' +
         JSON.stringify(id) +
-        ');if(!e)throw Error("Missing field");Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value").set.call(e,' +
+        ');if(!e)throw Error("Missing field");Object.getOwnPropertyDescriptor(e.tagName==="TEXTAREA"?HTMLTextAreaElement.prototype:HTMLInputElement.prototype,"value").set.call(e,' +
         JSON.stringify(String(value)) +
         ');e.dispatchEvent(new Event("input",{bubbles:true}));})()',
     );
@@ -174,7 +174,7 @@ try {
     ['priceUsd', '1'],
   ])
     await input(id, value);
-  await click('Save');
+  await click('Save changes');
   await wait('location.pathname==="/admin/credit-packs"');
   const packs = await (await api('/admin/credit-packs')).json();
   const pack = packs.find((p) => p.code === 'release-' + run);
@@ -184,7 +184,7 @@ try {
   await go('/admin/credit-packs/edit/' + packId);
   await wait('document.querySelector("#credits")?.value==="10"');
   await input('credits', '11');
-  await click('Save');
+  await click('Save changes');
   await wait('location.pathname==="/admin/credit-packs"');
   assert.equal((await (await api('/admin/credit-packs/' + packId)).json()).credits, 11);
   const title = 'Demo / Sample bundle asset ' + run;
@@ -201,42 +201,17 @@ try {
   await sleep(300);
   await input('title', 'Demo / Sample bundle');
   await input('slug', 'release-bundle-' + run);
-  await evaluate('document.querySelector("#assetIds").focus()');
-  await send('Input.dispatchKeyEvent', {
-    type: 'keyDown',
-    key: 'ArrowDown',
-    code: 'ArrowDown',
-    windowsVirtualKeyCode: 40,
-  });
-  await send('Input.dispatchKeyEvent', {
-    type: 'keyUp',
-    key: 'ArrowDown',
-    code: 'ArrowDown',
-    windowsVirtualKeyCode: 40,
-  });
   await wait(
-    '[...document.querySelectorAll(".ant-select-item-option-content")].some(e=>e.textContent===' +
+    '[...document.querySelectorAll(".admin-multiselect label")].some(e=>e.textContent===' +
       JSON.stringify(title) +
       ')',
   );
   await evaluate(
-    '[...document.querySelectorAll(".ant-select-item-option-content")].find(e=>e.textContent===' +
+    '[...document.querySelectorAll(".admin-multiselect label")].find(e=>e.textContent===' +
       JSON.stringify(title) +
-      ').parentElement.click()',
+      ').click()',
   );
-  await send('Input.dispatchKeyEvent', {
-    type: 'keyDown',
-    key: 'Escape',
-    code: 'Escape',
-    windowsVirtualKeyCode: 27,
-  });
-  await send('Input.dispatchKeyEvent', {
-    type: 'keyUp',
-    key: 'Escape',
-    code: 'Escape',
-    windowsVirtualKeyCode: 27,
-  });
-  await click('Save');
+  await click('Save changes');
   await wait('!location.pathname.endsWith("/create")');
   const listedBundles = await (await api('/admin/bundles')).json();
   bundleId = listedBundles.find((b) => b.slug === 'release-bundle-' + run)?.id;
@@ -245,12 +220,90 @@ try {
   await go('/admin/bundles/edit/' + bundleId);
   await wait('document.querySelector("#title")?.value==="Demo / Sample bundle"');
   await input('title', 'Updated sample bundle');
-  await click('Save');
+  await click('Save changes');
   await wait('!location.pathname.includes("/edit/")');
   const editedBundle = await (await api('/admin/bundles/' + bundleId)).json();
   assert.equal(editedBundle.title, 'Updated sample bundle');
   assert.deepEqual(editedBundle.assetIds, [assetId]);
   await go('/admin/credit-packs');
+
+  await go('/admin/works/create');
+  await wait('document.querySelector("#work-title")');
+  for (const [id, value] of [
+    ['work-title', 'Demo / Sample acceptance work'],
+    ['work-slug', 'release-work-' + run],
+    ['work-description', 'Explicit disposable portfolio acceptance fixture.'],
+    ['work-date', '2026-11-03'],
+    ['work-link-label', 'Explore sample'],
+    ['work-link-url', 'https://shop.nesomn.studio/demo/3d?model=nesomn-studio-kit'],
+  ])
+    await input(id, value);
+  await evaluate('document.querySelector(".works-sample-label button").click()');
+  async function upload(id, path) {
+    const doc = await send('DOM.getDocument');
+    const node = await send('DOM.querySelector', { nodeId: doc.root.nodeId, selector: '#' + id });
+    await send('DOM.setFileInputFiles', { nodeId: node.nodeId, files: [resolve(path)] });
+    await wait(
+      '!document.querySelector("#work-title").disabled && !document.body.textContent.includes("Uploading media. Keep this page open.")',
+    );
+    await sleep(200);
+  }
+  await upload('work-cover-upload', 'client/public/demo/portfolio/studio-kit/cover.png');
+  await wait('document.querySelector(".works-cover-preview img")?.complete');
+  await upload('work-gallery-upload', 'client/public/demo/portfolio/studio-kit/artwork.png');
+  await wait('document.querySelectorAll(".works-gallery-item").length===1');
+  const altId = await evaluate('document.querySelector(".works-gallery input[id^=work-alt]").id');
+  await input(altId, 'Original sample Studio Kit artwork');
+  await upload('work-gallery-upload', 'client/public/demo/portfolio/studio-kit/motion.mp4');
+  await wait('document.querySelectorAll(".works-gallery-item").length===2');
+  await click('Save changes');
+  await wait('location.pathname.includes("/admin/works/edit/")');
+  workId = await evaluate('location.pathname.split("/").pop()');
+  await wait('document.querySelector("#work-title")?.value==="Demo / Sample acceptance work"');
+  await evaluate('document.querySelector("#work-status").click()');
+  await wait('document.querySelector("[role=option][data-state=unchecked]")');
+  await evaluate(
+    '[...document.querySelectorAll("[role=option]")].find(e=>e.textContent==="Published").click()',
+  );
+  await click('Save changes');
+  await wait('document.body.textContent.includes("Work published.")');
+  const savedWork = await (await api('/admin/works/' + workId)).json();
+  assert.equal(savedWork.status, 'published');
+  assert.equal(savedWork.gallery.length, 2);
+  assert.equal(savedWork.isSample, true);
+  const publicWork = await (await fetch(base + '/api/works/release-work-' + run)).json();
+  assert.equal(publicWork.title, 'Demo / Sample acceptance work');
+  assert.equal((await fetch(base + publicWork.cover.url)).status, 200);
+  for (const theme of ['light', 'dark']) {
+    await evaluate(
+      'localStorage.setItem("nesomn-theme",' +
+        JSON.stringify(theme) +
+        ');window.dispatchEvent(new Event("storage"));',
+    );
+    for (const width of [360, 390, 768, 1024, 1440]) {
+      await send('Emulation.setDeviceMetricsOverride', {
+        width,
+        height: 1000,
+        deviceScaleFactor: 1,
+        mobile: width < 600,
+      });
+      await sleep(200);
+      assert.ok(
+        await evaluate('document.documentElement.scrollWidth<=innerWidth'),
+        'Works admin overflow',
+      );
+      const shot = await send('Page.captureScreenshot', { format: 'png' });
+      writeFileSync(
+        folder + '/works-' + theme + '-' + width + '.png',
+        Buffer.from(shot.data, 'base64'),
+      );
+    }
+  }
+  await go('/admin/works');
+  await wait(
+    'document.querySelector(".rt-TableRoot")?.textContent.includes("Demo / Sample acceptance work")',
+  );
+
   const shots = [];
   for (const theme of ['light', 'dark']) {
     await evaluate(
@@ -290,7 +343,7 @@ try {
     'bundles',
   ]) {
     await go('/admin/' + resource);
-    await wait('document.querySelector(".ant-table")');
+    await wait('document.querySelector(".rt-TableRoot")');
   }
   assert.deepEqual(exceptions, []);
   assert.ok(network.every((origin) => origin === base));
@@ -304,6 +357,7 @@ try {
         creditPackCreateEdit: true,
         bundleMembershipCreateEdit: true,
         resourceLists: true,
+        portfolioCreatePublishMixedMedia: true,
         shots,
         diagnostics,
         exceptions,
@@ -323,6 +377,7 @@ try {
     ws.close();
   }
   chrome?.kill();
+  if (workId) await api('/admin/works/' + workId, 'DELETE');
   if (bundleId) await api('/admin/bundles/' + bundleId, 'DELETE');
   if (assetId) await api('/admin/assets-scene/' + assetId, 'DELETE');
   if (packId) await api('/admin/credit-packs/' + packId, 'DELETE');

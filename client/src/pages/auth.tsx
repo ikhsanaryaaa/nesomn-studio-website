@@ -1,3 +1,4 @@
+import { apiUrl } from '@/lib/site-config';
 import { useState, type FormEvent } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
@@ -44,7 +45,7 @@ export default function AuthPage({ register = false }: { register?: boolean }) {
     if (pending) return;
     setPending(true);
     setError('');
-    const url = '/api/auth/google?returnTo=' + encodeURIComponent(returnTo);
+    const url = apiUrl('/auth/google?returnTo=') + encodeURIComponent(returnTo);
     try {
       const response = await fetch(url, { credentials: 'include', redirect: 'manual' });
       if (response.type === 'opaqueredirect') {

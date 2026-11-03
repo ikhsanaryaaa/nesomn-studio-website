@@ -1,16 +1,16 @@
 import type { ResourceProps } from '@refinedev/core';
 import {
-  DatabaseOutlined,
-  AppstoreOutlined,
-  CreditCardOutlined,
-  GiftOutlined,
-  TeamOutlined,
-  ApiOutlined,
-  ThunderboltOutlined,
-  DesktopOutlined,
-  FileSearchOutlined,
-  PictureOutlined,
-} from '@ant-design/icons';
+  Database as DatabaseOutlined,
+  Grid2X2 as AppstoreOutlined,
+  CreditCard as CreditCardOutlined,
+  Gift as GiftOutlined,
+  Users as TeamOutlined,
+  Plug as ApiOutlined,
+  Zap as ThunderboltOutlined,
+  Monitor as DesktopOutlined,
+  FileSearch as FileSearchOutlined,
+  Image as PictureOutlined,
+} from 'lucide-react';
 
 /**
  * Definisi resource Refine: tiap entri memetakan nama resource ke rute
@@ -18,6 +18,14 @@ import {
  * tetap rapi: Katalog, Pengguna, AI, Sistem.
  */
 export const resources: ResourceProps[] = [
+  {
+    name: 'works',
+    list: '/works',
+    create: '/works/create',
+    edit: '/works/edit/:id',
+    meta: { label: 'Works', icon: <PictureOutlined />, parent: 'content' },
+  },
+  { name: 'content', meta: { label: 'Website content' } },
   {
     name: 'subscriptions',
     list: '/subscriptions',

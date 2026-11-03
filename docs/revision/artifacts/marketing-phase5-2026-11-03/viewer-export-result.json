@@ -1,0 +1,20 @@
+{
+  "command": "node tests/viewer-browser.mjs",
+  "status": "FAIL",
+  "exit": 1,
+  "observedError": "AssertionError: missing webm",
+  "editorNotice": "Recording failed",
+  "passedBeforeFailure": [
+    "four original GLB renders",
+    "12 model switches",
+    "zoom/reset/autorotate/fullscreen",
+    "reduced motion",
+    "invalid model retry",
+    "no WebGL fallback",
+    "editor save protocol",
+    "PNG download",
+    "JPEG download"
+  ],
+  "physicalDeviceTested": false,
+  "assertionDisabled": false
+}

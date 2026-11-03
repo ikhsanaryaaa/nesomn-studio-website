@@ -1,0 +1,1 @@
+[{"path":"/health/ready","status":200},{"path":"/admin/works","status":200},{"path":"/admin/works/create","status":200},{"path":"/api/works","status":200},{"path":"/api/admin/works","status":401}]

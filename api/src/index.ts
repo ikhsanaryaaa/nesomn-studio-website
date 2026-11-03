@@ -1,8 +1,9 @@
+import { worksPublicRoutes } from './modules/portfolio/routes.ts';
 import { Elysia } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import type { HealthResponse } from '@nesomn/shared';
 import { errorHandler } from './middleware/error.ts';
-import { requestSecurity } from './middleware/request-security.ts';
+import { requestSecurity, isLandingCatalogRequest } from './middleware/request-security.ts';
 import { rateLimit } from './middleware/rate-limit.ts';
 import { authRoutes } from './modules/auth/routes.ts';
 import { userRoutes } from './modules/user/routes.ts';
@@ -21,7 +22,7 @@ const ADMIN_URL = process.env.ADMIN_URL || 'http://localhost:5174';
 export const app = new Elysia()
   .use(
     cors({
-      origin: [CLIENT_URL, ADMIN_URL],
+      origin: [CLIENT_URL, ADMIN_URL, isLandingCatalogRequest],
       credentials: true, // izinkan cookie httpOnly lintas origin
       exposeHeaders: ['x-total-count'],
     }),
@@ -40,6 +41,7 @@ export const app = new Elysia()
   .use(userRoutes)
   .use(adminRoutes)
   .use(catalogRoutes)
+  .use(worksPublicRoutes)
   .use(storeRoutes)
   .use(storageRoutes)
   .use(projectRoutes)

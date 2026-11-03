@@ -1,6 +1,6 @@
-import { List, useTable } from '@refinedev/antd';
+import { List, useTable } from '../components/ui';
 import { useNotification, useUpdate } from '@refinedev/core';
-import { Table, InputNumber, Tag, Space, Button } from 'antd';
+import { Table, InputNumber, Tag, Space, Button } from '../components/ui';
 import { useState } from 'react';
 
 /**

@@ -6,9 +6,9 @@ export function safeReturnTo(value: string | null | undefined): string {
     /[\\%]/.test(value) ||
     [...value].some((c) => c.charCodeAt(0) <= 32 || c.charCodeAt(0) === 127)
   )
-    return '/account';
+    return '/dashboard';
   const path = value.split(/[?#]/)[0];
-  if (/^\/(login|register|api|admin)(\/|$)/.test(path)) return '/account';
+  if (/^\/(login|register|api|admin)(\/|$)/.test(path)) return '/dashboard';
   return value;
 }
 export const loginUrl = (path: string) =>

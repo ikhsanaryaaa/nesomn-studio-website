@@ -21,3 +21,11 @@ Controls: drag orbit, wheel/pinch zoom, ResetView/Zoom±/AutoRotateOff-default/b
 Owned model/texture disposal, R3F control/renderer lifecycle, PMREM cleanup, fetch abort, FileReader and recording cleanup protect mounts/switches. No Canvas grids. Video rejects empty output, retries once, then explicit error.
 
 User requested test container/image deletion after Docker testing. Current phase8 test resources already removed; rebuild only when needed and clean verified task-specific resources afterward. Preserve production/shared data and unrelated project resources.
+
+## Studio Kit and registered sources (phase4)
+
+Hero artwork and the optional fifth sample use Nesomn Studio Kit. Open /demo/3d?model=nesomn-studio-kit. The original four sample files remain unchanged. Generate assets with node scripts/generate-studio-kit.mjs, then node scripts/generate-studio-kit-model.mjs (first generator requires existing Sharp/FFmpeg setup). Textures are embedded; no FBX loader was added.
+
+The client accepts known local samples or URLs returned by api.editorAsset. This client allowlist is a loading guard, not authorization: the API and signed private storage remain the access boundary. Expired preview access can be reacquired through Refresh asset access. No browser URL input or external model upload flow is introduced. Embedded glTF remains supported; arbitrary remote URLs and external sidecar resources are rejected.
+
+Production-build preview/hero check: node tests/studio-kit-viewer-browser.mjs. See [phase4 evidence](revision/phase4-2026-11-03.md) for scope and limitations.

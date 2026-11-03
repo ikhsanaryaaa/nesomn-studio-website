@@ -75,6 +75,13 @@ async function assertNoSymlinks(key: string, create = false) {
     throw new Error('Storage escaped root.');
   return full;
 }
+/** Stream large local media without buffering the entire object for each range request. */
+export async function openLocalKey(key: string) {
+  const file = Bun.file(await assertNoSymlinks(key));
+  if (!(await file.exists())) throw new Error('File not found.');
+  return file;
+}
+
 export async function readLocalKey(key: string) {
   return readFile(await assertNoSymlinks(key));
 }
@@ -93,7 +100,8 @@ export function createLocalFsDriver(): LocalFsDriver {
       const expiresAt = Date.now() + ttlSeconds * 1000;
       const token = signToken(key, expiresAt);
       const params = new URLSearchParams({ exp: String(expiresAt), token });
-      return `/files/${encodeURIComponent(key)}?${params.toString()}`;
+      const relative = `/files/${encodeURIComponent(key)}?${params.toString()}`;
+      return process.env.API_URL ? new URL(relative, process.env.API_URL).toString() : relative;
     },
     async delete(key) {
       try {

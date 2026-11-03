@@ -8,7 +8,7 @@ import {
   Edit,
   Show,
   useForm,
-} from '@refinedev/antd';
+} from '../components/ui';
 import { useShow } from '@refinedev/core';
 import {
   Table,
@@ -26,8 +26,8 @@ import {
   Col,
   Card,
   Divider,
-} from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+} from '../components/ui';
+import { Upload as UploadOutlined } from 'lucide-react';
 
 /**
  * CRUD admin aset 3D (editorType=product_3d_editor).
@@ -46,11 +46,14 @@ const RESOURCE = 'assets-3d';
 async function uploadTo(kind: 'preview' | 'file', file: File) {
   const fd = new FormData();
   fd.append('file', file);
-  const res = await fetch(`/api/admin/uploads?kind=${kind}`, {
-    method: 'POST',
-    credentials: 'include',
-    body: fd,
-  });
+  const res = await fetch(
+    `${(import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '')}/admin/uploads?kind=${kind}`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      body: fd,
+    },
+  );
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err?.error?.message ?? 'Upload failed');
@@ -303,7 +306,11 @@ export const Asset3dShow = () => {
   const { queryResult } = useShow({ resource: RESOURCE });
   const record = queryResult?.data?.data;
   return (
-    <Show isLoading={queryResult?.isLoading}>
+    <Show
+      isLoading={queryResult?.isLoading}
+      isError={queryResult?.isError}
+      refetch={queryResult?.refetch}
+    >
       <Typography.Title level={5}>Title</Typography.Title>
       <Typography.Text>{record?.title}</Typography.Text>
       <Typography.Title level={5}>Slug</Typography.Title>

@@ -1,5 +1,5 @@
-import { List, useTable } from '@refinedev/antd';
-import { Table, Tag } from 'antd';
+import { List, useTable } from '../components/ui';
+import { Table, Tag } from '../components/ui';
 
 /**
  * Audit log viewer read-only. Tidak ada aksi create/update/delete dari UI:
